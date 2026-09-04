@@ -203,16 +203,15 @@ main{
 
 .movie-card{
   background:var(--card);
-  border:1px solid var(--border);
+  border:0;
   border-radius:14px;
   overflow:hidden;
   cursor:pointer;
-  transition:transform .18s,border-color .18s;
+  transition:transform .18s;
 }
 
 .movie-card:hover{
   transform:translateY(-3px);
-  border-color:#555;
 }
 
 .poster{
@@ -427,18 +426,6 @@ main{
   padding:12px 0;
 }
 
-.skeleton-label{
-  width:70px;
-  height:14px;
-  border-radius:6px;
-}
-
-.skeleton-value{
-  width:65%;
-  height:14px;
-  border-radius:6px;
-}
-
 
 /* DETAILS */
 
@@ -535,14 +522,14 @@ main{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:14px;
-  padding:18px;
+  padding:14px;
 }
 
 .info-row{
   display:grid;
   grid-template-columns:110px 1fr;
   gap:14px;
-  padding:12px 0;
+  padding:9px 0;
   border-bottom:1px solid var(--border);
 }
 
@@ -556,7 +543,7 @@ main{
 
 .info-value{
   color:var(--muted);
-  line-height:1.6;
+  line-height:1.45;
 }
 
 .cast-name{
@@ -719,8 +706,9 @@ main{
 }
 
 .menu-title{
-  font-size:20px;
-  font-weight:800;
+  font-size:28px;
+  font-weight:900;
+  color:var(--yellow);
 }
 
 .menu-item{
@@ -860,6 +848,32 @@ footer{
     grid-template-columns:90px 1fr;
   }
 
+  .pagination{
+    flex-wrap:nowrap;
+    gap:4px;
+    width:100%;
+    overflow:hidden;
+  }
+
+  .page-btn{
+    padding:8px 9px;
+    min-width:34px;
+    flex-shrink:0;
+  }
+
+  .details-box{
+    padding:12px;
+  }
+
+  .info-row{
+    padding:8px 0;
+    gap:10px;
+  }
+
+  .info-value{
+    line-height:1.4;
+  }
+
 }
 
 @media(max-width:450px){
@@ -895,8 +909,6 @@ footer{
 
     <div class="header-spacer"></div>
 
-    <!-- SEARCH -->
-
     <button
       id="searchIcon"
       class="icon-btn"
@@ -929,9 +941,6 @@ footer{
 
     </button>
 
-
-    <!-- THEME -->
-
     <button
       id="themeIcon"
       class="icon-btn"
@@ -950,9 +959,6 @@ footer{
       ></svg>
 
     </button>
-
-
-    <!-- MENU -->
 
     <button
       class="icon-btn"
@@ -977,7 +983,6 @@ footer{
     </button>
 
   </div>
-
 
   <div
     id="searchWrap"
@@ -1023,14 +1028,12 @@ footer{
 
   </div>
 
-
   <button
     class="menu-item"
     onclick="loadHomeSection('popular')"
   >
     🔥 Popular
   </button>
-
 
   <button
     class="menu-item"
@@ -1039,14 +1042,12 @@ footer{
     ⭐ Top Rated
   </button>
 
-
   <button
     class="menu-item"
     onclick="loadHomeSection('now-playing')"
   >
     🎬 Now Playing
   </button>
-
 
   <button
     class="menu-item"
@@ -1055,7 +1056,6 @@ footer{
     🚀 Upcoming
   </button>
 
-
   <button
     class="menu-item"
     onclick="showAbout()"
@@ -1063,11 +1063,9 @@ footer{
     ℹ️ About Us
   </button>
 
-
   <div class="menu-section">
     Genres
   </div>
-
 
   <div id="genreMenu"></div>
 
@@ -1100,8 +1098,6 @@ footer{
 
 </footer>
 
-
-<!-- TRAILER -->
 
 <div
   id="trailerModal"
@@ -1470,7 +1466,10 @@ function renderPagination(
   pagination.className =
     "pagination";
 
-  const maxButtons = 7;
+  const maxButtons =
+    window.innerWidth <= 650
+      ? 6
+      : 7;
 
   let start =
     Math.max(1,page-3);
@@ -1706,12 +1705,6 @@ function renderMovieDetails(
     (credits.cast || [])
       .slice(0,10);
 
-  /*
-    Only actual directors are included.
-    This naturally supports movies with
-    multiple directors.
-  */
-
   const directors =
     (credits.crew || [])
       .filter(
@@ -1852,8 +1845,6 @@ function renderMovieDetails(
       </div>
 
 
-      <!-- STARS / DIRECTOR / RELEASE DATE -->
-
       <div class="details-box">
 
         <div class="info-row">
@@ -1957,8 +1948,6 @@ function renderMovieDetails(
       </div>
 
 
-      <!-- MORE LIKE THIS -->
-
       <section class="section">
 
         <div class="section-header">
@@ -2044,19 +2033,6 @@ async function showDirector(
   showMovieGridSkeleton();
 
   try{
-
-    /*
-      combined_credits contains the person's
-      movie/TV credits. We filter it down to
-      movies where this person is actually a
-      Director.
-
-      Therefore:
-      - one director works
-      - two directors work
-      - three directors work
-      - only movies directed by this person appear
-    */
 
     const data =
       await getJSON(
@@ -2419,11 +2395,6 @@ async function searchMovies(query){
 }
 
 
-/*
-  Close the search strip when the user taps
-  anywhere outside the search area.
-*/
-
 document.addEventListener(
   "click",
   function(event){
@@ -2661,8 +2632,6 @@ function renderGenreMovies(
       <h1 class="genre-heading">
 
         <span class="genre-icon">
-
-          <!-- REAL OUTLINED TAG -->
 
           <svg
             viewBox="0 0 24 24"
@@ -3053,8 +3022,6 @@ function updateThemeIcon(){
 
   }else{
 
-    /* CLEAN MOON — NO RANDOM DOTS */
-
     svg.innerHTML = `
 
       <path
@@ -3154,11 +3121,6 @@ window.addEventListener(
       );
 
     }else if(directorId){
-
-      /*
-        Reload the director page from
-        the person's credits.
-      */
 
       getJSON(
         API +
