@@ -272,9 +272,7 @@ main{
 }
 
 
-/* -------------------------
-   SKELETON LOADING
-------------------------- */
+/* SKELETON */
 
 .skeleton{
   background:
@@ -289,13 +287,8 @@ main{
 }
 
 @keyframes skeletonShimmer{
-  0%{
-    background-position:200% 0;
-  }
-
-  100%{
-    background-position:-200% 0;
-  }
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
 }
 
 .skeleton-grid{
@@ -382,10 +375,6 @@ main{
   margin-bottom:14px;
 }
 
-.skeleton-detail-line.wide{
-  width:90%;
-}
-
 .skeleton-detail-line.medium{
   width:70%;
 }
@@ -412,17 +401,9 @@ main{
   margin-bottom:9px;
 }
 
-.skeleton-overview-line:nth-child(1){
-  width:95%;
-}
-
-.skeleton-overview-line:nth-child(2){
-  width:88%;
-}
-
-.skeleton-overview-line:nth-child(3){
-  width:76%;
-}
+.skeleton-overview-line:nth-child(1){width:95%;}
+.skeleton-overview-line:nth-child(2){width:88%;}
+.skeleton-overview-line:nth-child(3){width:76%;}
 
 .skeleton-button{
   width:145px;
@@ -580,10 +561,22 @@ main{
 
 .cast-name{
   color:var(--text);
+  font-weight:700;
 }
 
 .character{
   color:var(--muted);
+}
+
+.director-link{
+  color:var(--text);
+  font-weight:700;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.director-link:hover{
+  color:var(--yellow);
 }
 
 .related-grid{
@@ -632,7 +625,7 @@ main{
 }
 
 
-/* TRAILER MODAL */
+/* TRAILER */
 
 .modal{
   position:fixed;
@@ -887,7 +880,6 @@ footer{
 </style>
 </head>
 
-
 <body>
 
 <header>
@@ -903,7 +895,7 @@ footer{
 
     <div class="header-spacer"></div>
 
-    <!-- MINIMAL SEARCH ICON -->
+    <!-- SEARCH -->
 
     <button
       id="searchIcon"
@@ -938,7 +930,7 @@ footer{
     </button>
 
 
-    <!-- MINIMAL SUN / MOON ICON -->
+    <!-- THEME -->
 
     <button
       id="themeIcon"
@@ -959,6 +951,8 @@ footer{
 
     </button>
 
+
+    <!-- MENU -->
 
     <button
       class="icon-btn"
@@ -984,8 +978,6 @@ footer{
 
   </div>
 
-
-  <!-- SEARCH BOX HIDDEN BY DEFAULT -->
 
   <div
     id="searchWrap"
@@ -1098,11 +1090,9 @@ footer{
 
   </div>
 
-
   <div class="footer-credit">
     Made by Aditya Chauhan • 2026
   </div>
-
 
   <div class="footer-tmdb">
     This product uses the TMDB API but is not endorsed or certified by TMDB.
@@ -1111,7 +1101,7 @@ footer{
 </footer>
 
 
-<!-- TRAILER POPUP -->
+<!-- TRAILER -->
 
 <div
   id="trailerModal"
@@ -1138,7 +1128,6 @@ footer{
       </button>
 
     </div>
-
 
     <div class="video-wrap">
 
@@ -1171,10 +1160,14 @@ let currentMovie = null;
 let currentTrailer = null;
 let currentGenreId = null;
 let currentGenreName = null;
+let currentDirectorId = null;
+let currentDirectorName = null;
+
+let genreCache = {};
 
 
 /* -------------------------
-   BASIC HELPERS
+   HELPERS
 ------------------------- */
 
 function escapeHTML(value){
@@ -1214,11 +1207,7 @@ function formatDate(date){
   const d =
     new Date(date + "T00:00:00");
 
-  if(
-    Number.isNaN(
-      d.getTime()
-    )
-  ){
+  if(Number.isNaN(d.getTime())){
     return date;
   }
 
@@ -1239,9 +1228,7 @@ async function getJSON(url){
     await fetch(url);
 
   if(!response.ok){
-    throw new Error(
-      "Request failed"
-    );
+    throw new Error("Request failed");
   }
 
   return await response.json();
@@ -1255,6 +1242,7 @@ async function getJSON(url){
 function goHome(){
 
   closeMenu();
+  hideSearch();
 
   currentSection = "popular";
   currentPage = 1;
@@ -1268,16 +1256,14 @@ function goHome(){
     window.location.pathname
   );
 
-  loadMovies(
-    "popular",
-    1
-  );
+  loadMovies("popular",1);
 }
 
 
 async function loadHomeSection(section){
 
   closeMenu();
+  hideSearch();
 
   currentSection = section;
   currentPage = 1;
@@ -1291,17 +1277,11 @@ async function loadHomeSection(section){
     window.location.pathname
   );
 
-  await loadMovies(
-    section,
-    1
-  );
+  await loadMovies(section,1);
 }
 
 
-async function loadMovies(
-  section,
-  page
-){
+async function loadMovies(section,page){
 
   showMovieGridSkeleton();
 
@@ -1351,12 +1331,7 @@ async function loadMovies(
 
   }catch(error){
 
-    const app =
-      document.getElementById(
-        "app"
-      );
-
-    app.innerHTML = `
+    document.getElementById("app").innerHTML = `
       <div class="error">
         Unable to load movies right now.
       </div>
@@ -1367,15 +1342,10 @@ async function loadMovies(
 }
 
 
-function renderMovies(
-  movies,
-  title
-){
+function renderMovies(movies,title){
 
   const app =
-    document.getElementById(
-      "app"
-    );
+    document.getElementById("app");
 
   if(!movies.length){
 
@@ -1417,91 +1387,9 @@ function renderMovies(
 }
 
 
-function renderGenreMovies(
-  movies,
-  name
-){
-
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  if(!movies.length){
-
-    app.innerHTML = `
-      <div class="empty">
-        No movies found for this genre.
-      </div>
-    `;
-
-    return;
-  }
-
-  app.innerHTML = `
-
-    <div class="hero">
-
-      <h1 class="genre-heading">
-
-        <span class="genre-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-
-            <path
-              d="M3.5 6.5V4.5H5.5L20 19L19 20L4 5"
-            ></path>
-
-            <path
-              d="M5.5 4.5L19.5 18.5"
-            ></path>
-
-            <circle
-              cx="6.5"
-              cy="7"
-              r="1"
-            ></circle>
-
-          </svg>
-
-        </span>
-
-        <span>
-          ${escapeHTML(name)}
-        </span>
-
-      </h1>
-
-      <p>
-        Movies in the
-        ${escapeHTML(name)}
-        genre.
-      </p>
-
-    </div>
-
-
-    <section class="section">
-
-      <div class="movie-grid">
-
-        ${movies.map(movieCard).join("")}
-
-      </div>
-
-    </section>
-
-  `;
-
-}
-
+/* -------------------------
+   MOVIE CARD
+------------------------- */
 
 function movieCard(movie){
 
@@ -1563,27 +1451,21 @@ function renderPagination(
 ){
 
   const app =
-    document.getElementById(
-      "app"
-    );
+    document.getElementById("app");
 
   if(totalPages <= 1){
     return;
   }
 
-  const existing =
-    document.querySelector(
-      ".pagination"
-    );
+  const old =
+    document.querySelector(".pagination");
 
-  if(existing){
-    existing.remove();
+  if(old){
+    old.remove();
   }
 
   const pagination =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   pagination.className =
     "pagination";
@@ -1591,10 +1473,7 @@ function renderPagination(
   const maxButtons = 7;
 
   let start =
-    Math.max(
-      1,
-      page - 3
-    );
+    Math.max(1,page-3);
 
   let end =
     Math.min(
@@ -1603,14 +1482,14 @@ function renderPagination(
     );
 
   if(
-    end - start <
-    maxButtons - 1
+    end-start <
+    maxButtons-1
   ){
 
     start =
       Math.max(
         1,
-        end - maxButtons + 1
+        end-maxButtons+1
       );
 
   }
@@ -1619,29 +1498,27 @@ function renderPagination(
 
     <button
       class="page-btn"
-      ${page === 1 ? "disabled" : ""}
+      ${page===1 ? "disabled" : ""}
       data-page="${page-1}"
     >
       ←
     </button>
 
-
     ${
       Array.from(
         {
-          length:
-            end - start + 1
+          length:end-start+1
         },
         (_,i)=>{
 
           const p =
-            start + i;
+            start+i;
 
           return `
 
             <button
               class="page-btn ${
-                p === page
+                p===page
                   ? "active"
                   : ""
               }"
@@ -1656,11 +1533,10 @@ function renderPagination(
       ).join("")
     }
 
-
     <button
       class="page-btn"
       ${
-        page === totalPages
+        page===totalPages
           ? "disabled"
           : ""
       }
@@ -1671,11 +1547,8 @@ function renderPagination(
 
   `;
 
-
   pagination
-    .querySelectorAll(
-      ".page-btn"
-    )
+    .querySelectorAll(".page-btn")
     .forEach(btn=>{
 
       btn.addEventListener(
@@ -1683,13 +1556,11 @@ function renderPagination(
         ()=>{
 
           const p =
-            Number(
-              btn.dataset.page
-            );
+            Number(btn.dataset.page);
 
           if(
-            p >= 1 &&
-            p <= totalPages
+            p>=1 &&
+            p<=totalPages
           ){
 
             callback(p);
@@ -1701,11 +1572,7 @@ function renderPagination(
 
     });
 
-
-  app.appendChild(
-    pagination
-  );
-
+  app.appendChild(pagination);
 }
 
 
@@ -1716,6 +1583,8 @@ function renderPagination(
 async function showMovie(id){
 
   currentMovieId = id;
+
+  hideSearch();
 
   window.history.pushState(
     {
@@ -1770,18 +1639,11 @@ async function showMovie(id){
       credits
     );
 
-    loadRelatedMovies(
-      movie
-    );
+    loadRelatedMovies(movie);
 
   }catch(error){
 
-    const app =
-      document.getElementById(
-        "app"
-      );
-
-    app.innerHTML = `
+    document.getElementById("app").innerHTML = `
       <div class="error">
         Unable to load this movie.
       </div>
@@ -1792,18 +1654,13 @@ async function showMovie(id){
 }
 
 
-/* -------------------------
-   TRAILER FINDER
-------------------------- */
-
-function findTrailer(
-  videos
-){
+function findTrailer(videos){
 
   const youtube =
-    videos.filter(video =>
-      video.site === "YouTube" &&
-      video.key
+    videos.filter(
+      video =>
+        video.site === "YouTube" &&
+        video.key
     );
 
   if(!youtube.length){
@@ -1811,35 +1668,30 @@ function findTrailer(
   }
 
   const officialTrailer =
-    youtube.find(video =>
-      video.type === "Trailer" &&
-      (
-        video.official === true ||
-        /official/i.test(
-          video.name || ""
+    youtube.find(
+      video =>
+        video.type === "Trailer" &&
+        (
+          video.official === true ||
+          /official/i.test(
+            video.name || ""
+          )
         )
-      )
     );
 
   if(officialTrailer){
     return officialTrailer;
   }
 
-  const normalTrailer =
-    youtube.find(video =>
+  return youtube.find(
+    video =>
       video.type === "Trailer"
-    );
-
-  if(normalTrailer){
-    return normalTrailer;
-  }
-
-  return null;
+  ) || null;
 }
 
 
 /* -------------------------
-   MOVIE DETAIL RENDER
+   MOVIE DETAIL PAGE
 ------------------------- */
 
 function renderMovieDetails(
@@ -1848,19 +1700,30 @@ function renderMovieDetails(
 ){
 
   const app =
-    document.getElementById(
-      "app"
-    );
+    document.getElementById("app");
 
   const cast =
     (credits.cast || [])
       .slice(0,10);
+
+  /*
+    Only actual directors are included.
+    This naturally supports movies with
+    multiple directors.
+  */
 
   const directors =
     (credits.crew || [])
       .filter(
         person =>
           person.job === "Director"
+      )
+      .filter(
+        (person,index,array) =>
+          array.findIndex(
+            item =>
+              item.id === person.id
+          ) === index
       );
 
   const genres =
@@ -1913,19 +1776,21 @@ function renderMovieDetails(
           <div class="tag-row">
 
             ${
-              genres.map(genre => `
+              genres.map(
+                genre => `
 
-                <button
-                  class="tag"
-                  onclick="loadGenreFromTag(
-                    ${genre.id},
-                    '${escapeHTML(genre.name)}'
-                  )"
-                >
-                  ${escapeHTML(genre.name)}
-                </button>
+                  <button
+                    class="tag"
+                    onclick="loadGenreFromTag(
+                      ${genre.id},
+                      '${escapeHTML(genre.name)}'
+                    )"
+                  >
+                    ${escapeHTML(genre.name)}
+                  </button>
 
-              `).join("")
+                `
+              ).join("")
             }
 
           </div>
@@ -1935,9 +1800,7 @@ function renderMovieDetails(
 
             ${
               movie.release_date
-                ? formatDate(
-                    movie.release_date
-                  )
+                ? formatDate(movie.release_date)
                 : "Release date unavailable"
             }
 
@@ -1989,7 +1852,7 @@ function renderMovieDetails(
       </div>
 
 
-      <!-- CAST / DIRECTOR / RELEASE DATE -->
+      <!-- STARS / DIRECTOR / RELEASE DATE -->
 
       <div class="details-box">
 
@@ -2004,29 +1867,31 @@ function renderMovieDetails(
             ${
               cast.length
 
-                ? cast.map(person => `
+                ? cast.map(
+                    person => `
 
-                    <div>
+                      <div>
 
-                      <span class="cast-name">
-                        ${escapeHTML(person.name)}
-                      </span>
+                        <span class="cast-name">
+                          ${escapeHTML(person.name)}
+                        </span>
 
-                      ${
-                        person.character
-                          ? `
+                        ${
+                          person.character
+                            ? `
 
-                            <span class="character">
-                              — ${escapeHTML(person.character)}
-                            </span>
+                              <span class="character">
+                                — ${escapeHTML(person.character)}
+                              </span>
 
-                          `
-                          : ""
-                      }
+                            `
+                            : ""
+                        }
 
-                    </div>
+                      </div>
 
-                  `).join("")
+                    `
+                  ).join("")
 
                 : "Cast information unavailable."
             }
@@ -2047,14 +1912,21 @@ function renderMovieDetails(
             ${
               directors.length
 
-                ? directors
-                    .map(
-                      person =>
-                        escapeHTML(
-                          person.name
-                        )
-                    )
-                    .join(", ")
+                ? directors.map(
+                    person => `
+
+                      <span
+                        class="director-link"
+                        onclick="showDirector(
+                          ${person.id},
+                          '${escapeHTML(person.name)}'
+                        )"
+                      >
+                        ${escapeHTML(person.name)}
+                      </span>
+
+                    `
+                  ).join(", ")
 
                 : "Director information unavailable."
             }
@@ -2074,9 +1946,7 @@ function renderMovieDetails(
 
             ${
               movie.release_date
-                ? formatDate(
-                    movie.release_date
-                  )
+                ? formatDate(movie.release_date)
                 : "Release date unavailable."
             }
 
@@ -2105,38 +1975,34 @@ function renderMovieDetails(
           class="related-grid"
         >
 
-          <div class="skeleton-grid">
+          ${
+            Array.from(
+              {length:6},
+              ()=>`
 
-            ${
-              Array.from(
-                {length:6},
-                ()=>`
+                <div class="skeleton-card">
 
-                  <div class="skeleton-card">
+                  <div
+                    class="skeleton skeleton-poster"
+                  ></div>
+
+                  <div class="skeleton-info">
 
                     <div
-                      class="skeleton skeleton-poster"
+                      class="skeleton skeleton-title"
                     ></div>
 
-                    <div class="skeleton-info">
-
-                      <div
-                        class="skeleton skeleton-title"
-                      ></div>
-
-                      <div
-                        class="skeleton skeleton-title short"
-                      ></div>
-
-                    </div>
+                    <div
+                      class="skeleton skeleton-title short"
+                    ></div>
 
                   </div>
 
-                `
-              ).join("")
-            }
+                </div>
 
-          </div>
+              `
+            ).join("")
+          }
 
         </div>
 
@@ -2150,12 +2016,164 @@ function renderMovieDetails(
 
 
 /* -------------------------
+   DIRECTOR PAGE
+------------------------- */
+
+async function showDirector(
+  id,
+  name
+){
+
+  currentDirectorId = id;
+  currentDirectorName = name;
+
+  closeMenu();
+  hideSearch();
+
+  window.history.pushState(
+    {
+      page:"director",
+      id,
+      name
+    },
+    "",
+    "?director=" +
+    id
+  );
+
+  showMovieGridSkeleton();
+
+  try{
+
+    /*
+      combined_credits contains the person's
+      movie/TV credits. We filter it down to
+      movies where this person is actually a
+      Director.
+
+      Therefore:
+      - one director works
+      - two directors work
+      - three directors work
+      - only movies directed by this person appear
+    */
+
+    const data =
+      await getJSON(
+        API +
+        "/person/" +
+        id +
+        "/credits"
+      );
+
+    const directedMovies =
+      (data.crew || [])
+        .filter(
+          item =>
+            item.media_type === "movie" &&
+            item.job === "Director"
+        )
+        .filter(
+          (item,index,array) =>
+            array.findIndex(
+              movie =>
+                movie.id === item.id
+            ) === index
+        )
+        .sort(
+          (a,b) =>
+            (
+              b.release_date || ""
+            ).localeCompare(
+              a.release_date || ""
+            )
+        );
+
+    renderDirectorPage(
+      name,
+      directedMovies
+    );
+
+  }catch(error){
+
+    document.getElementById("app").innerHTML = `
+      <div class="error">
+        Unable to load this director.
+      </div>
+    `;
+
+  }
+
+}
+
+
+function renderDirectorPage(
+  name,
+  movies
+){
+
+  const app =
+    document.getElementById("app");
+
+  app.innerHTML = `
+
+    <div class="hero">
+
+      <button
+        class="back-btn"
+        onclick="goBack()"
+      >
+        ← Back
+      </button>
+
+
+      <h1>
+        ${escapeHTML(name)}
+      </h1>
+
+      <p>
+        Movies directed by ${escapeHTML(name)}.
+      </p>
+
+    </div>
+
+
+    ${
+      movies.length
+
+        ? `
+
+          <section class="section">
+
+            <div class="movie-grid">
+
+              ${movies.map(movieCard).join("")}
+
+            </div>
+
+          </section>
+
+        `
+
+        : `
+
+          <div class="empty">
+            No directed movies found.
+          </div>
+
+        `
+    }
+
+  `;
+
+}
+
+
+/* -------------------------
    RELATED MOVIES
 ------------------------- */
 
-async function loadRelatedMovies(
-  movie
-){
+async function loadRelatedMovies(movie){
 
   const container =
     document.getElementById(
@@ -2197,21 +2215,8 @@ async function loadRelatedMovies(
         )
         .slice(0,6);
 
-    if(!movies.length){
-
-      container.innerHTML = `
-        <div class="empty">
-          No similar movies found.
-        </div>
-      `;
-
-      return;
-    }
-
     container.innerHTML =
-      movies
-        .map(movieCard)
-        .join("");
+      movies.map(movieCard).join("");
 
   }catch(error){
 
@@ -2223,7 +2228,7 @@ async function loadRelatedMovies(
 
 
 /* -------------------------
-   TRAILER POPUP
+   TRAILER
 ------------------------- */
 
 function openTrailer(){
@@ -2283,19 +2288,14 @@ function closeTrailer(){
 
   frame.src = "";
 
-  modal.classList.remove(
-    "show"
-  );
+  modal.classList.remove("show");
 
-  document.body.style.overflow =
-    "";
+  document.body.style.overflow = "";
 
 }
 
 
-function handleModalBackground(
-  event
-){
+function handleModalBackground(event){
 
   if(
     event.target.id ===
@@ -2364,9 +2364,7 @@ function hideSearch(){
     .getElementById(
       "searchWrap"
     )
-    .classList.add(
-      "hidden"
-    );
+    .classList.add("hidden");
 
 }
 
@@ -2377,19 +2375,11 @@ function showSearch(){
     .getElementById(
       "searchWrap"
     )
-    .classList.remove(
-      "hidden"
-    );
+    .classList.remove("hidden");
 
   setTimeout(
     ()=>{
-
-      document
-        .getElementById(
-          "searchInput"
-        )
-        .focus();
-
+      searchInput.focus();
     },
     50
   );
@@ -2397,9 +2387,7 @@ function showSearch(){
 }
 
 
-async function searchMovies(
-  query
-){
+async function searchMovies(query){
 
   showMovieGridSkeleton();
 
@@ -2420,12 +2408,7 @@ async function searchMovies(
 
   }catch(error){
 
-    const app =
-      document.getElementById(
-        "app"
-      );
-
-    app.innerHTML = `
+    document.getElementById("app").innerHTML = `
       <div class="error">
         Search failed.
       </div>
@@ -2434,6 +2417,44 @@ async function searchMovies(
   }
 
 }
+
+
+/*
+  Close the search strip when the user taps
+  anywhere outside the search area.
+*/
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const searchWrap =
+      document.getElementById(
+        "searchWrap"
+      );
+
+    const searchIcon =
+      document.getElementById(
+        "searchIcon"
+      );
+
+    if(
+      searchWrap.classList.contains("hidden")
+    ){
+      return;
+    }
+
+    if(
+      searchWrap.contains(event.target) ||
+      searchIcon.contains(event.target)
+    ){
+      return;
+    }
+
+    hideSearch();
+
+  }
+);
 
 
 /* -------------------------
@@ -2456,31 +2477,30 @@ async function loadGenres(){
 
     container.innerHTML =
       (data.genres || [])
-        .map(genre => `
+        .map(
+          genre => `
 
-          <button
-            class="menu-item"
-            onclick="loadGenre(
-              ${genre.id},
-              '${escapeHTML(genre.name)}'
-            )"
-          >
-            ${escapeHTML(genre.name)}
-          </button>
+            <button
+              class="menu-item"
+              onclick="loadGenre(
+                ${genre.id},
+                '${escapeHTML(genre.name)}'
+              )"
+            >
+              ${escapeHTML(genre.name)}
+            </button>
 
-        `)
-        .join("");
+          `
+        ).join("");
 
   }catch(error){
 
     document.getElementById(
       "genreMenu"
     ).innerHTML = `
-
       <div class="movie-meta">
         Genres unavailable.
       </div>
-
     `;
 
   }
@@ -2494,6 +2514,7 @@ async function loadGenre(
 ){
 
   closeMenu();
+  hideSearch();
 
   currentGenreId = id;
   currentGenreName = name;
@@ -2523,6 +2544,8 @@ async function loadGenreFromTag(
   id,
   name
 ){
+
+  hideSearch();
 
   currentGenreId = id;
   currentGenreName = name;
@@ -2601,12 +2624,7 @@ async function loadGenrePage(
 
   }catch(error){
 
-    const app =
-      document.getElementById(
-        "app"
-      );
-
-    app.innerHTML = `
+    document.getElementById("app").innerHTML = `
       <div class="error">
         Unable to load this genre.
       </div>
@@ -2617,13 +2635,103 @@ async function loadGenrePage(
 }
 
 
+function renderGenreMovies(
+  movies,
+  name
+){
+
+  const app =
+    document.getElementById("app");
+
+  if(!movies.length){
+
+    app.innerHTML = `
+      <div class="empty">
+        No movies found for this genre.
+      </div>
+    `;
+
+    return;
+  }
+
+  app.innerHTML = `
+
+    <div class="hero">
+
+      <h1 class="genre-heading">
+
+        <span class="genre-icon">
+
+          <!-- REAL OUTLINED TAG -->
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+
+            <path
+              d="M20.5 13.5L13.5 20.5
+                 C12.7 21.3 11.4 21.3 10.6 20.5
+                 L3.5 13.4
+                 V4
+                 H12.9
+                 L20.5 11.6
+                 C21.3 12.4 21.3 13
+                 20.5 13.5Z"
+            ></path>
+
+            <circle
+              cx="7.5"
+              cy="8"
+              r="1.25"
+            ></circle>
+
+          </svg>
+
+        </span>
+
+        <span>
+          ${escapeHTML(name)}
+        </span>
+
+      </h1>
+
+      <p>
+        Movies in the
+        ${escapeHTML(name)}
+        genre.
+      </p>
+
+    </div>
+
+
+    <section class="section">
+
+      <div class="movie-grid">
+
+        ${movies.map(movieCard).join("")}
+
+      </div>
+
+    </section>
+
+  `;
+
+}
+
+
 /* -------------------------
-   ABOUT US
+   ABOUT
 ------------------------- */
 
 function showAbout(){
 
   closeMenu();
+  hideSearch();
 
   window.history.pushState(
     {
@@ -2633,12 +2741,7 @@ function showAbout(){
     "?about=1"
   );
 
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  app.innerHTML = `
+  document.getElementById("app").innerHTML = `
 
     <div class="about-page">
 
@@ -2648,7 +2751,6 @@ function showAbout(){
       >
         ← Back
       </button>
-
 
       <div class="hero">
 
@@ -2735,17 +2837,12 @@ function showAbout(){
 
 
 /* -------------------------
-   SKELETON HELPERS
+   SKELETON
 ------------------------- */
 
 function showMovieSkeleton(){
 
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  app.innerHTML = `
+  document.getElementById("app").innerHTML = `
 
     <div class="detail-skeleton">
 
@@ -2753,13 +2850,11 @@ function showMovieSkeleton(){
         class="skeleton skeleton-back"
       ></div>
 
-
       <div class="skeleton-detail-top">
 
         <div
           class="skeleton skeleton-detail-poster"
         ></div>
-
 
         <div>
 
@@ -2767,50 +2862,29 @@ function showMovieSkeleton(){
             class="skeleton skeleton-detail-title"
           ></div>
 
-
           <div
             class="skeleton skeleton-detail-line"
           ></div>
 
-
           <div class="skeleton-tags">
 
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
 
           </div>
-
 
           <div
             class="skeleton skeleton-detail-line medium"
           ></div>
 
-
           <div class="skeleton-overview">
 
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
 
           </div>
-
 
           <div
             class="skeleton skeleton-button"
@@ -2824,41 +2898,18 @@ function showMovieSkeleton(){
       <div class="skeleton-details-box">
 
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-label"
-          ></div>
-
-          <div
-            class="skeleton skeleton-value"
-          ></div>
-
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
         </div>
 
-
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-label"
-          ></div>
-
-          <div
-            class="skeleton skeleton-value"
-          ></div>
-
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
         </div>
 
-
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-label"
-          ></div>
-
-          <div
-            class="skeleton skeleton-value"
-          ></div>
-
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
         </div>
 
       </div>
@@ -2872,12 +2923,7 @@ function showMovieSkeleton(){
 
 function showMovieGridSkeleton(){
 
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  app.innerHTML = `
+  document.getElementById("app").innerHTML = `
 
     <div class="hero">
 
@@ -2941,20 +2987,12 @@ function showMovieGridSkeleton(){
 function openMenu(){
 
   document
-    .getElementById(
-      "menu"
-    )
-    .classList.add(
-      "open"
-    );
+    .getElementById("menu")
+    .classList.add("open");
 
   document
-    .getElementById(
-      "menuOverlay"
-    )
-    .classList.add(
-      "show"
-    );
+    .getElementById("menuOverlay")
+    .classList.add("show");
 
 }
 
@@ -2962,20 +3000,12 @@ function openMenu(){
 function closeMenu(){
 
   document
-    .getElementById(
-      "menu"
-    )
-    .classList.remove(
-      "open"
-    );
+    .getElementById("menu")
+    .classList.remove("open");
 
   document
-    .getElementById(
-      "menuOverlay"
-    )
-    .classList.remove(
-      "show"
-    );
+    .getElementById("menuOverlay")
+    .classList.remove("show");
 
 }
 
@@ -2999,8 +3029,6 @@ function updateThemeIcon(){
 
   if(isLight){
 
-    /* SUN */
-
     svg.innerHTML = `
 
       <circle
@@ -3009,88 +3037,33 @@ function updateThemeIcon(){
         r="4"
       ></circle>
 
-      <line
-        x1="12"
-        y1="2"
-        x2="12"
-        y2="4"
-      ></line>
+      <line x1="12" y1="2" x2="12" y2="4"></line>
+      <line x1="12" y1="20" x2="12" y2="22"></line>
 
-      <line
-        x1="12"
-        y1="20"
-        x2="12"
-        y2="22"
-      ></line>
+      <line x1="2" y1="12" x2="4" y2="12"></line>
+      <line x1="20" y1="12" x2="22" y2="12"></line>
 
-      <line
-        x1="2"
-        y1="12"
-        x2="4"
-        y2="12"
-      ></line>
+      <line x1="4.9" y1="4.9" x2="6.3" y2="6.3"></line>
+      <line x1="17.7" y1="17.7" x2="19.1" y2="19.1"></line>
 
-      <line
-        x1="20"
-        y1="12"
-        x2="22"
-        y2="12"
-      ></line>
-
-      <line
-        x1="4.9"
-        y1="4.9"
-        x2="6.3"
-        y2="6.3"
-      ></line>
-
-      <line
-        x1="17.7"
-        y1="17.7"
-        x2="19.1"
-        y2="19.1"
-      ></line>
-
-      <line
-        x1="17.7"
-        y1="6.3"
-        x2="19.1"
-        y2="4.9"
-      ></line>
-
-      <line
-        x1="4.9"
-        y1="19.1"
-        x2="6.3"
-        y2="17.7"
-      ></line>
+      <line x1="17.7" y1="6.3" x2="19.1" y2="4.9"></line>
+      <line x1="4.9" y1="19.1" x2="6.3" y2="17.7"></line>
 
     `;
 
   }else{
 
-    /* MOON */
+    /* CLEAN MOON — NO RANDOM DOTS */
 
     svg.innerHTML = `
 
       <path
-        d="M20 15.5A8.5 8.5 0 0 1 8.5 4
-           A8.5 8.5 0 1 0 20 15.5Z"
+        d="M20 15.5
+           A8.5 8.5 0 0 1
+           8.5 4
+           A8.5 8.5 0 1 0
+           20 15.5Z"
       ></path>
-
-      <line
-        x1="17"
-        y1="4"
-        x2="17"
-        y2="6"
-      ></line>
-
-      <line
-        x1="20"
-        y1="7"
-        x2="22"
-        y2="7"
-      ></line>
 
     `;
 
@@ -3102,15 +3075,11 @@ function updateThemeIcon(){
 function toggleTheme(){
 
   document.body
-    .classList.toggle(
-      "light"
-    );
+    .classList.toggle("light");
 
   localStorage.setItem(
     "theme",
-    document.body.classList.contains(
-      "light"
-    )
+    document.body.classList.contains("light")
       ? "light"
       : "dark"
   );
@@ -3123,16 +3092,12 @@ function toggleTheme(){
 function loadSavedTheme(){
 
   const theme =
-    localStorage.getItem(
-      "theme"
-    );
+    localStorage.getItem("theme");
 
   if(theme === "light"){
 
     document.body
-      .classList.add(
-        "light"
-      );
+      .classList.add("light");
 
   }
 
@@ -3142,14 +3107,12 @@ function loadSavedTheme(){
 
 
 /* -------------------------
-   BACK BUTTON
+   BACK / HISTORY
 ------------------------- */
 
 function goBack(){
 
-  if(
-    window.history.length > 1
-  ){
+  if(window.history.length > 1){
 
     window.history.back();
 
@@ -3180,11 +3143,66 @@ window.addEventListener(
     const about =
       params.get("about");
 
+    const directorId =
+      params.get("director");
+
 
     if(movieId){
 
       showMovieWithoutHistory(
         movieId
+      );
+
+    }else if(directorId){
+
+      /*
+        Reload the director page from
+        the person's credits.
+      */
+
+      getJSON(
+        API +
+        "/person/" +
+        directorId +
+        "/credits"
+      ).then(data => {
+
+        const directed =
+          (data.crew || [])
+            .filter(
+              item =>
+                item.media_type === "movie" &&
+                item.job === "Director"
+            )
+            .filter(
+              (item,index,array) =>
+                array.findIndex(
+                  movie =>
+                    movie.id === item.id
+                ) === index
+            )
+            .sort(
+              (a,b) =>
+                (
+                  b.release_date || ""
+                ).localeCompare(
+                  a.release_date || ""
+                )
+            );
+
+        const directorName =
+          directed[0]?.crew?.name ||
+          currentDirectorName ||
+          "Director";
+
+        renderDirectorPage(
+          currentDirectorName ||
+          directorName,
+          directed
+        );
+
+      }).catch(
+        () => loadMovies("popular",1)
       );
 
     }else if(genre){
@@ -3228,6 +3246,62 @@ window.addEventListener(
   }
 );
 
+
+/* -------------------------
+   GENRE ID HELPER
+------------------------- */
+
+async function findGenreIdByName(
+  name
+){
+
+  if(
+    genreCache[
+      name.toLowerCase()
+    ]
+  ){
+
+    return genreCache[
+      name.toLowerCase()
+    ];
+
+  }
+
+  try{
+
+    const data =
+      await getJSON(
+        API + "/genres"
+      );
+
+    const found =
+      (data.genres || [])
+        .find(
+          genre =>
+            genre.name.toLowerCase() ===
+            name.toLowerCase()
+        );
+
+    if(found){
+
+      genreCache[
+        name.toLowerCase()
+      ] = found.id;
+
+      return found.id;
+
+    }
+
+  }catch(error){}
+
+  return 0;
+
+}
+
+
+/* -------------------------
+   MOVIE WITHOUT HISTORY
+------------------------- */
 
 async function showMovieWithoutHistory(
   id
@@ -3285,75 +3359,13 @@ async function showMovieWithoutHistory(
 
   }catch(error){
 
-    const app =
-      document.getElementById(
-        "app"
-      );
-
-    app.innerHTML = `
+    document.getElementById("app").innerHTML = `
       <div class="error">
         Unable to load this movie.
       </div>
     `;
 
   }
-
-}
-
-
-/* -------------------------
-   GENRE HISTORY HELPER
-------------------------- */
-
-let genreCache = {};
-
-
-async function findGenreIdByName(
-  name
-){
-
-  if(
-    genreCache[
-      name.toLowerCase()
-    ]
-  ){
-
-    return genreCache[
-      name.toLowerCase()
-    ];
-
-  }
-
-
-  try{
-
-    const data =
-      await getJSON(
-        API + "/genres"
-      );
-
-    const found =
-      (data.genres || [])
-        .find(
-          genre =>
-            genre.name.toLowerCase() ===
-            name.toLowerCase()
-        );
-
-
-    if(found){
-
-      genreCache[
-        name.toLowerCase()
-      ] = found.id;
-
-      return found.id;
-
-    }
-
-  }catch(error){}
-
-  return 0;
 
 }
 
@@ -3372,7 +3384,6 @@ const initialParams =
     window.location.search
   );
 
-
 const initialMovie =
   initialParams.get("movie");
 
@@ -3382,11 +3393,21 @@ const initialGenre =
 const initialAbout =
   initialParams.get("about");
 
+const initialDirector =
+  initialParams.get("director");
+
 
 if(initialMovie){
 
   showMovieWithoutHistory(
     initialMovie
+  );
+
+}else if(initialDirector){
+
+  showDirector(
+    initialDirector,
+    "Director"
   );
 
 }else if(initialGenre){
