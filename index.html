@@ -1167,4 +1167,327 @@
       <button
         class="page-button"
         onclick="changePage(${currentPage + 1})"
-        ${currentPage === totalPages ? "disable
+        ${currentPage === totalPages ? "disabled" : ""}
+      >
+        ›
+      </button>
+    `;
+
+    container.innerHTML = html;
+  }
+
+
+  function changePage(page) {
+
+    if (
+      loading ||
+      page < 1 ||
+      page > totalPages ||
+      page === currentPage
+    ) {
+      return;
+    }
+
+    currentPage = page;
+
+    loadMovies();
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+
+  /* =========================
+     SEARCH
+  ========================= */
+
+  document
+    .getElementById("search")
+    .addEventListener(
+      "input",
+      function() {
+
+        const query =
+          this.value.trim();
+
+        clearTimeout(searchTimer);
+
+        searchTimer =
+          setTimeout(() => {
+
+            if (!query) {
+
+              currentMode = "popular";
+
+              currentGenre = null;
+
+              currentQuery = "";
+
+              currentPage = 1;
+
+              document.getElementById("sectionTitle")
+                .textContent =
+                "🔥 Popular Movies";
+
+              loadMovies();
+
+              return;
+            }
+
+            currentMode = "search";
+
+            currentGenre = null;
+
+            currentQuery = query;
+
+            currentPage = 1;
+
+            document.getElementById("sectionTitle")
+              .textContent =
+              "🔎 Search Results";
+
+            loadMovies();
+
+          }, 450);
+      }
+    );
+
+
+  /* =========================
+     MOVIE DETAILS
+  ========================= */
+
+  async function openMovie(id) {
+
+    history.pushState(
+      {
+        page: "movie",
+        movieId: id
+      },
+      "",
+      "#movie-" + id
+    );
+
+    showDetails();
+
+    const container =
+      document.getElementById("movieDetails");
+
+    container.innerHTML = `
+      <div class="loading">
+
+        <div class="spinner"></div>
+
+        Loading movie...
+
+      </div>
+    `;
+
+    try {
+
+      const response =
+        await fetch(API + "/movie/" + id);
+
+      if (!response.ok) {
+        throw new Error("Movie error");
+      }
+
+      const movie =
+        await response.json();
+
+      const poster =
+        movie.poster_path
+        ? "https://image.tmdb.org/t/p/w500" +
+          movie.poster_path
+        : "";
+
+      const genres =
+        movie.genres || [];
+
+
+      container.innerHTML = `
+
+        <div class="movie-detail">
+
+          <div class="detail-top">
+
+            ${
+              poster
+              ? `
+                <img
+                  class="detail-poster"
+                  src="${poster}"
+                  alt="${escapeHTML(movie.title)}"
+                >
+              `
+              : ""
+            }
+
+            <div>
+
+              <h1 class="detail-title">
+                ${escapeHTML(movie.title)}
+              </h1>
+
+              <div class="detail-text">
+
+                ⭐ ${
+                  movie.vote_average
+                  ? movie.vote_average.toFixed(1)
+                  : "N/A"
+                }
+
+                <br>
+
+                📅 ${movie.release_date || "Unknown"}
+
+              </div>
+
+              <div class="genres">
+
+                ${
+                  genres.map(g => `
+                    <span class="genre">
+                      ${escapeHTML(g.name)}
+                    </span>
+                  `).join("")
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="overview">
+
+            <strong style="color:var(--text)">
+              Overview
+            </strong>
+
+            <br><br>
+
+            ${
+              escapeHTML(
+                movie.overview ||
+                "No overview available."
+              )
+            }
+
+          </div>
+
+        </div>
+      `;
+
+    } catch (error) {
+
+      container.innerHTML = `
+        <div class="error">
+          Could not load movie details.
+        </div>
+      `;
+    }
+  }
+
+
+  /* =========================
+     NAVIGATION
+  ========================= */
+
+  function showHome() {
+
+    document.getElementById("home").style.display =
+      "block";
+
+    document.getElementById("details").style.display =
+      "none";
+  }
+
+
+  function showDetails() {
+
+    document.getElementById("home").style.display =
+      "none";
+
+    document.getElementById("details").style.display =
+      "block";
+
+    window.scrollTo(0, 0);
+  }
+
+
+  function goBackToMovies() {
+
+    if (history.state && history.state.page === "movie") {
+
+      history.back();
+
+    } else {
+
+      showHome();
+
+      if (location.hash) {
+        history.replaceState(null, "", location.pathname);
+      }
+    }
+  }
+
+
+  /* =========================
+     DEVICE BACK BUTTON
+  ========================= */
+
+  window.addEventListener(
+    "popstate",
+    function() {
+
+      showHome();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "instant"
+      });
+    }
+  );
+
+
+  /* =========================
+     ESCAPE HELPERS
+  ========================= */
+
+  function escapeHTML(text) {
+
+    const div =
+      document.createElement("div");
+
+    div.textContent =
+      text || "";
+
+    return div.innerHTML;
+  }
+
+
+  function escapeJS(text) {
+
+    return String(text)
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'");
+  }
+
+
+  /* =========================
+     START
+  ========================= */
+
+  loadTheme();
+
+  loadGenres();
+
+  loadMovies();
+
+</script>
+
+</body>
+</html>
