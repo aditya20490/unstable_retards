@@ -3,215 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Unstable Retards</title>
 
 <style>
+:root{
+  --bg:#0b0b0f;
+  --card:#141419;
+  --text:#f5f5f5;
+  --muted:#999;
+  --accent:#ff4757;
+  --border:#25252d;
+}
 
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-:root{
-  --bg:#0b0b0f;
-  --card:#15151c;
-  --card2:#1c1c25;
-  --text:#f5f5f5;
-  --muted:#9b9ba5;
-  --accent:#e50914;
-  --border:#292933;
-  --yellow:#ffd21f;
-  --skeleton:#24242c;
-  --skeleton-highlight:#34343e;
-}
-
-body.light{
-  --bg:#f5f5f7;
-  --card:#ffffff;
-  --card2:#eeeeF2;
-  --text:#111;
-  --muted:#666;
-  --border:#ddd;
-  --skeleton:#dedee3;
-  --skeleton-highlight:#f2f2f5;
-  --yellow:#c89400;
 }
 
 body{
+  margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
   color:var(--text);
-  transition:.2s;
 }
 
-button,input{
+button,
+input{
   font:inherit;
 }
 
+button{
+  cursor:pointer;
+}
+
 header{
-  position:sticky;
-  top:0;
-  z-index:50;
-  background:rgba(11,11,15,.94);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
-
-body.light header{
-  background:rgba(245,245,247,.94);
-}
-
-.header-inner{
-  max-width:1200px;
-  margin:auto;
-  padding:14px 16px;
+  height:64px;
   display:flex;
   align-items:center;
-  gap:12px;
+  justify-content:space-between;
+  padding:0 22px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(11,11,15,.95);
+  backdrop-filter:blur(12px);
 }
 
 .logo{
-  font-family:Impact,"Arial Black",Arial,sans-serif;
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-.5px;
-  color:var(--text);
-  cursor:pointer;
-  white-space:nowrap;
-  transition:.18s;
-  text-shadow:0 2px 12px rgba(229,9,20,.22);
-}
-
-.logo:hover{
-  transform:scale(1.02);
-}
-
-.header-spacer{
-  flex:1;
-}
-
-.icon-btn{
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--text);
-  width:42px;
-  height:42px;
-  border-radius:12px;
   cursor:pointer;
   display:flex;
   align-items:center;
+}
+
+.logo img{
+  width:180px;
+  height:auto;
+  display:block;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon-btn{
+  width:38px;
+  height:38px;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  display:flex;
+  align-items:center;
   justify-content:center;
-  transition:.18s;
+  border-radius:9px;
 }
 
 .icon-btn:hover{
-  border-color:var(--yellow);
-  transform:translateY(-1px);
+  background:var(--card);
 }
 
 .icon-btn svg{
   width:21px;
   height:21px;
-  display:block;
 }
 
 .search-wrap{
-  max-width:1200px;
-  margin:auto;
-  padding:12px 16px 16px;
-}
-
-.search-wrap.hidden{
+  max-width:900px;
+  margin:22px auto 0;
+  padding:0 18px;
   display:none;
 }
 
-#searchInput{
-  width:100%;
-  padding:14px 16px;
-  border-radius:13px;
-  border:1px solid var(--border);
-  outline:none;
+.search-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
   background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:0 14px;
+}
+
+.search-box svg{
+  width:20px;
+  height:20px;
+  color:var(--muted);
+  flex-shrink:0;
+}
+
+.search-box input{
+  width:100%;
+  height:46px;
+  border:0;
+  outline:0;
+  background:transparent;
   color:var(--text);
 }
 
-#searchInput::placeholder{
+.search-box input::placeholder{
   color:var(--muted);
 }
 
 main{
   max-width:1200px;
   margin:auto;
-  padding:24px 16px 50px;
+  padding:28px 18px 50px;
 }
 
-.hero{
-  margin-bottom:28px;
-}
-
-.hero h1{
-  font-size:30px;
-  margin-bottom:7px;
-}
-
-.hero p{
-  color:var(--muted);
-}
-
-.genre-heading{
+.popular-heading{
   display:flex;
   align-items:center;
   gap:10px;
+  margin:0 0 22px;
+  font-size:26px;
 }
 
-.genre-icon{
+.popular-icon{
   width:23px;
   height:23px;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
+  color:var(--accent);
 }
 
-.genre-icon svg{
+.popular-icon svg{
   width:23px;
   height:23px;
 }
 
-.section{
-  margin-top:30px;
-}
-
-.section-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.section-header h2{
-  font-size:22px;
-}
-
 .movie-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
+  grid-template-columns:repeat(5,1fr);
+  gap:20px;
 }
 
 .movie-card{
   background:var(--card);
   border:0;
-  border-radius:14px;
+  border-radius:12px;
   overflow:hidden;
   cursor:pointer;
-  transition:transform .18s;
+  transition:transform .2s ease;
 }
 
 .movie-card:hover{
-  transform:translateY(-3px);
+  transform:translateY(-4px);
 }
 
 .poster{
@@ -219,7 +179,7 @@ main{
   aspect-ratio:2/3;
   object-fit:cover;
   display:block;
-  background:#222;
+  background:#1a1a20;
 }
 
 .movie-info{
@@ -227,210 +187,118 @@ main{
 }
 
 .movie-title{
+  font-size:15px;
   font-weight:700;
   line-height:1.3;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
+  margin-bottom:6px;
 }
 
-.movie-meta{
+.movie-year{
   color:var(--muted);
   font-size:13px;
-  margin-top:5px;
+}
+
+.rating{
+  margin-top:6px;
+  font-size:13px;
+  color:#f5c542;
 }
 
 .pagination{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:8px;
-  margin-top:24px;
+  gap:7px;
+  margin-top:30px;
   flex-wrap:wrap;
 }
 
 .page-btn{
+  min-width:38px;
+  height:36px;
+  padding:0 10px;
   border:1px solid var(--border);
   background:var(--card);
   color:var(--text);
-  padding:9px 13px;
-  border-radius:9px;
-  cursor:pointer;
+  border-radius:8px;
 }
 
 .page-btn.active{
   background:var(--accent);
   border-color:var(--accent);
-  color:white;
 }
 
 .page-btn:disabled{
-  opacity:.4;
+  opacity:.45;
   cursor:not-allowed;
 }
 
-
-/* SKELETON */
-
-.skeleton{
-  background:
-    linear-gradient(
-      110deg,
-      var(--skeleton) 25%,
-      var(--skeleton-highlight) 50%,
-      var(--skeleton) 75%
-    );
-  background-size:200% 100%;
-  animation:skeletonShimmer 1.35s linear infinite;
+.menu{
+  position:fixed;
+  top:64px;
+  right:18px;
+  width:210px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px;
+  z-index:200;
+  display:none;
+  box-shadow:0 12px 35px rgba(0,0,0,.4);
 }
 
-@keyframes skeletonShimmer{
-  0%{background-position:200% 0;}
-  100%{background-position:-200% 0;}
+.menu.show{
+  display:block;
+}
+
+.menu-item{
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.menu-item:hover{
+  background:#202027;
 }
 
 .skeleton-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
+  grid-template-columns:repeat(5,1fr);
+  gap:20px;
 }
 
 .skeleton-card{
   background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:12px;
   overflow:hidden;
 }
 
 .skeleton-poster{
-  width:100%;
   aspect-ratio:2/3;
+  background:linear-gradient(
+    90deg,
+    #15151b 25%,
+    #202027 50%,
+    #15151b 75%
+  );
+  background-size:200% 100%;
+  animation:loading 1.3s infinite;
 }
 
-.skeleton-info{
-  padding:11px;
-}
-
-.skeleton-title{
-  height:16px;
-  width:82%;
-  border-radius:6px;
-}
-
-.skeleton-title.short{
-  width:58%;
-  margin-top:8px;
-}
-
-.skeleton-hero-title{
-  height:30px;
-  width:260px;
-  border-radius:8px;
-  margin-bottom:9px;
-}
-
-.skeleton-hero-text{
+.skeleton-text{
   height:14px;
-  width:230px;
-  border-radius:6px;
+  margin:12px;
+  border-radius:5px;
+  background:#202027;
 }
 
-.detail-skeleton{
-  max-width:1000px;
-  margin:auto;
+@keyframes loading{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
 }
 
-.skeleton-back{
-  width:90px;
-  height:40px;
-  border-radius:10px;
-  margin-bottom:20px;
-}
-
-.skeleton-detail-top{
-  display:grid;
-  grid-template-columns:260px 1fr;
-  gap:25px;
-}
-
-.skeleton-detail-poster{
-  width:100%;
-  aspect-ratio:2/3;
-  border-radius:14px;
-}
-
-.skeleton-detail-title{
-  width:75%;
-  height:38px;
-  border-radius:8px;
-  margin-bottom:16px;
-}
-
-.skeleton-detail-line{
-  width:45%;
-  height:14px;
-  border-radius:6px;
-  margin-bottom:14px;
-}
-
-.skeleton-detail-line.medium{
-  width:70%;
-}
-
-.skeleton-tags{
-  display:flex;
-  gap:7px;
-  margin:15px 0;
-}
-
-.skeleton-tag{
-  width:65px;
-  height:28px;
-  border-radius:999px;
-}
-
-.skeleton-overview{
-  margin-top:16px;
-}
-
-.skeleton-overview-line{
-  height:13px;
-  border-radius:6px;
-  margin-bottom:9px;
-}
-
-.skeleton-overview-line:nth-child(1){width:95%;}
-.skeleton-overview-line:nth-child(2){width:88%;}
-.skeleton-overview-line:nth-child(3){width:76%;}
-
-.skeleton-button{
-  width:145px;
-  height:43px;
-  border-radius:10px;
-  margin-top:18px;
-}
-
-.skeleton-details-box{
-  margin-top:28px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:18px;
-}
-
-.skeleton-info-row{
-  display:grid;
-  grid-template-columns:110px 1fr;
-  gap:14px;
-  padding:12px 0;
-}
-
-
-/* DETAILS */
-
-.detail{
-  max-width:1000px;
+.detail-page{
+  max-width:1050px;
   margin:auto;
 }
 
@@ -439,97 +307,62 @@ main{
   background:var(--card);
   color:var(--text);
   padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
+  border-radius:9px;
   margin-bottom:20px;
 }
 
-.detail-top{
+.detail-top,
+.skeleton-detail-top{
   display:grid;
   grid-template-columns:260px 1fr;
-  gap:25px;
+  gap:26px;
 }
 
 .detail-poster{
   width:100%;
-  border-radius:14px;
+  border-radius:12px;
   display:block;
 }
 
-.detail-content h1{
-  font-size:38px;
-  line-height:1.12;
-  margin-bottom:8px;
-  font-weight:900;
-}
-
-.movie-tagline{
-  color:var(--yellow);
-  font-size:17px;
-  font-style:italic;
-  font-weight:600;
-  line-height:1.4;
-  margin-bottom:12px;
+.detail-title{
+  font-size:32px;
+  margin:0 0 10px;
 }
 
 .tag-row{
   display:flex;
-  flex-wrap:wrap;
   gap:7px;
-  margin:13px 0;
+  flex-wrap:wrap;
+  margin:12px 0;
 }
 
 .tag{
-  background:var(--card2);
   border:1px solid var(--border);
+  background:var(--card);
+  border-radius:20px;
   padding:6px 10px;
-  border-radius:999px;
+  font-size:12px;
   color:var(--muted);
-  font-size:13px;
-  cursor:pointer;
-  transition:.18s;
-}
-
-.tag:hover{
-  color:var(--text);
-  border-color:var(--yellow);
-  transform:translateY(-1px);
 }
 
 .overview{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.65;
-  margin-top:12px;
-}
-
-.watch-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  margin-top:18px;
-  border:0;
-  background:var(--accent);
-  color:white;
-  padding:12px 18px;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
+  color:#ccc;
+  line-height:1.6;
+  font-size:15px;
 }
 
 .details-box{
-  margin-top:28px;
-  background:var(--card);
+  margin-top:22px;
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:12px;
+  overflow:hidden;
   padding:14px;
 }
 
 .info-row{
-  display:grid;
-  grid-template-columns:110px 1fr;
+  display:flex;
   gap:14px;
-  padding:9px 0;
+  padding:9px;
   border-bottom:1px solid var(--border);
 }
 
@@ -538,310 +371,274 @@ main{
 }
 
 .info-label{
-  font-weight:800;
+  color:var(--muted);
+  min-width:100px;
 }
 
-.info-value{
-  color:var(--muted);
-  line-height:1.45;
+.cast-section{
+  margin-top:30px;
+}
+
+.section-title{
+  font-size:22px;
+  margin-bottom:16px;
+}
+
+.cast-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:15px;
+}
+
+.cast-card{
+  cursor:pointer;
+}
+
+.cast-photo{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  border-radius:10px;
+  background:#18181f;
 }
 
 .cast-name{
-  color:var(--text);
-  font-weight:700;
+  font-size:13px;
+  font-weight:bold;
+  margin-top:7px;
 }
 
-.character{
+.cast-character{
   color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
 }
 
-.director-link{
-  color:var(--text);
-  font-weight:700;
-  cursor:pointer;
-  transition:.15s;
-}
-
-.director-link:hover{
-  color:var(--yellow);
+.trailer-btn{
+  margin-top:16px;
+  border:0;
+  background:var(--accent);
+  color:white;
+  padding:11px 16px;
+  border-radius:9px;
+  font-weight:bold;
 }
 
 .related-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
+  grid-template-columns:repeat(5,1fr);
+  gap:18px;
 }
 
+.person-top{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:25px;
+}
 
-/* ABOUT */
+.person-photo{
+  width:100%;
+  border-radius:12px;
+}
 
-.about-page{
-  max-width:850px;
+.person-bio{
+  color:#ccc;
+  line-height:1.6;
+}
+
+.person-credits{
+  margin-top:30px;
+}
+
+.about{
+  max-width:800px;
   margin:auto;
 }
 
-.about-page h1{
-  font-size:34px;
-  margin-bottom:8px;
-}
-
-.about-tagline{
-  color:var(--yellow);
-  font-size:18px;
-  font-style:italic;
-  margin-bottom:25px;
+.about h1{
+  font-size:30px;
+  margin-bottom:10px;
 }
 
 .about-section{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:16px;
+  margin-top:28px;
 }
 
 .about-section h2{
-  margin-bottom:9px;
-  font-size:20px;
+  font-size:21px;
 }
 
 .about-section p{
-  color:var(--muted);
+  color:#ccc;
   line-height:1.7;
-  font-size:14px;
 }
 
+.genre-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
 
-/* TRAILER */
+.genre-btn{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  padding:10px 14px;
+  border-radius:20px;
+}
+
+.genre-btn:hover{
+  border-color:var(--accent);
+}
 
 .modal{
   position:fixed;
   inset:0;
-  z-index:200;
+  background:rgba(0,0,0,.8);
   display:none;
   align-items:center;
   justify-content:center;
+  z-index:500;
   padding:18px;
-  background:rgba(0,0,0,.82);
 }
 
 .modal.show{
   display:flex;
 }
 
-.trailer-box{
-  width:min(850px,100%);
-  background:#111118;
-  border:1px solid #333;
-  border-radius:15px;
+.modal-box{
+  width:min(900px,100%);
+  background:#111116;
+  border:1px solid var(--border);
+  border-radius:14px;
   overflow:hidden;
-  box-shadow:0 20px 70px rgba(0,0,0,.7);
+  position:relative;
 }
 
-.trailer-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:15px 17px;
-}
-
-.trailer-title{
-  font-weight:800;
-  font-size:17px;
-}
-
-.close-btn{
+.modal-close{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:38px;
+  height:38px;
   border:0;
-  background:#24242d;
+  border-radius:50%;
+  background:rgba(0,0,0,.7);
   color:white;
-  width:35px;
-  height:35px;
-  border-radius:9px;
-  cursor:pointer;
+  z-index:2;
   font-size:20px;
 }
 
-.video-wrap{
-  position:relative;
+.trailer-frame{
   width:100%;
   aspect-ratio:16/9;
-  background:#000;
-}
-
-.video-wrap iframe{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
   border:0;
-}
-
-
-/* MENU */
-
-.menu{
-  position:fixed;
-  top:0;
-  right:-310px;
-  width:290px;
-  height:100%;
-  background:var(--card);
-  border-left:1px solid var(--border);
-  z-index:100;
-  transition:.25s;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.menu.open{
-  right:0;
-}
-
-.menu-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.menu-title{
-  font-size:28px;
-  font-weight:900;
-  color:var(--yellow);
-}
-
-.menu-item{
-  width:100%;
-  text-align:left;
-  border:0;
-  background:transparent;
-  color:var(--text);
-  padding:13px 10px;
-  border-radius:9px;
-  cursor:pointer;
-}
-
-.menu-item:hover{
-  background:var(--card2);
-}
-
-.menu-section{
-  margin-top:20px;
-  margin-bottom:7px;
-  color:var(--muted);
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-
-.menu-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:90;
-  display:none;
-}
-
-.menu-overlay.show{
   display:block;
 }
 
-.loading,
-.empty,
-.error{
-  text-align:center;
-  padding:45px 10px;
-  color:var(--muted);
-}
-
-
-/* FOOTER */
-
 footer{
-  max-width:1200px;
-  margin:auto;
-  padding:25px 16px 40px;
-  color:var(--muted);
-  font-size:12px;
+  border-top:1px solid var(--border);
+  padding:25px 18px;
   text-align:center;
-  line-height:1.8;
+  color:var(--muted);
 }
 
 .footer-links{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:16px;
   margin-bottom:12px;
 }
 
 .footer-link{
-  color:var(--text);
-  text-decoration:none;
   cursor:pointer;
 }
 
 .footer-link:hover{
-  color:var(--yellow);
+  color:var(--text);
 }
 
 .footer-credit{
-  margin-bottom:5px;
+  font-size:13px;
 }
 
-
-/* RESPONSIVE */
-
-@media(min-width:650px){
-
-  .movie-grid,
-  .skeleton-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .related-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
+.error{
+  text-align:center;
+  color:#ff6975;
+  padding:40px 10px;
 }
 
-@media(min-width:900px){
-
+@media(max-width:1000px){
   .movie-grid,
   .skeleton-grid{
     grid-template-columns:repeat(4,1fr);
   }
 
-  .related-grid{
-    grid-template-columns:repeat(3,1fr);
+  .cast-grid{
+    grid-template-columns:repeat(5,1fr);
   }
 
+  .related-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
 }
 
 @media(max-width:650px){
 
-  .logo{
-    font-size:20px;
+  header{
+    height:58px;
+    padding:0 14px;
+  }
+
+  .logo img{
+    width:150px;
+  }
+
+  .header-actions{
+    gap:4px;
+  }
+
+  .icon-btn{
+    width:36px;
+    height:36px;
+  }
+
+  .menu{
+    top:58px;
+    right:12px;
+  }
+
+  main{
+    padding:22px 12px 40px;
+  }
+
+  .popular-heading{
+    font-size:22px;
+    margin-bottom:17px;
+  }
+
+  .movie-grid,
+  .skeleton-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+
+  .movie-title{
+    font-size:14px;
+  }
+
+  .pagination{
+    flex-wrap:nowrap;
+    overflow:hidden;
+    gap:5px;
+  }
+
+  .page-btn{
+    min-width:34px;
+    padding:0 7px;
   }
 
   .detail-top,
   .skeleton-detail-top{
     grid-template-columns:160px 1fr;
     gap:16px;
-  }
-
-  .detail-content h1{
-    font-size:26px;
-  }
-
-  .movie-tagline{
-    font-size:15px;
-  }
-
-  .info-row,
-  .skeleton-info-row{
-    grid-template-columns:90px 1fr;
   }
 
   .back-btn{
@@ -851,32 +648,38 @@ footer{
     margin-bottom:16px;
   }
 
-  .pagination{
-    flex-wrap:nowrap;
-    gap:4px;
-    width:100%;
-    overflow:hidden;
+  .detail-title{
+    font-size:24px;
   }
 
-  .page-btn{
-    padding:8px 9px;
-    min-width:34px;
-    flex-shrink:0;
+  .overview{
+    font-size:14px;
   }
 
   .details-box{
-    padding:12px;
+    padding:8px;
   }
 
   .info-row{
-    padding:8px 0;
+    padding:8px;
     gap:10px;
+    font-size:13px;
   }
 
-  .info-value{
-    line-height:1.4;
+  .cast-grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
   }
 
+  .related-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+  }
+
+  .person-top{
+    grid-template-columns:140px 1fr;
+    gap:16px;
+  }
 }
 
 @media(max-width:450px){
@@ -886,14 +689,18 @@ footer{
     grid-template-columns:1fr;
   }
 
-  .detail-poster,
-  .skeleton-detail-poster{
+  .detail-poster{
     max-width:220px;
-    margin:auto;
   }
 
-}
+  .person-top{
+    grid-template-columns:1fr;
+  }
 
+  .person-photo{
+    max-width:220px;
+  }
+}
 </style>
 </head>
 
@@ -901,194 +708,103 @@ footer{
 
 <header>
 
-  <div class="header-inner">
+  <div class="logo" onclick="goHome()">
+    <img src="IMG_20260905_030014.jpg" alt="Unstable Retards">
+  </div>
 
-    <div
-      class="logo"
-      onclick="goHome()"
-    >
-      Unstable Retards
-    </div>
+  <div class="header-actions">
 
-    <div class="header-spacer"></div>
-
-    <button
-      id="searchIcon"
-      class="icon-btn"
-      onclick="showSearch()"
-      aria-label="Search"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.8"
-        stroke-linecap="round"
-      >
-
-        <circle
-          cx="10.8"
-          cy="10.8"
-          r="6.5"
-        ></circle>
-
-        <line
-          x1="16"
-          y1="16"
-          x2="21"
-          y2="21"
-        ></line>
-
+    <button class="icon-btn" onclick="toggleSearch()" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round">
+        <circle cx="11" cy="11" r="6.5"></circle>
+        <path d="M16 16L21 21"></path>
       </svg>
-
     </button>
 
-    <button
-      id="themeIcon"
-      class="icon-btn"
-      onclick="toggleTheme()"
-      aria-label="Theme"
-    >
-
-      <svg
-        id="themeSvg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      ></svg>
-
+    <button class="icon-btn" onclick="toggleTheme()" aria-label="Theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2V4"></path>
+        <path d="M12 20V22"></path>
+        <path d="M4.93 4.93L6.34 6.34"></path>
+        <path d="M17.66 17.66L19.07 19.07"></path>
+        <path d="M2 12H4"></path>
+        <path d="M20 12H22"></path>
+        <path d="M4.93 19.07L6.34 17.66"></path>
+        <path d="M17.66 6.34L19.07 4.93"></path>
+      </svg>
     </button>
 
-    <button
-      class="icon-btn"
-      onclick="openMenu()"
-      aria-label="Menu"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-      >
-
-        <line x1="4" y1="7" x2="20" y2="7"></line>
-        <line x1="4" y1="12" x2="20" y2="12"></line>
-        <line x1="4" y1="17" x2="20" y2="17"></line>
-
+    <button class="icon-btn" onclick="toggleMenu()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7H20"></path>
+        <path d="M4 12H20"></path>
+        <path d="M4 17H20"></path>
       </svg>
-
     </button>
 
   </div>
+</header>
 
-  <div
-    id="searchWrap"
-    class="search-wrap hidden"
-  >
+<div class="search-wrap" id="searchWrap">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round">
+      <circle cx="11" cy="11" r="6.5"></circle>
+      <path d="M16 16L21 21"></path>
+    </svg>
 
     <input
       id="searchInput"
-      type="search"
+      type="text"
       placeholder="Search movies..."
       autocomplete="off"
+      oninput="handleSearch(this.value)"
     >
+  </div>
+</div>
 
+<div class="menu" id="menu">
+
+  <div class="menu-item" onclick="loadCategory('popular')">
+    Popular Movies
   </div>
 
-</header>
-
-
-<div
-  id="menuOverlay"
-  class="menu-overlay"
-  onclick="closeMenu()"
-></div>
-
-
-<aside
-  id="menu"
-  class="menu"
->
-
-  <div class="menu-top">
-
-    <div class="menu-title">
-      Explore
-    </div>
-
-    <button
-      class="close-btn"
-      onclick="closeMenu()"
-    >
-      ×
-    </button>
-
+  <div class="menu-item" onclick="loadCategory('top-rated')">
+    Top Rated
   </div>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('popular')"
-  >
-    🔥 Popular
-  </button>
+  <div class="menu-item" onclick="loadCategory('now-playing')">
+    Now Playing
+  </div>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('top-rated')"
-  >
-    ⭐ Top Rated
-  </button>
+  <div class="menu-item" onclick="loadCategory('upcoming')">
+    Upcoming
+  </div>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('now-playing')"
-  >
-    🎬 Now Playing
-  </button>
+  <div class="menu-item" onclick="showAbout()">
+    About Us
+  </div>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('upcoming')"
-  >
-    🚀 Upcoming
-  </button>
-
-  <button
-    class="menu-item"
-    onclick="showAbout()"
-  >
-    ℹ️ About Us
-  </button>
-
-  <div class="menu-section">
+  <div class="menu-item" onclick="showGenres()">
     Genres
   </div>
 
-  <div id="genreMenu"></div>
-
-</aside>
-
+</div>
 
 <main id="app"></main>
-
 
 <footer>
 
   <div class="footer-links">
-
-    <span
-      class="footer-link"
-      onclick="showAbout()"
-    >
+    <span class="footer-link" onclick="showAbout()">
       About Us
     </span>
-
   </div>
 
   <div class="footer-credit">
@@ -1097,641 +813,457 @@ footer{
 
 </footer>
 
+<div class="modal" id="trailerModal" onclick="closeTrailer(event)">
+  <div class="modal-box">
 
-<div
-  id="trailerModal"
-  class="modal"
-  onclick="handleModalBackground(event)"
->
+    <button class="modal-close" onclick="closeTrailer()">
+      ×
+    </button>
 
-  <div class="trailer-box">
-
-    <div class="trailer-header">
-
-      <div
-        id="trailerTitle"
-        class="trailer-title"
-      >
-        Official Trailer
-      </div>
-
-      <button
-        class="close-btn"
-        onclick="closeTrailer()"
-      >
-        ×
-      </button>
-
-    </div>
-
-    <div class="video-wrap">
-
-      <iframe
-        id="trailerFrame"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-
-    </div>
+    <iframe
+      id="trailerFrame"
+      class="trailer-frame"
+      allowfullscreen
+      allow="autoplay; encrypted-media"
+    ></iframe>
 
   </div>
-
 </div>
-
 
 <script>
 
-const API =
-  "https://movie-api.828477ww.workers.dev";
-
-const IMAGE =
-  "https://image.tmdb.org/t/p/w500";
-
+const API = "https://movie-api.828477ww.workers.dev";
+const IMAGE = "https://image.tmdb.org/t/p/w500";
 
 let currentPage = 1;
-let currentSection = "popular";
-let currentMovieId = null;
-let currentMovie = null;
-let currentTrailer = null;
-let currentGenreId = null;
-let currentGenreName = null;
-let currentDirectorId = null;
-let currentDirectorName = null;
+let currentCategory = "popular";
+let searchTimer = null;
 
-let genreCache = {};
+const app = document.getElementById("app");
 
+function escapeHTML(str){
 
-/* -------------------------
-   HELPERS
-------------------------- */
+  if(str === null || str === undefined) return "";
 
-function escapeHTML(value){
-
-  if(
-    value === null ||
-    value === undefined
-  ){
-    return "";
-  }
-
-  return String(value)
+  return String(str)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
-
-
-function poster(path){
-
-  if(!path){
-    return "https://via.placeholder.com/500x750?text=No+Poster";
-  }
-
-  return IMAGE + path;
-
-}
-
 
 function formatDate(date){
 
-  if(!date){
-    return "Not available";
-  }
+  if(!date) return "Unknown";
 
-  const d =
-    new Date(date + "T00:00:00");
-
-  if(Number.isNaN(d.getTime())){
-    return date;
-  }
-
-  return d.toLocaleDateString(
-    "en-US",
-    {
-      year:"numeric",
-      month:"long",
-      day:"numeric"
-    }
-  );
-
+  return date.split("-")[0];
 }
 
+function image(path){
 
-async function getJSON(url){
+  if(!path){
+    return "https://via.placeholder.com/500x750/18181f/999999?text=No+Image";
+  }
 
-  const response =
-    await fetch(url);
+  return IMAGE + path;
+}
+
+async function api(path){
+
+  const response = await fetch(API + path);
 
   if(!response.ok){
-    throw new Error("Request failed");
+    throw new Error("API request failed");
   }
 
-  return await response.json();
-
+  return response.json();
 }
 
+function skeletons(){
 
-/* -------------------------
-   HOME
-------------------------- */
-
-function goHome(){
-
-  closeMenu();
-  hideSearch();
-
-  currentSection = "popular";
-  currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"home",
-      section:"popular"
-    },
-    "",
-    window.location.pathname
-  );
-
-  loadMovies("popular",1);
-
+  return `
+    <div class="skeleton-grid">
+      ${Array.from({length:10}).map(() => `
+        <div class="skeleton-card">
+          <div class="skeleton-poster"></div>
+          <div class="skeleton-text"></div>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
+function renderMovies(data,title="Popular Movies"){
 
-async function loadHomeSection(section){
-
-  closeMenu();
-  hideSearch();
-
-  currentSection = section;
-  currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"home",
-      section
-    },
-    "",
-    window.location.pathname
-  );
-
-  await loadMovies(section,1);
-
-}
-
-
-async function loadMovies(section,page){
-
-  showMovieGridSkeleton();
-
-  try{
-
-    const data =
-      await getJSON(
-        API +
-        "/" +
-        section +
-        "?page=" +
-        page
-      );
-
-    renderMovies(
-      data.results || [],
-      section === "popular"
-        ? "Popular Movies"
-        : section === "top-rated"
-        ? "Top Rated Movies"
-        : section === "now-playing"
-        ? "Now Playing"
-        : section === "upcoming"
-        ? "Upcoming Movies"
-        : "Movies"
-    );
-
-    renderPagination(
-      data.page || page,
-      data.total_pages || 1,
-      function(newPage){
-
-        currentPage = newPage;
-
-        loadMovies(
-          section,
-          newPage
-        );
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
-      }
-    );
-
-  }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load movies right now.
-      </div>
-    `;
-
-  }
-
-}
-
-
-function renderMovies(movies,title){
-
-  const app =
-    document.getElementById("app");
+  const movies = data.results || [];
 
   if(!movies.length){
 
     app.innerHTML = `
-      <div class="empty">
+      <div class="error">
         No movies found.
       </div>
     `;
 
     return;
-
   }
 
   app.innerHTML = `
-    <div class="hero">
 
-      <h1>
-        ${escapeHTML(title)}
-      </h1>
+    <h1 class="popular-heading">
 
-      <p>
-        Every Movie and TV Show Ever Made.
-      </p>
+      ${
+        title === "Popular Movies"
+          ? `
+            <span class="popular-icon" aria-hidden="true">
+
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="1.7"
+                   stroke-linecap="round"
+                   stroke-linejoin="round">
+
+                <path d="M12.5 21C8.4 21 5 18.3 5 14.2C5 10.8 7.1 8.7 9.2 6.1C10.2 4.8 10.9 3.2 10.7 2C14.7 4.2 16.5 7.1 16.2 10.1C17.4 9.5 18.1 8.6 18.3 7.4C20.2 9.4 21 11.5 21 14.1C21 18.2 17.8 21 12.5 21Z"></path>
+
+                <path d="M12.2 17.8C10.8 17.8 9.7 16.8 9.7 15.4C9.7 14.1 10.5 13.2 11.4 12.1C11.8 11.6 12.1 11 12 10.5C13.6 11.5 14.3 12.7 14.1 14C14.7 13.7 15.1 13.3 15.2 12.8C15.9 13.7 16.1 14.6 16.1 15.5C16.1 16.9 14.9 17.8 12.2 17.8Z"></path>
+
+              </svg>
+
+            </span>
+          `
+          : ""
+      }
+
+      <span>${escapeHTML(title)}</span>
+
+    </h1>
+
+    <div class="movie-grid">
+
+      ${movies.map(movie => `
+
+        <div class="movie-card"
+             onclick="showMovie(${movie.id})">
+
+          <img
+            class="poster"
+            src="${image(movie.poster_path)}"
+            alt="${escapeHTML(movie.title)}"
+            loading="lazy"
+          >
+
+          <div class="movie-info">
+
+            <div class="movie-title">
+              ${escapeHTML(movie.title)}
+            </div>
+
+            <div class="movie-year">
+              ${formatDate(movie.release_date)}
+            </div>
+
+            <div class="rating">
+              ★ ${movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")}
 
     </div>
 
-    <section class="section">
+    ${renderPagination(data.total_pages || 1)}
 
-      <div class="movie-grid">
-        ${movies.map(movieCard).join("")}
-      </div>
-
-    </section>
   `;
-
 }
 
+function renderPagination(totalPages){
 
-/* -------------------------
-   MOVIE CARD
-------------------------- */
+  const maxButtons = window.innerWidth <= 650 ? 6 : 8;
 
-function movieCard(movie){
+  let start = Math.max(
+    1,
+    currentPage - Math.floor(maxButtons / 2)
+  );
 
-  const year =
-    movie.release_date
-      ? movie.release_date.slice(0,4)
-      : "";
+  let end = Math.min(
+    totalPages,
+    start + maxButtons - 1
+  );
+
+  if(end - start + 1 < maxButtons){
+    start = Math.max(1,end - maxButtons + 1);
+  }
 
   return `
 
-    <div
-      class="movie-card"
-      onclick="showMovie(${movie.id})"
-    >
+    <div class="pagination">
 
-      <img
-        class="poster"
-        src="${poster(movie.poster_path)}"
-        alt="${escapeHTML(movie.title || "Movie")}"
-        loading="lazy"
+      <button
+        class="page-btn"
+        onclick="changePage(${currentPage - 1})"
+        ${currentPage <= 1 ? "disabled" : ""}
       >
+        ‹
+      </button>
 
-      <div class="movie-info">
+      ${Array.from(
+        {length:end-start+1},
+        (_,i) => start+i
+      ).map(page => `
 
-        <div class="movie-title">
-          ${escapeHTML(movie.title)}
-        </div>
+        <button
+          class="page-btn ${page === currentPage ? "active" : ""}"
+          onclick="changePage(${page})"
+        >
+          ${page}
+        </button>
 
-        <div class="movie-meta">
+      `).join("")}
 
-          ${escapeHTML(year)}
-
-          ${
-            movie.vote_average
-              ? " • ⭐ " +
-                movie.vote_average.toFixed(1)
-              : ""
-          }
-
-        </div>
-
-      </div>
+      <button
+        class="page-btn"
+        onclick="changePage(${currentPage + 1})"
+        ${currentPage >= totalPages ? "disabled" : ""}
+      >
+        ›
+      </button>
 
     </div>
 
   `;
-
 }
 
+async function loadCategory(category,page=1){
 
-/* -------------------------
-   PAGINATION
-------------------------- */
+  currentCategory = category;
+  currentPage = page;
 
-function renderPagination(
-  page,
-  totalPages,
-  callback
-){
+  closeMenu();
 
-  const app =
-    document.getElementById("app");
-
-  if(totalPages <= 1){
-    return;
-  }
-
-  const old =
-    document.querySelector(".pagination");
-
-  if(old){
-    old.remove();
-  }
-
-  const pagination =
-    document.createElement("div");
-
-  pagination.className =
-    "pagination";
-
-  const maxButtons =
-    window.innerWidth <= 650
-      ? 6
-      : 7;
-
-  let start =
-    Math.max(1,page-3);
-
-  let end =
-    Math.min(
-      totalPages,
-      start + maxButtons - 1
-    );
-
-  if(
-    end-start <
-    maxButtons-1
-  ){
-
-    start =
-      Math.max(
-        1,
-        end-maxButtons+1
-      );
-
-  }
-
-  pagination.innerHTML = `
-
-    <button
-      class="page-btn"
-      ${page===1 ? "disabled" : ""}
-      data-page="${page-1}"
-    >
-      ←
-    </button>
-
-    ${
-      Array.from(
-        {
-          length:end-start+1
-        },
-        (_,i)=>{
-
-          const p =
-            start+i;
-
-          return `
-            <button
-              class="page-btn ${
-                p===page
-                  ? "active"
-                  : ""
-              }"
-              data-page="${p}"
-            >
-              ${p}
-            </button>
-          `;
-
-        }
-      ).join("")
-    }
-
-    <button
-      class="page-btn"
-      ${
-        page===totalPages
-          ? "disabled"
-          : ""
-      }
-      data-page="${page+1}"
-    >
-      →
-    </button>
-
-  `;
-
-  pagination
-    .querySelectorAll(".page-btn")
-    .forEach(btn=>{
-
-      btn.addEventListener(
-        "click",
-        ()=>{
-
-          const p =
-            Number(btn.dataset.page);
-
-          if(
-            p>=1 &&
-            p<=totalPages
-          ){
-
-            callback(p);
-
-          }
-
-        }
-      );
-
-    });
-
-  app.appendChild(pagination);
-
-}
-
-
-/* -------------------------
-   MOVIE DETAILS
-------------------------- */
-
-async function showMovie(id){
-
-  currentMovieId = id;
-
-  hideSearch();
-
-  window.history.pushState(
-    {
-      page:"movie",
-      id
-    },
-    "",
-    "?movie=" + id
-  );
-
-  showMovieSkeleton();
+  app.innerHTML = skeletons();
 
   try{
 
-    const [
-      movie,
-      credits,
-      videos
-    ] = await Promise.all([
-
-      getJSON(
-        API +
-        "/movie/" +
-        id
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/credits"
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/videos"
-      )
-
-    ]);
-
-    currentMovie = movie;
-
-    currentTrailer =
-      findTrailer(
-        videos.results || []
-      );
-
-    renderMovieDetails(
-      movie,
-      credits
+    const data = await api(
+      `/${category}?page=${page}`
     );
 
-    loadRelatedMovies(movie);
+    let title = "Popular Movies";
+
+    if(category === "top-rated")
+      title = "Top Rated";
+
+    if(category === "now-playing")
+      title = "Now Playing";
+
+    if(category === "upcoming")
+      title = "Upcoming";
+
+    renderMovies(data,title);
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
 
   }catch(error){
 
-    document.getElementById("app").innerHTML = `
+    app.innerHTML = `
       <div class="error">
-        Unable to load this movie.
+        Something went wrong. Please try again.
       </div>
     `;
-
   }
-
 }
 
+function changePage(page){
 
-function findTrailer(videos){
+  if(page < 1) return;
 
-  const youtube =
-    videos.filter(
-      video =>
-        video.site === "YouTube" &&
-        video.key
-    );
-
-  if(!youtube.length){
-    return null;
-  }
-
-  const officialTrailer =
-    youtube.find(
-      video =>
-        video.type === "Trailer" &&
-        (
-          video.official === true ||
-          /official/i.test(
-            video.name || ""
-          )
-        )
-    );
-
-  if(officialTrailer){
-    return officialTrailer;
-  }
-
-  return youtube.find(
-    video =>
-      video.type === "Trailer"
-  ) || null;
-
+  loadCategory(currentCategory,page);
 }
 
+function goHome(){
 
-/* -------------------------
-   MOVIE DETAIL PAGE
-------------------------- */
+  loadCategory("popular",1);
+}
+
+function toggleMenu(){
+
+  document
+    .getElementById("menu")
+    .classList.toggle("show");
+}
+
+function closeMenu(){
+
+  document
+    .getElementById("menu")
+    .classList.remove("show");
+}
+
+function toggleSearch(){
+
+  const box = document.getElementById("searchWrap");
+
+  const visible =
+    box.style.display === "block";
+
+  box.style.display =
+    visible ? "none" : "block";
+
+  if(!visible){
+
+    document
+      .getElementById("searchInput")
+      .focus();
+  }
+}
+
+function handleSearch(value){
+
+  clearTimeout(searchTimer);
+
+  const query = value.trim();
+
+  if(!query){
+
+    loadCategory("popular",1);
+    return;
+  }
+
+  searchTimer = setTimeout(
+    () => searchMovies(query,1),
+    400
+  );
+}
+
+async function searchMovies(query,page=1){
+
+  app.innerHTML = skeletons();
+
+  try{
+
+    const data = await api(
+      `/search?query=${encodeURIComponent(query)}&page=${page}`
+    );
+
+    currentCategory = "search";
+    currentPage = page;
+
+    renderMovies(
+      data,
+      `Search results for "${query}"`
+    );
+
+  }catch(error){
+
+    app.innerHTML = `
+      <div class="error">
+        Search failed. Please try again.
+      </div>
+    `;
+  }
+}
+
+async function showMovie(id){
+
+  closeMenu();
+
+  app.innerHTML = `
+    <div class="detail-page">
+      <button class="back-btn" onclick="goHome()">
+        ← Back
+      </button>
+      ${skeletons()}
+    </div>
+  `;
+
+  try{
+
+    const [movie,credits,videos] =
+      await Promise.all([
+        api(`/movie/${id}`),
+        api(`/movie/${id}/credits`),
+        api(`/movie/${id}/videos`)
+      ]);
+
+    renderMovieDetails(
+      movie,
+      credits,
+      videos
+    );
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }catch(error){
+
+    app.innerHTML = `
+      <div class="detail-page">
+
+        <button class="back-btn" onclick="goHome()">
+          ← Back
+        </button>
+
+        <div class="error">
+          Could not load movie details.
+        </div>
+
+      </div>
+    `;
+  }
+}
 
 function renderMovieDetails(
   movie,
-  credits
+  credits,
+  videos
 ){
 
-  const app =
-    document.getElementById("app");
-
-  const cast =
-    (credits.cast || [])
-      .slice(0,10);
+  const genres =
+    (movie.genres || [])
+      .map(g => `
+        <span class="tag">
+          ${escapeHTML(g.name)}
+        </span>
+      `)
+      .join("");
 
   const directors =
     (credits.crew || [])
-      .filter(
-        person =>
-          person.job === "Director"
-      )
-      .filter(
-        (person,index,array) =>
-          array.findIndex(
-            item =>
-              item.id === person.id
-          ) === index
-      );
+      .filter(person => person.job === "Director")
+      .slice(0,4);
 
-  const genres =
-    movie.genres || [];
+  const cast =
+    (credits.cast || [])
+      .slice(0,12);
+
+  const trailer =
+    (videos.results || []).find(
+      video =>
+        video.site === "YouTube" &&
+        video.type === "Trailer" &&
+        video.official !== false
+    ) ||
+    (videos.results || []).find(
+      video =>
+        video.site === "YouTube" &&
+        video.type === "Trailer"
+    );
 
   app.innerHTML = `
 
-    <div class="detail">
+    <div class="detail-page">
 
-      <button
-        class="back-btn"
-        onclick="goBack()"
-      >
+      <button class="back-btn" onclick="goHome()">
         ← Back
       </button>
 
@@ -1739,86 +1271,37 @@ function renderMovieDetails(
 
         <img
           class="detail-poster"
-          src="${poster(movie.poster_path)}"
+          src="${image(movie.poster_path)}"
           alt="${escapeHTML(movie.title)}"
         >
 
-        <div class="detail-content">
+        <div>
 
-          <h1>
+          <h1 class="detail-title">
             ${escapeHTML(movie.title)}
           </h1>
 
-          ${
-            movie.tagline
-              ? `
-                <p class="movie-tagline">
-                  ${escapeHTML(movie.tagline)}
-                </p>
-              `
-              : ""
-          }
+          <div class="movie-year">
+            ${formatDate(movie.release_date)}
+            ${movie.runtime ? ` • ${movie.runtime} min` : ""}
+          </div>
 
           <div class="tag-row">
-
-            ${
-              genres.map(
-                genre => `
-
-                  <button
-                    class="tag"
-                    onclick="loadGenreFromTag(
-                      ${genre.id},
-                      '${escapeHTML(genre.name)}'
-                    )"
-                  >
-                    ${escapeHTML(genre.name)}
-                  </button>
-
-                `
-              ).join("")
-            }
-
+            ${genres}
           </div>
 
-          <div class="movie-meta">
-
-            ${
-              movie.release_date
-                ? formatDate(movie.release_date)
-                : "Release date unavailable"
-            }
-
-            ${
-              movie.runtime
-                ? " • " +
-                  movie.runtime +
-                  " min"
-                : ""
-            }
-
-            ${
-              movie.vote_average
-                ? " • ⭐ " +
-                  movie.vote_average.toFixed(1)
-                : ""
-            }
-
-          </div>
-
-          <p class="overview">
+          <div class="overview">
             ${escapeHTML(
-              movie.overview ||
-              "No description is available for this title."
+              movie.overview || "No overview available."
             )}
-          </p>
+          </div>
 
           ${
-            currentTrailer
+            trailer
               ? `
                 <button
-                  class="watch-btn"
-                  onclick="openTrailer()"
+                  class="trailer-btn"
+                  onclick="openTrailer('${trailer.key}')"
                 >
                   ▶ Watch Trailer
                 </button>
@@ -1830,889 +1313,510 @@ function renderMovieDetails(
 
       </div>
 
-
       <div class="details-box">
 
         <div class="info-row">
-
-          <div class="info-label">
-            Stars
+          <div class="info-label">Rating</div>
+          <div>
+            ★ ${movie.vote_average
+              ? movie.vote_average.toFixed(1)
+              : "N/A"}
           </div>
-
-          <div class="info-value">
-
-            ${
-              cast.length
-                ? cast.map(
-                    person => `
-
-                      <div>
-
-                        <span class="cast-name">
-                          ${escapeHTML(person.name)}
-                        </span>
-
-                        ${
-                          person.character
-                            ? `
-                              <span class="character">
-                                — ${escapeHTML(person.character)}
-                              </span>
-                            `
-                            : ""
-                        }
-
-                      </div>
-
-                    `
-                  ).join("")
-                : "Cast information unavailable."
-            }
-
-          </div>
-
         </div>
 
-
         <div class="info-row">
-
-          <div class="info-label">
-            Director
+          <div class="info-label">Release Date</div>
+          <div>
+            ${escapeHTML(movie.release_date || "Unknown")}
           </div>
+        </div>
 
-          <div class="info-value">
+        ${
+          movie.original_language
+            ? `
+              <div class="info-row">
+                <div class="info-label">Language</div>
+                <div>
+                  ${escapeHTML(
+                    movie.original_language.toUpperCase()
+                  )}
+                </div>
+              </div>
+            `
+            : ""
+        }
 
-            ${
-              directors.length
-                ? directors.map(
-                    person => `
-
+        ${
+          directors.length
+            ? `
+              <div class="info-row">
+                <div class="info-label">Director</div>
+                <div>
+                  ${directors.map(
+                    director => `
                       <span
-                        class="director-link"
-                        onclick="showDirector(
-                          ${person.id},
-                          '${escapeHTML(person.name)}'
-                        )"
+                        style="cursor:pointer"
+                        onclick="showPerson(${director.id})"
                       >
-                        ${escapeHTML(person.name)}
+                        ${escapeHTML(director.name)}
                       </span>
-
                     `
-                  ).join(", ")
-                : "Director information unavailable."
-            }
-
-          </div>
-
-        </div>
-
-
-        <div class="info-row">
-
-          <div class="info-label">
-            Release Date
-          </div>
-
-          <div class="info-value">
-
-            ${
-              movie.release_date
-                ? formatDate(movie.release_date)
-                : "Release date unavailable."
-            }
-
-          </div>
-
-        </div>
+                  ).join(", ")}
+                </div>
+              </div>
+            `
+            : ""
+        }
 
       </div>
 
+      ${
+        cast.length
+          ? `
+            <div class="cast-section">
 
-      <section class="section">
+              <div class="section-title">
+                Cast
+              </div>
 
-        <div class="section-header">
+              <div class="cast-grid">
 
-          <h2>
-            More Like This
-          </h2>
-
-        </div>
-
-        <div
-          id="relatedMovies"
-          class="related-grid"
-        >
-
-          ${
-            Array.from(
-              {length:6},
-              ()=>`
-
-                <div class="skeleton-card">
+                ${cast.map(person => `
 
                   <div
-                    class="skeleton skeleton-poster"
-                  ></div>
+                    class="cast-card"
+                    onclick="showPerson(${person.id})"
+                  >
 
-                  <div class="skeleton-info">
+                    <img
+                      class="cast-photo"
+                      src="${image(person.profile_path)}"
+                      alt="${escapeHTML(person.name)}"
+                      loading="lazy"
+                    >
 
-                    <div
-                      class="skeleton skeleton-title"
-                    ></div>
+                    <div class="cast-name">
+                      ${escapeHTML(person.name)}
+                    </div>
 
-                    <div
-                      class="skeleton skeleton-title short"
-                    ></div>
+                    <div class="cast-character">
+                      ${escapeHTML(person.character || "")}
+                    </div>
 
                   </div>
 
-                </div>
+                `).join("")}
 
-              `
-            ).join("")
-          }
+              </div>
 
-        </div>
+            </div>
+          `
+          : ""
+      }
 
-      </section>
+      <div id="relatedMovies"></div>
 
     </div>
 
   `;
 
+  loadRelatedMovies(movie);
 }
 
-
-/* -------------------------
-   DIRECTOR PAGE
-------------------------- */
-
-async function showDirector(
-  id,
-  name
-){
-
-  currentDirectorId = id;
-  currentDirectorName = name;
-
-  closeMenu();
-  hideSearch();
-
-  window.history.pushState(
-    {
-      page:"director",
-      id,
-      name
-    },
-    "",
-    "?director=" +
-    id
-  );
-
-  showMovieGridSkeleton();
+async function loadRelatedMovies(movie){
 
   try{
 
-    const data =
-      await getJSON(
-        API +
-        "/person/" +
-        id +
-        "/credits"
-      );
+    const genres =
+      (movie.genres || [])
+        .map(g => g.id)
+        .join("|");
 
-    const directedMovies =
-      (data.crew || [])
-        .filter(
-          item =>
-            item.media_type === "movie" &&
-            item.job === "Director"
-        )
-        .filter(
-          (item,index,array) =>
-            array.findIndex(
-              movie =>
-                movie.id === item.id
-            ) === index
-        )
-        .sort(
-          (a,b) =>
-            (
-              b.release_date || ""
-            ).localeCompare(
-              a.release_date || ""
-            )
-        );
+    if(!genres) return;
 
-    renderDirectorPage(
-      name,
-      directedMovies
+    const data = await api(
+      `/discover?with_genres=${encodeURIComponent(
+        genres.split("|")[0]
+      )}&sort_by=popularity.desc&page=1`
     );
+
+    const related =
+      (data.results || [])
+        .filter(item => item.id !== movie.id)
+        .slice(0,5);
+
+    if(!related.length) return;
+
+    document.getElementById(
+      "relatedMovies"
+    ).innerHTML = `
+
+      <div class="cast-section">
+
+        <div class="section-title">
+          You May Also Like
+        </div>
+
+        <div class="related-grid">
+
+          ${related.map(item => `
+
+            <div
+              class="movie-card"
+              onclick="showMovie(${item.id})"
+            >
+
+              <img
+                class="poster"
+                src="${image(item.poster_path)}"
+                alt="${escapeHTML(item.title)}"
+                loading="lazy"
+              >
+
+              <div class="movie-info">
+
+                <div class="movie-title">
+                  ${escapeHTML(item.title)}
+                </div>
+
+                <div class="movie-year">
+                  ${formatDate(item.release_date)}
+                </div>
+
+                <div class="rating">
+                  ★ ${item.vote_average
+                    ? item.vote_average.toFixed(1)
+                    : "N/A"}
+                </div>
+
+              </div>
+
+            </div>
+
+          `).join("")}
+
+        </div>
+
+      </div>
+
+    `;
 
   }catch(error){
 
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this director.
-      </div>
-    `;
-
+    console.log(error);
   }
-
 }
 
+async function showPerson(id){
 
-function renderDirectorPage(
-  name,
-  movies
-){
+  app.innerHTML = `
+    <div class="detail-page">
 
-  const app =
-    document.getElementById("app");
+      <button class="back-btn" onclick="history.back()">
+        ← Back
+      </button>
+
+      <div class="error">
+        Loading...
+      </div>
+
+    </div>
+  `;
+
+  try{
+
+    const [person,credits] =
+      await Promise.all([
+        api(`/person/${id}`),
+        api(`/person/${id}/credits`)
+      ]);
+
+    renderPerson(
+      person,
+      credits
+    );
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }catch(error){
+
+    app.innerHTML = `
+      <div class="error">
+        Could not load actor information.
+      </div>
+    `;
+  }
+}
+
+function renderPerson(person,credits){
+
+  const movies =
+    (credits.cast || [])
+      .filter(movie => movie.poster_path)
+      .sort(
+        (a,b) =>
+          (b.popularity || 0) -
+          (a.popularity || 0)
+      )
+      .slice(0,30);
 
   app.innerHTML = `
 
-    <div class="detail">
+    <div class="detail-page">
 
       <button
         class="back-btn"
-        onclick="goBack()"
+        onclick="goHome()"
       >
         ← Back
       </button>
 
-      <div class="hero">
+      <div class="person-top">
 
-        <h1>
-          ${escapeHTML(name)}
-        </h1>
+        <img
+          class="person-photo"
+          src="${image(person.profile_path)}"
+          alt="${escapeHTML(person.name)}"
+        >
 
-        <p>
-          Movies directed by ${escapeHTML(name)}.
-        </p>
+        <div>
+
+          <h1 class="detail-title">
+            ${escapeHTML(person.name)}
+          </h1>
+
+          ${
+            person.known_for_department
+              ? `
+                <div class="movie-year">
+                  ${escapeHTML(
+                    person.known_for_department
+                  )}
+                </div>
+              `
+              : ""
+          }
+
+          ${
+            person.birthday
+              ? `
+                <div class="movie-year" style="margin-top:8px;">
+                  Born: ${escapeHTML(person.birthday)}
+                </div>
+              `
+              : ""
+          }
+
+          ${
+            person.place_of_birth
+              ? `
+                <div class="movie-year" style="margin-top:5px;">
+                  ${escapeHTML(person.place_of_birth)}
+                </div>
+              `
+              : ""
+          }
+
+          <p class="person-bio">
+            ${escapeHTML(
+              person.biography ||
+              "No biography available."
+            )}
+          </p>
+
+        </div>
 
       </div>
 
       ${
         movies.length
           ? `
+            <div class="person-credits">
 
-            <section class="section">
+              <div class="section-title">
+                Filmography
+              </div>
 
-              <div class="movie-grid">
+              <div class="related-grid">
 
-                ${movies.map(movieCard).join("")}
+                ${movies.map(movie => `
+
+                  <div
+                    class="movie-card"
+                    onclick="showMovie(${movie.id})"
+                  >
+
+                    <img
+                      class="poster"
+                      src="${image(movie.poster_path)}"
+                      alt="${escapeHTML(movie.title || movie.name)}"
+                      loading="lazy"
+                    >
+
+                    <div class="movie-info">
+
+                      <div class="movie-title">
+                        ${escapeHTML(
+                          movie.title || movie.name
+                        )}
+                      </div>
+
+                      <div class="movie-year">
+                        ${formatDate(
+                          movie.release_date ||
+                          movie.first_air_date
+                        )}
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                `).join("")}
 
               </div>
 
-            </section>
-
-          `
-          : `
-
-            <div class="empty">
-              No directed movies found.
             </div>
-
           `
+          : ""
       }
 
     </div>
 
   `;
-
 }
 
+async function showGenres(){
 
-/* -------------------------
-   RELATED MOVIES
-------------------------- */
+  closeMenu();
 
-async function loadRelatedMovies(movie){
+  app.innerHTML = `
+    <div class="about">
 
-  const container =
-    document.getElementById(
-      "relatedMovies"
-    );
+      <button
+        class="back-btn"
+        onclick="goHome()"
+      >
+        ← Back
+      </button>
 
-  if(!container){
-    return;
-  }
+      <h1>Genres</h1>
 
-  const genreIds =
-    (movie.genres || [])
-      .map(
-        genre => genre.id
-      );
-
-  if(!genreIds.length){
-
-    container.innerHTML = "";
-
-    return;
-
-  }
-
-  try{
-
-    const data =
-      await getJSON(
-        API +
-        "/discover?with_genres=" +
-        genreIds.join("|") +
-        "&sort_by=popularity.desc&page=1"
-      );
-
-    const movies =
-      (data.results || [])
-        .filter(
-          item =>
-            item.id !== movie.id
-        )
-        .slice(0,6);
-
-    container.innerHTML =
-      movies.map(movieCard).join("");
-
-  }catch(error){
-
-    container.innerHTML = "";
-
-  }
-
-}
-
-
-/* -------------------------
-   TRAILER
-------------------------- */
-
-function openTrailer(){
-
-  if(!currentTrailer){
-    return;
-  }
-
-  const modal =
-    document.getElementById(
-      "trailerModal"
-    );
-
-  const title =
-    document.getElementById(
-      "trailerTitle"
-    );
-
-  const frame =
-    document.getElementById(
-      "trailerFrame"
-    );
-
-  title.textContent =
-    (
-      currentMovie?.title ||
-      "Movie"
-    ) +
-    " Official Trailer";
-
-  frame.src =
-    "https://www.youtube.com/embed/" +
-    encodeURIComponent(
-      currentTrailer.key
-    ) +
-    "?autoplay=1&rel=0";
-
-  modal.classList.add("show");
-
-  document.body.style.overflow =
-    "hidden";
-
-}
-
-
-function closeTrailer(){
-
-  const modal =
-    document.getElementById(
-      "trailerModal"
-    );
-
-  const frame =
-    document.getElementById(
-      "trailerFrame"
-    );
-
-  frame.src = "";
-
-  modal.classList.remove("show");
-
-  document.body.style.overflow = "";
-
-}
-
-
-function handleModalBackground(event){
-
-  if(
-    event.target.id ===
-    "trailerModal"
-  ){
-
-    closeTrailer();
-
-  }
-
-}
-
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if(event.key === "Escape"){
-
-      closeTrailer();
-
-    }
-
-  }
-);
-
-
-/* -------------------------
-   SEARCH
-------------------------- */
-
-const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
-
-
-searchInput.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key !== "Enter"
-    ){
-      return;
-    }
-
-    event.preventDefault();
-
-    const query =
-      this.value.trim();
-
-    if(!query){
-      return;
-    }
-
-    searchMovies(query);
-
-    hideSearch();
-
-  }
-);
-
-
-function hideSearch(){
-
-  document
-    .getElementById(
-      "searchWrap"
-    )
-    .classList.add("hidden");
-
-}
-
-
-function showSearch(){
-
-  document
-    .getElementById(
-      "searchWrap"
-    )
-    .classList.remove("hidden");
-
-  setTimeout(
-    ()=>{
-      searchInput.focus();
-    },
-    50
-  );
-
-}
-
-
-async function searchMovies(query){
-
-  showMovieGridSkeleton();
-
-  try{
-
-    const data =
-      await getJSON(
-        API +
-        "/search?query=" +
-        encodeURIComponent(query) +
-        "&page=1"
-      );
-
-    renderMovies(
-      data.results || [],
-      "Search Results"
-    );
-
-  }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Search failed.
+      <div id="genreList">
+        ${skeletons()}
       </div>
-    `;
 
-  }
-
-}
-
-
-document.addEventListener(
-  "click",
-  function(event){
-
-    const searchWrap =
-      document.getElementById(
-        "searchWrap"
-      );
-
-    const searchIcon =
-      document.getElementById(
-        "searchIcon"
-      );
-
-    if(
-      searchWrap.classList.contains("hidden")
-    ){
-      return;
-    }
-
-    if(
-      searchWrap.contains(event.target) ||
-      searchIcon.contains(event.target)
-    ){
-      return;
-    }
-
-    hideSearch();
-
-  }
-);
-
-
-/* -------------------------
-   GENRES
-------------------------- */
-
-async function loadGenres(){
+    </div>
+  `;
 
   try{
 
-    const data =
-      await getJSON(
-        API + "/genres"
-      );
+    const data = await api("/genres");
 
-    const container =
-      document.getElementById(
-        "genreMenu"
-      );
+    document.getElementById(
+      "genreList"
+    ).innerHTML = `
 
-    container.innerHTML =
-      (data.genres || [])
-        .map(
+      <div class="genre-grid">
+
+        ${(data.genres || []).map(
           genre => `
 
             <button
-              class="menu-item"
-              onclick="loadGenre(
-                ${genre.id},
-                '${escapeHTML(genre.name)}'
-              )"
+              class="genre-btn"
+              onclick="showGenre(${genre.id}, '${escapeHTML(genre.name)}')"
             >
               ${escapeHTML(genre.name)}
             </button>
 
           `
-        ).join("");
+        ).join("")}
+
+      </div>
+
+    `;
 
   }catch(error){
 
     document.getElementById(
-      "genreMenu"
+      "genreList"
     ).innerHTML = `
       <div class="error">
-        Genres unavailable.
+        Could not load genres.
       </div>
     `;
-
   }
-
 }
 
+async function showGenre(id,name){
 
-async function loadGenre(
-  id,
-  name
-){
-
-  closeMenu();
-  hideSearch();
-
-  currentGenreId = id;
-  currentGenreName = name;
   currentPage = 1;
 
-  window.history.pushState(
-    {
-      page:"genre",
-      id,
-      name
-    },
-    "",
-    "?genre=" +
-    encodeURIComponent(name)
-  );
-
-  await loadGenrePage(
-    id,
-    name,
-    1
-  );
-
-}
-
-
-async function loadGenreFromTag(
-  id,
-  name
-){
-
-  hideSearch();
-
-  currentGenreId = id;
-  currentGenreName = name;
-  currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"genre",
-      id,
-      name
-    },
-    "",
-    "?genre=" +
-    encodeURIComponent(name)
-  );
-
-  await loadGenrePage(
-    id,
-    name,
-    1
-  );
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-async function loadGenrePage(
-  id,
-  name,
-  page
-){
-
-  showMovieGridSkeleton();
+  app.innerHTML = skeletons();
 
   try{
 
-    const data =
-      await getJSON(
-        API +
-        "/discover?with_genres=" +
-        id +
-        "&sort_by=popularity.desc&page=" +
-        page
-      );
-
-    renderGenreMovies(
-      data.results || [],
-      name
+    const data = await api(
+      `/discover?with_genres=${id}&page=1&sort_by=popularity.desc`
     );
 
-    renderPagination(
-      data.page || page,
-      data.total_pages || 1,
-      function(newPage){
-
-        currentPage =
-          newPage;
-
-        loadGenrePage(
-          id,
-          name,
-          newPage
-        );
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
-      }
+    renderMovies(
+      data,
+      name
     );
 
   }catch(error){
 
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this genre.
-      </div>
-    `;
-
-  }
-
-}
-
-
-function renderGenreMovies(
-  movies,
-  name
-){
-
-  const app =
-    document.getElementById("app");
-
-  if(!movies.length){
-
     app.innerHTML = `
-      <div class="empty">
-        No movies found for this genre.
+      <div class="error">
+        Could not load this genre.
       </div>
     `;
-
-    return;
-
   }
-
-  app.innerHTML = `
-
-    <div class="hero">
-
-      <h1>
-        ${escapeHTML(name)}
-      </h1>
-
-      <p>
-        Movies in the
-        ${escapeHTML(name)}
-        genre.
-      </p>
-
-    </div>
-
-    <section class="section">
-
-      <div class="movie-grid">
-        ${movies.map(movieCard).join("")}
-      </div>
-
-    </section>
-
-  `;
-
 }
-
-
-/* -------------------------
-   ABOUT
-------------------------- */
 
 function showAbout(){
 
   closeMenu();
-  hideSearch();
 
-  window.history.pushState(
-    {
-      page:"about"
-    },
-    "",
-    "?about=1"
-  );
+  app.innerHTML = `
 
-  document.getElementById("app").innerHTML = `
-
-    <div class="about-page">
+    <div class="about">
 
       <button
         class="back-btn"
-        onclick="goBack()"
+        onclick="goHome()"
       >
         ← Back
       </button>
 
-      <h1>
-        About Unstable Retards
-      </h1>
+      <h1>About Us</h1>
 
-      <p class="about-tagline">
-        Every Movie and TV Show Ever Made.
+      <p>
+        Welcome to Unstable Retards — a simple
+        movie discovery website made for people
+        who love exploring movies.
       </p>
 
-
       <div class="about-section">
 
-        <h2>
-          What is Unstable Retards?
-        </h2>
+        <h2>What We Do</h2>
 
         <p>
-          Unstable Retards is a movie discovery
-          website built to make exploring movies
-          simple, fast and fun. Discover movies,
-          explore genres, learn about filmmakers
-          and cast members, and find official
-          trailers in one place.
+          We help you discover movies, explore
+          their details, watch official trailers,
+          browse cast members, and explore the
+          filmographies of actors and directors.
         </p>
 
       </div>
 
-
       <div class="about-section">
 
-        <h2>
-          Why was it made?
-        </h2>
-
-        <p>
-          The idea is simple: create a place where
-          movie lovers can discover something new
-          without having to jump between different
-          websites just to find basic movie details.
-        </p>
-
-      </div>
-
-
-      <div class="about-section">
-
-        <h2>
-          Movie Information
-        </h2>
+        <h2>Movie Information</h2>
 
         <p>
           Movie information and metadata are
@@ -2728,17 +1832,12 @@ function showAbout(){
 
       </div>
 
-
       <div class="about-section">
 
-        <h2>
-          About the Creator
-        </h2>
+        <h2>Creator</h2>
 
         <p>
-          Unstable Retards was created by
-          Aditya Chauhan as an independent
-          movie-discovery project.
+          Made by Aditya Chauhan • 2026
         </p>
 
       </div>
@@ -2746,640 +1845,131 @@ function showAbout(){
     </div>
 
   `;
-
 }
 
+function openTrailer(key){
 
-/* -------------------------
-   SKELETON
-------------------------- */
+  if(!key) return;
 
-function showMovieSkeleton(){
+  document.getElementById(
+    "trailerFrame"
+  ).src =
+    "https://www.youtube.com/embed/" +
+    encodeURIComponent(key) +
+    "?autoplay=1";
 
-  document.getElementById("app").innerHTML = `
-
-    <div class="detail-skeleton">
-
-      <div
-        class="skeleton skeleton-back"
-      ></div>
-
-      <div class="skeleton-detail-top">
-
-        <div
-          class="skeleton skeleton-detail-poster"
-        ></div>
-
-        <div>
-
-          <div
-            class="skeleton skeleton-detail-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-detail-line"
-          ></div>
-
-          <div
-            class="skeleton skeleton-detail-line medium"
-          ></div>
-
-          <div class="skeleton-tags">
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-          </div>
-
-          <div class="skeleton-overview">
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-          </div>
-
-          <div
-            class="skeleton skeleton-button"
-          ></div>
-
-        </div>
-
-      </div>
-
-
-      <div class="skeleton-details-box">
-
-        <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-        </div>
-
-        <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-        </div>
-
-        <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
+  document.getElementById(
+    "trailerModal"
+  ).classList.add("show");
 }
 
+function closeTrailer(event){
 
-function showMovieGridSkeleton(){
-
-  document.getElementById("app").innerHTML = `
-
-    <div class="hero">
-
-      <div
-        class="skeleton skeleton-hero-title"
-      ></div>
-
-      <div
-        class="skeleton skeleton-hero-text"
-      ></div>
-
-    </div>
-
-    <div class="skeleton-grid">
-
-      ${
-        Array.from(
-          {length:12},
-          ()=>`
-
-            <div class="skeleton-card">
-
-              <div
-                class="skeleton skeleton-poster"
-              ></div>
-
-              <div class="skeleton-info">
-
-                <div
-                  class="skeleton skeleton-title"
-                ></div>
-
-                <div
-                  class="skeleton skeleton-title short"
-                ></div>
-
-              </div>
-
-            </div>
-
-          `
-        ).join("")
-      }
-
-    </div>
-
-  `;
-
-}
-
-
-/* -------------------------
-   MENU
-------------------------- */
-
-function openMenu(){
-
-  document
-    .getElementById("menu")
-    .classList.add("open");
-
-  document
-    .getElementById("menuOverlay")
-    .classList.add("show");
-
-}
-
-
-function closeMenu(){
-
-  document
-    .getElementById("menu")
-    .classList.remove("open");
-
-  document
-    .getElementById("menuOverlay")
-    .classList.remove("show");
-
-}
-
-
-/* -------------------------
-   THEME
-------------------------- */
-
-function updateThemeIcon(){
-
-  const svg =
-    document.getElementById(
-      "themeSvg"
-    );
-
-  const isLight =
-    document.body.classList.contains(
-      "light"
-    );
-
-  if(isLight){
-
-    svg.innerHTML = `
-
-      <circle
-        cx="12"
-        cy="12"
-        r="4"
-      ></circle>
-
-      <line x1="12" y1="2" x2="12" y2="5"></line>
-      <line x1="12" y1="19" x2="12" y2="22"></line>
-
-      <line x1="2" y1="12" x2="5" y2="12"></line>
-      <line x1="19" y1="12" x2="22" y2="12"></line>
-
-      <line x1="4.9" y1="4.9" x2="7" y2="7"></line>
-      <line x1="17" y1="17" x2="19.1" y2="19.1"></line>
-
-      <line x1="17" y1="7" x2="19.1" y2="4.9"></line>
-      <line x1="4.9" y1="19.1" x2="7" y2="17"></line>
-
-    `;
-
-  }else{
-
-    svg.innerHTML = `
-
-      <path
-        d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5
-        A8.5 8.5 0 1 0 20.5 14.5Z"
-      ></path>
-
-    `;
-
+  if(
+    event &&
+    event.target &&
+    event.target.id !== "trailerModal"
+  ){
+    return;
   }
 
-}
+  document.getElementById(
+    "trailerModal"
+  ).classList.remove("show");
 
+  document.getElementById(
+    "trailerFrame"
+  ).src = "";
+}
 
 function toggleTheme(){
 
-  document.body
-    .classList.toggle("light");
+  const root =
+    document.documentElement;
 
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light")
-      ? "light"
-      : "dark"
-  );
+  const current =
+    getComputedStyle(root)
+      .getPropertyValue("--bg")
+      .trim();
 
-  updateThemeIcon();
+  if(current === "#0b0b0f"){
 
-}
+    root.style.setProperty(
+      "--bg",
+      "#f5f5f5"
+    );
 
+    root.style.setProperty(
+      "--card",
+      "#ffffff"
+    );
 
-function loadSavedTheme(){
+    root.style.setProperty(
+      "--text",
+      "#111111"
+    );
 
-  const theme =
-    localStorage.getItem("theme");
+    root.style.setProperty(
+      "--muted",
+      "#666666"
+    );
 
-  if(theme === "light"){
-
-    document.body
-      .classList.add("light");
-
-  }
-
-  updateThemeIcon();
-
-}
-
-
-/* -------------------------
-   BACK / HISTORY
-------------------------- */
-
-function goBack(){
-
-  if(window.history.length > 1){
-
-    window.history.back();
+    root.style.setProperty(
+      "--border",
+      "#dddddd"
+    );
 
   }else{
 
-    goHome();
+    root.style.setProperty(
+      "--bg",
+      "#0b0b0f"
+    );
 
+    root.style.setProperty(
+      "--card",
+      "#141419"
+    );
+
+    root.style.setProperty(
+      "--text",
+      "#f5f5f5"
+    );
+
+    root.style.setProperty(
+      "--muted",
+      "#999"
+    );
+
+    root.style.setProperty(
+      "--border",
+      "#25252d"
+    );
   }
-
 }
 
+document.addEventListener(
+  "click",
+  function(event){
 
-window.addEventListener(
-  "popstate",
-  function(){
+    const menu =
+      document.getElementById("menu");
 
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
+    const button =
+      event.target.closest(".icon-btn");
 
-    const movieId =
-      params.get("movie");
-
-    const genre =
-      params.get("genre");
-
-    const about =
-      params.get("about");
-
-    const directorId =
-      params.get("director");
-
-
-    if(movieId){
-
-      showMovieWithoutHistory(
-        movieId
-      );
-
-    }else if(directorId){
-
-      getJSON(
-        API +
-        "/person/" +
-        directorId +
-        "/credits"
-      ).then(data => {
-
-        const directed =
-          (data.crew || [])
-            .filter(
-              item =>
-                item.media_type === "movie" &&
-                item.job === "Director"
-            )
-            .filter(
-              (item,index,array) =>
-                array.findIndex(
-                  movie =>
-                    movie.id === item.id
-                ) === index
-            )
-            .sort(
-              (a,b) =>
-                (
-                  b.release_date || ""
-                ).localeCompare(
-                  a.release_date || ""
-                )
-            );
-
-        const directorName =
-          currentDirectorName ||
-          "Director";
-
-        renderDirectorPage(
-          directorName,
-          directed
-        );
-
-      }).catch(
-        () => loadMovies("popular",1)
-      );
-
-    }else if(genre){
-
-      findGenreIdByName(
-        genre
-      ).then(id => {
-
-        if(id){
-
-          loadGenrePage(
-            id,
-            genre,
-            1
-          );
-
-        }else{
-
-          loadMovies(
-            "popular",
-            1
-          );
-
-        }
-
-      });
-
-    }else if(about){
-
-      showAbout();
-
-    }else{
-
-      loadMovies(
-        "popular",
-        1
-      );
-
+    if(
+      menu.classList.contains("show") &&
+      !menu.contains(event.target) &&
+      !button
+    ){
+      closeMenu();
     }
 
   }
 );
 
-
-/* -------------------------
-   GENRE ID HELPER
-------------------------- */
-
-async function findGenreIdByName(
-  name
-){
-
-  if(
-    genreCache[
-      name.toLowerCase()
-    ]
-  ){
-
-    return genreCache[
-      name.toLowerCase()
-    ];
-
-  }
-
-  try{
-
-    const data =
-      await getJSON(
-        API + "/genres"
-      );
-
-    const found =
-      (data.genres || [])
-        .find(
-          genre =>
-            genre.name.toLowerCase() ===
-            name.toLowerCase()
-        );
-
-    if(found){
-
-      genreCache[
-        name.toLowerCase()
-      ] = found.id;
-
-      return found.id;
-
-    }
-
-  }catch(error){}
-
-  return 0;
-
-}
-
-
-/* -------------------------
-   MOVIE WITHOUT HISTORY
-------------------------- */
-
-async function showMovieWithoutHistory(
-  id
-){
-
-  currentMovieId = id;
-
-  showMovieSkeleton();
-
-  try{
-
-    const [
-      movie,
-      credits,
-      videos
-    ] = await Promise.all([
-
-      getJSON(
-        API +
-        "/movie/" +
-        id
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/credits"
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/videos"
-      )
-
-    ]);
-
-    currentMovie = movie;
-
-    currentTrailer =
-      findTrailer(
-        videos.results || []
-      );
-
-    renderMovieDetails(
-      movie,
-      credits
-    );
-
-    loadRelatedMovies(
-      movie
-    );
-
-  }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this movie.
-      </div>
-    `;
-
-  }
-
-}
-
-
-/* -------------------------
-   INITIALIZE
-------------------------- */
-
-loadSavedTheme();
-
-loadGenres();
-
-
-const initialParams =
-  new URLSearchParams(
-    window.location.search
-  );
-
-const initialMovie =
-  initialParams.get("movie");
-
-const initialGenre =
-  initialParams.get("genre");
-
-const initialAbout =
-  initialParams.get("about");
-
-const initialDirector =
-  initialParams.get("director");
-
-
-if(initialMovie){
-
-  showMovieWithoutHistory(
-    initialMovie
-  );
-
-}else if(initialDirector){
-
-  showDirector(
-    initialDirector,
-    "Director"
-  );
-
-}else if(initialGenre){
-
-  findGenreIdByName(
-    initialGenre
-  ).then(id => {
-
-    if(id){
-
-      loadGenrePage(
-        id,
-        initialGenre,
-        1
-      );
-
-    }else{
-
-      loadMovies(
-        "popular",
-        1
-      );
-
-    }
-
-  });
-
-}else if(initialAbout){
-
-  showAbout();
-
-}else{
-
-  loadMovies(
-    "popular",
-    1
-  );
-
-}
+goHome();
 
 </script>
 
