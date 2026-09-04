@@ -20,6 +20,8 @@
   --muted:#9b9ba5;
   --accent:#e50914;
   --border:#292933;
+  --skeleton:#24242c;
+  --skeleton-highlight:#34343e;
 }
 
 body.light{
@@ -29,6 +31,8 @@ body.light{
   --text:#111;
   --muted:#666;
   --border:#ddd;
+  --skeleton:#dedee3;
+  --skeleton-highlight:#f2f2f5;
 }
 
 body{
@@ -214,6 +218,192 @@ main{
 .page-btn:disabled{
   opacity:.4;
   cursor:not-allowed;
+}
+
+/* -------------------------
+   SKELETON LOADING
+------------------------- */
+
+.skeleton{
+  background:
+    linear-gradient(
+      110deg,
+      var(--skeleton) 25%,
+      var(--skeleton-highlight) 50%,
+      var(--skeleton) 75%
+    );
+  background-size:200% 100%;
+  animation:skeletonShimmer 1.35s linear infinite;
+}
+
+@keyframes skeletonShimmer{
+  0%{
+    background-position:200% 0;
+  }
+
+  100%{
+    background-position:-200% 0;
+  }
+}
+
+.skeleton-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.skeleton-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.skeleton-poster{
+  width:100%;
+  aspect-ratio:2/3;
+}
+
+.skeleton-info{
+  padding:11px;
+}
+
+.skeleton-title{
+  height:16px;
+  width:82%;
+  border-radius:6px;
+}
+
+.skeleton-title.short{
+  width:58%;
+  margin-top:8px;
+}
+
+.skeleton-hero-title{
+  height:30px;
+  width:260px;
+  border-radius:8px;
+  margin-bottom:9px;
+}
+
+.skeleton-hero-text{
+  height:14px;
+  width:230px;
+  border-radius:6px;
+}
+
+.detail-skeleton{
+  max-width:1000px;
+  margin:auto;
+}
+
+.skeleton-back{
+  width:90px;
+  height:40px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.skeleton-detail-top{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:25px;
+}
+
+.skeleton-detail-poster{
+  width:100%;
+  aspect-ratio:2/3;
+  border-radius:14px;
+}
+
+.skeleton-detail-title{
+  width:75%;
+  height:38px;
+  border-radius:8px;
+  margin-bottom:16px;
+}
+
+.skeleton-detail-line{
+  width:45%;
+  height:14px;
+  border-radius:6px;
+  margin-bottom:14px;
+}
+
+.skeleton-detail-line.wide{
+  width:90%;
+}
+
+.skeleton-detail-line.medium{
+  width:70%;
+}
+
+.skeleton-tags{
+  display:flex;
+  gap:7px;
+  margin:15px 0;
+}
+
+.skeleton-tag{
+  width:65px;
+  height:28px;
+  border-radius:999px;
+}
+
+.skeleton-overview{
+  margin-top:16px;
+}
+
+.skeleton-overview-line{
+  height:13px;
+  border-radius:6px;
+  margin-bottom:9px;
+}
+
+.skeleton-overview-line:nth-child(1){
+  width:95%;
+}
+
+.skeleton-overview-line:nth-child(2){
+  width:88%;
+}
+
+.skeleton-overview-line:nth-child(3){
+  width:76%;
+}
+
+.skeleton-button{
+  width:145px;
+  height:43px;
+  border-radius:10px;
+  margin-top:18px;
+}
+
+.skeleton-details-box{
+  margin-top:28px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+}
+
+.skeleton-info-row{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:14px;
+  padding:12px 0;
+}
+
+.skeleton-label{
+  width:70px;
+  height:14px;
+  border-radius:6px;
+}
+
+.skeleton-value{
+  width:65%;
+  height:14px;
+  border-radius:6px;
 }
 
 /* DETAILS */
@@ -481,7 +671,8 @@ footer{
 }
 
 @media(min-width:650px){
-  .movie-grid{
+  .movie-grid,
+  .skeleton-grid{
     grid-template-columns:repeat(3,1fr);
   }
 
@@ -491,7 +682,8 @@ footer{
 }
 
 @media(min-width:900px){
-  .movie-grid{
+  .movie-grid,
+  .skeleton-grid{
     grid-template-columns:repeat(4,1fr);
   }
 
@@ -505,7 +697,8 @@ footer{
     font-size:18px;
   }
 
-  .detail-top{
+  .detail-top,
+  .skeleton-detail-top{
     grid-template-columns:140px 1fr;
     gap:16px;
   }
@@ -514,17 +707,20 @@ footer{
     font-size:23px;
   }
 
-  .info-row{
+  .info-row,
+  .skeleton-info-row{
     grid-template-columns:90px 1fr;
   }
 }
 
 @media(max-width:450px){
-  .detail-top{
+  .detail-top,
+  .skeleton-detail-top{
     grid-template-columns:1fr;
   }
 
-  .detail-poster{
+  .detail-poster,
+  .skeleton-detail-poster{
     max-width:220px;
     margin:auto;
   }
@@ -694,6 +890,119 @@ async function getJSON(url){
 
 
 /* -------------------------
+   SKELETON HELPERS
+------------------------- */
+
+function showMovieSkeleton(){
+
+  const app = document.getElementById("app");
+
+  app.innerHTML = `
+
+    <div class="detail-skeleton">
+
+      <div class="skeleton skeleton-back"></div>
+
+      <div class="skeleton-detail-top">
+
+        <div class="skeleton skeleton-detail-poster"></div>
+
+        <div>
+
+          <div class="skeleton skeleton-detail-title"></div>
+
+          <div class="skeleton skeleton-detail-line"></div>
+
+          <div class="skeleton-tags">
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
+          </div>
+
+          <div class="skeleton skeleton-detail-line medium"></div>
+
+          <div class="skeleton-overview">
+
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
+
+          </div>
+
+          <div class="skeleton skeleton-button"></div>
+
+        </div>
+
+      </div>
+
+      <div class="skeleton-details-box">
+
+        <div class="skeleton-info-row">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
+        </div>
+
+        <div class="skeleton-info-row">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
+        </div>
+
+        <div class="skeleton-info-row">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-value"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+function showMovieGridSkeleton(){
+
+  const app = document.getElementById("app");
+
+  app.innerHTML = `
+
+    <div class="hero">
+
+      <div class="skeleton skeleton-hero-title"></div>
+      <div class="skeleton skeleton-hero-text"></div>
+
+    </div>
+
+    <section class="section">
+
+      <div class="skeleton-grid">
+
+        ${Array.from({length:12},()=>`
+
+          <div class="skeleton-card">
+
+            <div class="skeleton skeleton-poster"></div>
+
+            <div class="skeleton-info">
+
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-title short"></div>
+
+            </div>
+
+          </div>
+
+        `).join("")}
+
+      </div>
+
+    </section>
+
+  `;
+}
+
+
+/* -------------------------
    HOME
 ------------------------- */
 
@@ -716,9 +1025,7 @@ async function loadHomeSection(section){
 
 async function loadMovies(section,page){
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `<div class="loading">Loading movies...</div>`;
+  showMovieGridSkeleton();
 
   try{
 
@@ -926,13 +1233,7 @@ async function showMovie(id){
     "?movie=" + id
   );
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div class="loading">
-      Loading movie details...
-    </div>
-  `;
+  showMovieSkeleton();
 
   try{
 
@@ -955,6 +1256,8 @@ async function showMovie(id){
     loadRelatedMovies(movie);
 
   }catch(error){
+
+    const app = document.getElementById("app");
 
     app.innerHTML = `
       <div class="error">
@@ -1198,8 +1501,25 @@ function renderMovieDetails(movie,credits){
 
         <div id="relatedMovies" class="related-grid">
 
-          <div class="loading">
-            Finding similar movies...
+          <div class="skeleton-grid">
+
+            ${Array.from({length:6},()=>`
+
+              <div class="skeleton-card">
+
+                <div class="skeleton skeleton-poster"></div>
+
+                <div class="skeleton-info">
+
+                  <div class="skeleton skeleton-title"></div>
+                  <div class="skeleton skeleton-title short"></div>
+
+                </div>
+
+              </div>
+
+            `).join("")}
+
           </div>
 
         </div>
@@ -1382,13 +1702,7 @@ document
 
 async function searchMovies(query){
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div class="loading">
-      Searching...
-    </div>
-  `;
+  showMovieGridSkeleton();
 
   try{
 
@@ -1405,6 +1719,8 @@ async function searchMovies(query){
     );
 
   }catch(error){
+
+    const app = document.getElementById("app");
 
     app.innerHTML = `
       <div class="error">
@@ -1456,13 +1772,7 @@ async function loadGenre(id,name){
 
   closeMenu();
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div class="loading">
-      Loading ${escapeHTML(name)} movies...
-    </div>
-  `;
+  showMovieGridSkeleton();
 
   try{
 
@@ -1495,6 +1805,8 @@ async function loadGenre(id,name){
 
   }catch(error){
 
+    const app = document.getElementById("app");
+
     app.innerHTML = `
       <div class="error">
         Unable to load this genre.
@@ -1507,13 +1819,7 @@ async function loadGenre(id,name){
 
 async function loadGenrePage(id,name,page){
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div class="loading">
-      Loading...
-    </div>
-  `;
+  showMovieGridSkeleton();
 
   try{
 
@@ -1537,6 +1843,8 @@ async function loadGenrePage(id,name,page){
     );
 
   }catch(error){
+
+    const app = document.getElementById("app");
 
     app.innerHTML = `
       <div class="error">
@@ -1646,13 +1954,7 @@ async function showMovieWithoutHistory(id){
 
   currentMovieId = id;
 
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div class="loading">
-      Loading movie details...
-    </div>
-  `;
+  showMovieSkeleton();
 
   try{
 
@@ -1679,6 +1981,8 @@ async function showMovieWithoutHistory(id){
     loadRelatedMovies(movie);
 
   }catch(error){
+
+    const app = document.getElementById("app");
 
     app.innerHTML = `
       <div class="error">
