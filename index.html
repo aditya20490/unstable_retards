@@ -1,18 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Unstable Retards</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unstable Retards | Movies</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b0b0f;
+    color: white;
+}
+
+header {
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #161622, #09090c);
+    text-align: center;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.search-box {
+    margin: 25px auto;
+    max-width: 600px;
+    display: flex;
+    padding: 0 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    background: #17171d;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+.container {
+    padding: 10px 20px 40px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+h2 {
+    margin: 25px 0 18px;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.movie-card {
+    background: #15151b;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #24242c;
+}
+
+.poster {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #292936, #111116);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+}
+
+.movie-info {
+    padding: 12px;
+}
+
+.movie-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.tags {
+    margin-top: 8px;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 11px;
+    color: #bbb;
+    background: #24242c;
+    padding: 5px 8px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+@media (min-width: 700px) {
+    .movie-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .poster {
+        height: 280px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Unstable Retards 🎬</h1>
-    <p>Your movie discovery website</p>
+<header>
+    <div class="logo">Unstable Retards 🎬</div>
+    <div class="subtitle">Discover movies, actors & trailers</div>
 
-    <input type="text" placeholder="Search for a movie...">
+    <div class="search-box">
+        <input type="text" placeholder="🔍 Search for a movie...">
+    </div>
+</header>
 
-    <h2>Popular Movies</h2>
+<div class="container">
 
-    <p>🎬 Movie database coming soon...</p>
+    <h2>🔥 Popular Movies</h2>
+
+    <div class="movie-grid">
+
+        <div class="movie-card">
+            <div class="poster">🎬</div>
+            <div class="movie-info">
+                <div class="movie-title">Movie One</div>
+                <div class="tags">
+                    <span class="tag">Action</span>
+                    <span class="tag">Drama</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="poster">🍿</div>
+            <div class="movie-info">
+                <div class="movie-title">Movie Two</div>
+                <div class="tags">
+                    <span class="tag">Comedy</span>
+                    <span class="tag">Drama</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="poster">🎥</div>
+            <div class="movie-info">
+                <div class="movie-title">Movie Three</div>
+                <div class="tags">
+                    <span class="tag">Thriller</span>
+                    <span class="tag">Mystery</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="poster">⭐</div>
+            <div class="movie-info">
+                <div class="movie-title">Movie Four</div>
+                <div class="tags">
+                    <span class="tag">Adventure</span>
+                    <span class="tag">Action</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
