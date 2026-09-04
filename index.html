@@ -236,7 +236,7 @@ h1 {
 }
 
 .detail {
-  max-width: 850px;
+  max-width: 900px;
   margin: auto;
 }
 
@@ -287,8 +287,40 @@ h1 {
   color: var(--muted);
 }
 
+.related {
+  margin-top: 38px;
+  border-top: 1px solid var(--border);
+  padding-top: 25px;
+}
+
+.related h2 {
+  margin-bottom: 6px;
+  font-size: 22px;
+}
+
+.related-subtitle {
+  color: var(--muted);
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.related-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
 @media (min-width: 700px) {
-  .grid {
+  .grid,
+  .related-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -336,19 +368,19 @@ h1 {
 <div class="drawer" id="drawer">
   <h2>Movie Categories</h2>
 
-  <button onclick="selectCategory('popular','🔥 Popular Movies',this)">
+  <button onclick="selectCategory('popular','🔥 Popular Movies')">
     🔥 Popular
   </button>
 
-  <button onclick="selectCategory('top-rated','⭐ Top Rated',this)">
+  <button onclick="selectCategory('top-rated','⭐ Top Rated')">
     ⭐ Top Rated
   </button>
 
-  <button onclick="selectCategory('now-playing','🎬 Now Playing',this)">
+  <button onclick="selectCategory('now-playing','🎬 Now Playing')">
     🎬 Now Playing
   </button>
 
-  <button onclick="selectCategory('upcoming','🚀 Upcoming',this)">
+  <button onclick="selectCategory('upcoming','🚀 Upcoming')">
     🚀 Upcoming
   </button>
 
@@ -374,6 +406,10 @@ let currentTitle = "🔥 Popular Movies";
 let currentQuery = "";
 let currentGenre = "";
 
+let relatedPage = 1;
+let relatedTotalPages = 1;
+let relatedGenreIds = [];
+
 let genreMap = {};
 
 function openMenu() {
@@ -387,24 +423,35 @@ function closeMenu() {
 }
 
 function toggleTheme() {
+
   document.body.classList.toggle("light");
 
-  const light = document.body.classList.contains("light");
+  const light =
+    document.body.classList.contains("light");
 
   document.getElementById("themeBtn").textContent =
     light ? "🌙" : "☀️";
 
-  localStorage.setItem("theme", light ? "light" : "dark");
+  localStorage.setItem(
+    "theme",
+    light ? "light" : "dark"
+  );
 }
 
 if (localStorage.getItem("theme") === "light") {
+
   document.body.classList.add("light");
-  document.getElementById("themeBtn").textContent = "🌙";
+
+  document.getElementById("themeBtn").textContent =
+    "🌙";
 }
 
 function handleSearch(event) {
+
   if (event.key === "Enter") {
-    const query = event.target.value.trim();
+
+    const query =
+      event.target.value.trim();
 
     if (!query) return;
 
@@ -420,43 +467,61 @@ function handleSearch(event) {
 }
 
 async function loadGenres() {
-  try {
-    const response = await fetch(API + "/genres");
-    const data = await response.json();
 
-    const container = document.getElementById("genres");
+  try {
+
+    const response =
+      await fetch(API + "/genres");
+
+    const data =
+      await response.json();
+
+    const container =
+      document.getElementById("genres");
 
     container.innerHTML = "";
 
     data.genres.forEach(genre => {
 
-      genreMap[genre.id] = genre.name;
+      genreMap[genre.id] =
+        genre.name;
 
-      const button = document.createElement("button");
+      const button =
+        document.createElement("button");
 
-      button.textContent = genre.name;
+      button.textContent =
+        genre.name;
 
-      button.onclick = function() {
-        selectGenre(genre.id, genre.name);
-      };
+      button.onclick =
+        function() {
+          selectGenre(
+            genre.id,
+            genre.name
+          );
+        };
 
       container.appendChild(button);
     });
 
   } catch (error) {
-    document.getElementById("genres").textContent =
+
+    document.getElementById("genres")
+      .textContent =
       "Could not load genres.";
   }
 }
 
 function selectCategory(mode, title) {
+
   currentMode = mode;
   currentTitle = title;
   currentPage = 1;
   currentQuery = "";
   currentGenre = "";
 
-  document.getElementById("searchInput").value = "";
+  document.getElementById(
+    "searchInput"
+  ).value = "";
 
   closeMenu();
 
@@ -464,13 +529,16 @@ function selectCategory(mode, title) {
 }
 
 function selectGenre(id, name) {
+
   currentMode = "discover";
   currentGenre = id;
   currentTitle = "🎭 " + name;
   currentPage = 1;
   currentQuery = "";
 
-  document.getElementById("searchInput").value = "";
+  document.getElementById(
+    "searchInput"
+  ).value = "";
 
   closeMenu();
 
@@ -480,6 +548,7 @@ function selectGenre(id, name) {
 function buildUrl() {
 
   if (currentMode === "search") {
+
     return API +
       "/search?query=" +
       encodeURIComponent(currentQuery) +
@@ -488,6 +557,7 @@ function buildUrl() {
   }
 
   if (currentMode === "discover") {
+
     return API +
       "/discover?with_genres=" +
       currentGenre +
@@ -504,21 +574,29 @@ function buildUrl() {
 
 async function loadMovies() {
 
-  const app = document.getElementById("app");
+  const app =
+    document.getElementById("app");
 
   app.innerHTML =
     "<div id='status'>Loading movies...</div>";
 
   try {
 
-    const response = await fetch(buildUrl());
-    const data = await response.json();
+    const response =
+      await fetch(buildUrl());
+
+    const data =
+      await response.json();
 
     if (!data.results) {
       throw new Error("No results");
     }
 
-    totalPages = Math.min(data.total_pages || 1, 500);
+    totalPages =
+      Math.min(
+        data.total_pages || 1,
+        500
+      );
 
     renderMovies(data.results);
 
@@ -531,10 +609,12 @@ async function loadMovies() {
 
 function renderMovies(movies) {
 
-  const app = document.getElementById("app");
+  const app =
+    document.getElementById("app");
 
   app.innerHTML = `
     <h1>${escapeHtml(currentTitle)}</h1>
+
     <div class="subtitle">
       Page ${currentPage} of ${totalPages}
     </div>
@@ -544,16 +624,20 @@ function renderMovies(movies) {
     <div class="pagination" id="pagination"></div>
   `;
 
-  const grid = document.getElementById("movieGrid");
+  const grid =
+    document.getElementById("movieGrid");
 
   movies.forEach(movie => {
 
-    const card = document.createElement("div");
+    const card =
+      document.createElement("div");
 
     card.className = "card";
 
-    const poster = movie.poster_path
-      ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+    const poster =
+      movie.poster_path
+      ? "https://image.tmdb.org/t/p/w500" +
+        movie.poster_path
       : "";
 
     card.innerHTML = `
@@ -567,25 +651,33 @@ function renderMovies(movies) {
       <div class="card-info">
 
         <div class="card-title">
-          ${escapeHtml(movie.title || "Untitled")}
+          ${escapeHtml(
+            movie.title || "Untitled"
+          )}
         </div>
 
         <div class="rating">
-          ⭐ ${movie.vote_average
+          ⭐ ${
+            movie.vote_average
             ? movie.vote_average.toFixed(1)
-            : "N/A"}
+            : "N/A"
+          }
         </div>
 
         <div class="date">
-          ${movie.release_date || "Release date unknown"}
+          ${
+            movie.release_date ||
+            "Release date unknown"
+          }
         </div>
 
       </div>
     `;
 
-    card.onclick = function() {
-      openMovie(movie.id);
-    };
+    card.onclick =
+      function() {
+        openMovie(movie.id);
+      };
 
     grid.appendChild(card);
   });
@@ -595,71 +687,132 @@ function renderMovies(movies) {
 
 function renderPagination() {
 
-  const container = document.getElementById("pagination");
+  const container =
+    document.getElementById(
+      "pagination"
+    );
 
   container.innerHTML = "";
 
-  const previous = document.createElement("button");
+  const previous =
+    document.createElement("button");
 
-  previous.className = "page-btn";
+  previous.className =
+    "page-btn";
+
   previous.textContent = "‹";
-  previous.disabled = currentPage === 1;
 
-  previous.onclick = function() {
-    if (currentPage > 1) {
-      currentPage--;
-      loadMovies();
-      window.scrollTo(0, 0);
-    }
-  };
+  previous.disabled =
+    currentPage === 1;
+
+  previous.onclick =
+    function() {
+
+      if (currentPage > 1) {
+
+        currentPage--;
+
+        loadMovies();
+
+        window.scrollTo(0, 0);
+      }
+    };
 
   container.appendChild(previous);
 
-  let start = Math.max(1, currentPage - 2);
-  let end = Math.min(totalPages, currentPage + 2);
+  let start =
+    Math.max(
+      1,
+      currentPage - 2
+    );
+
+  let end =
+    Math.min(
+      totalPages,
+      currentPage + 2
+    );
 
   if (currentPage <= 3) {
-    end = Math.min(5, totalPages);
+    end =
+      Math.min(
+        5,
+        totalPages
+      );
   }
 
-  if (currentPage >= totalPages - 2) {
-    start = Math.max(1, totalPages - 4);
+  if (
+    currentPage >=
+    totalPages - 2
+  ) {
+
+    start =
+      Math.max(
+        1,
+        totalPages - 4
+      );
   }
 
-  for (let i = start; i <= end; i++) {
+  for (
+    let i = start;
+    i <= end;
+    i++
+  ) {
 
-    const button = document.createElement("button");
+    const button =
+      document.createElement(
+        "button"
+      );
 
-    button.className = "page-btn";
+    button.className =
+      "page-btn";
 
     if (i === currentPage) {
-      button.classList.add("active");
+      button.classList.add(
+        "active"
+      );
     }
 
     button.textContent = i;
 
-    button.onclick = function() {
-      currentPage = i;
-      loadMovies();
-      window.scrollTo(0, 0);
-    };
+    button.onclick =
+      function() {
+
+        currentPage = i;
+
+        loadMovies();
+
+        window.scrollTo(0, 0);
+      };
 
     container.appendChild(button);
   }
 
-  const next = document.createElement("button");
+  const next =
+    document.createElement("button");
 
-  next.className = "page-btn";
+  next.className =
+    "page-btn";
+
   next.textContent = "›";
-  next.disabled = currentPage === totalPages;
 
-  next.onclick = function() {
-    if (currentPage < totalPages) {
-      currentPage++;
-      loadMovies();
-      window.scrollTo(0, 0);
-    }
-  };
+  next.disabled =
+    currentPage === totalPages;
+
+  next.onclick =
+    function() {
+
+      if (
+        currentPage <
+        totalPages
+      ) {
+
+        currentPage++;
+
+        loadMovies();
+
+        window.scrollTo(0, 0);
+      }
+    };
 
   container.appendChild(next);
 }
@@ -677,28 +830,50 @@ async function openMovie(id) {
 
 async function showMovie(id) {
 
-  const app = document.getElementById("app");
+  const app =
+    document.getElementById("app");
 
   app.innerHTML =
     "<div id='status'>Loading movie...</div>";
 
   try {
 
-    const response = await fetch(API + "/movie/" + id);
-    const movie = await response.json();
+    const response =
+      await fetch(
+        API + "/movie/" + id
+      );
 
-    const poster = movie.poster_path
-      ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+    const movie =
+      await response.json();
+
+    const poster =
+      movie.poster_path
+      ? "https://image.tmdb.org/t/p/w500" +
+        movie.poster_path
       : "";
 
-    const genres = (movie.genres || [])
-      .map(g => `<span class="genre">${escapeHtml(g.name)}</span>`)
+    const genres =
+      (movie.genres || [])
+      .map(g =>
+        `<span class="genre">${
+          escapeHtml(g.name)
+        }</span>`
+      )
       .join("");
+
+    relatedGenreIds =
+      (movie.genres || [])
+      .map(g => g.id);
+
+    relatedPage = 1;
 
     app.innerHTML = `
       <div class="detail">
 
-        <button class="back-btn" onclick="goBack()">
+        <button
+          class="back-btn"
+          onclick="goBack()"
+        >
           ← Back
         </button>
 
@@ -712,16 +887,25 @@ async function showMovie(id) {
 
           <div>
 
-            <h2>${escapeHtml(movie.title || "")}</h2>
+            <h2>
+              ${escapeHtml(
+                movie.title || ""
+              )}
+            </h2>
 
             <div class="meta">
-              ⭐ ${movie.vote_average
+              ⭐ ${
+                movie.vote_average
                 ? movie.vote_average.toFixed(1)
-                : "N/A"}
+                : "N/A"
+              }
             </div>
 
             <div class="meta">
-              📅 ${movie.release_date || "Unknown"}
+              📅 ${
+                movie.release_date ||
+                "Unknown"
+              }
             </div>
 
             <div class="genres">
@@ -735,13 +919,49 @@ async function showMovie(id) {
         <h3>Overview</h3>
 
         <div class="overview">
-          ${escapeHtml(movie.overview || "No overview available.")}
+          ${
+            escapeHtml(
+              movie.overview ||
+              "No overview available."
+            )
+          }
+        </div>
+
+        <div class="related">
+
+          <h2>
+            🎬 More Like This
+          </h2>
+
+          <div
+            class="related-subtitle"
+            id="relatedSubtitle"
+          >
+            Movies from the same genres
+          </div>
+
+          <div
+            class="related-grid"
+            id="relatedGrid"
+          >
+            <div id="status">
+              Loading recommendations...
+            </div>
+          </div>
+
+          <div
+            class="related-pagination"
+            id="relatedPagination"
+          ></div>
+
         </div>
 
       </div>
     `;
 
     window.scrollTo(0, 0);
+
+    loadRelatedMovies();
 
   } catch (error) {
 
@@ -750,33 +970,334 @@ async function showMovie(id) {
   }
 }
 
+async function loadRelatedMovies() {
+
+  const grid =
+    document.getElementById(
+      "relatedGrid"
+    );
+
+  const pagination =
+    document.getElementById(
+      "relatedPagination"
+    );
+
+  if (!grid) return;
+
+  grid.innerHTML =
+    "<div id='status'>Loading recommendations...</div>";
+
+  pagination.innerHTML = "";
+
+  if (
+    relatedGenreIds.length === 0
+  ) {
+
+    grid.innerHTML =
+      "<div id='status'>No related movies available.</div>";
+
+    return;
+  }
+
+  try {
+
+    const genreString =
+      relatedGenreIds.join(",");
+
+    const url =
+      API +
+      "/discover?with_genres=" +
+      genreString +
+      "&sort_by=popularity.desc&page=" +
+      relatedPage;
+
+    const response =
+      await fetch(url);
+
+    const data =
+      await response.json();
+
+    if (!data.results) {
+      throw new Error(
+        "No recommendations"
+      );
+    }
+
+    relatedTotalPages =
+      Math.min(
+        data.total_pages || 1,
+        500
+      );
+
+    grid.innerHTML = "";
+
+    data.results.forEach(movie => {
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className =
+        "card";
+
+      const poster =
+        movie.poster_path
+        ? "https://image.tmdb.org/t/p/w500" +
+          movie.poster_path
+        : "";
+
+      card.innerHTML = `
+        <img
+          class="poster"
+          src="${poster}"
+          alt=""
+          loading="lazy"
+        >
+
+        <div class="card-info">
+
+          <div class="card-title">
+            ${escapeHtml(
+              movie.title ||
+              "Untitled"
+            )}
+          </div>
+
+          <div class="rating">
+            ⭐ ${
+              movie.vote_average
+              ? movie.vote_average.toFixed(1)
+              : "N/A"
+            }
+          </div>
+
+          <div class="date">
+            ${
+              movie.release_date ||
+              "Release date unknown"
+            }
+          </div>
+
+        </div>
+      `;
+
+      card.onclick =
+        function() {
+
+          openMovie(movie.id);
+        };
+
+      grid.appendChild(card);
+    });
+
+    renderRelatedPagination();
+
+  } catch (error) {
+
+    grid.innerHTML =
+      "<div id='status'>Could not load recommendations.</div>";
+  }
+}
+
+function renderRelatedPagination() {
+
+  const container =
+    document.getElementById(
+      "relatedPagination"
+    );
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const previous =
+    document.createElement("button");
+
+  previous.className =
+    "page-btn";
+
+  previous.textContent = "‹";
+
+  previous.disabled =
+    relatedPage === 1;
+
+  previous.onclick =
+    function() {
+
+      if (relatedPage > 1) {
+
+        relatedPage--;
+
+        loadRelatedMovies();
+
+        window.scrollTo(
+          0,
+          document.querySelector(
+            ".related"
+          ).offsetTop - 80
+        );
+      }
+    };
+
+  container.appendChild(previous);
+
+  let start =
+    Math.max(
+      1,
+      relatedPage - 2
+    );
+
+  let end =
+    Math.min(
+      relatedTotalPages,
+      relatedPage + 2
+    );
+
+  if (relatedPage <= 3) {
+
+    end =
+      Math.min(
+        5,
+        relatedTotalPages
+      );
+  }
+
+  if (
+    relatedPage >=
+    relatedTotalPages - 2
+  ) {
+
+    start =
+      Math.max(
+        1,
+        relatedTotalPages - 4
+      );
+  }
+
+  for (
+    let i = start;
+    i <= end;
+    i++
+  ) {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.className =
+      "page-btn";
+
+    if (i === relatedPage) {
+
+      button.classList.add(
+        "active"
+      );
+    }
+
+    button.textContent = i;
+
+    button.onclick =
+      function() {
+
+        relatedPage = i;
+
+        loadRelatedMovies();
+
+        window.scrollTo(
+          0,
+          document.querySelector(
+            ".related"
+          ).offsetTop - 80
+        );
+      };
+
+    container.appendChild(button);
+  }
+
+  const next =
+    document.createElement("button");
+
+  next.className =
+    "page-btn";
+
+  next.textContent = "›";
+
+  next.disabled =
+    relatedPage ===
+    relatedTotalPages;
+
+  next.onclick =
+    function() {
+
+      if (
+        relatedPage <
+        relatedTotalPages
+      ) {
+
+        relatedPage++;
+
+        loadRelatedMovies();
+
+        window.scrollTo(
+          0,
+          document.querySelector(
+            ".related"
+          ).offsetTop - 80
+        );
+      }
+    };
+
+  container.appendChild(next);
+}
+
 function goBack() {
 
-  if (history.state && history.state.movie) {
+  if (
+    history.state &&
+    history.state.movie
+  ) {
+
     history.back();
+
   } else {
+
     loadMovies();
   }
 }
 
-window.addEventListener("popstate", function() {
+window.addEventListener(
+  "popstate",
+  function() {
 
-  if (location.hash.startsWith("#movie-")) {
+    if (
+      location.hash.startsWith(
+        "#movie-"
+      )
+    ) {
 
-    const id = location.hash.replace("#movie-", "");
+      const id =
+        location.hash.replace(
+          "#movie-",
+          ""
+        );
 
-    showMovie(id);
+      showMovie(id);
 
-  } else {
+    } else {
 
-    loadMovies();
+      loadMovies();
+    }
   }
-
-});
+);
 
 function escapeHtml(text) {
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement(
+      "div"
+    );
 
   div.textContent = text;
 
