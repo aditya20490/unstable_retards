@@ -1,1491 +1,790 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Discover movies, ratings, genres, actors and trailers.">
-  <title>Unstable Retards 🎬</title>
-
-  <style>
-    :root {
-      --bg: #09090d;
-      --card: #15151c;
-      --header: #101017;
-      --text: #ffffff;
-      --muted: #9999a5;
-      --border: #292932;
-      --button: #202029;
-      --accent: #ffffff;
-    }
-
-    body.light {
-      --bg: #f4f4f7;
-      --card: #ffffff;
-      --header: #ffffff;
-      --text: #111116;
-      --muted: #666672;
-      --border: #ddddE5;
-      --button: #e8e8ee;
-      --accent: #111116;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    /* HEADER */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 15px;
-      background: var(--header);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .menu-button,
-    .theme-button {
-      width: 42px;
-      height: 42px;
-      border: none;
-      border-radius: 12px;
-      background: var(--button);
-      color: var(--text);
-      font-size: 21px;
-      cursor: pointer;
-    }
-
-    .logo {
-      font-size: 19px;
-      font-weight: 800;
-    }
-
-    .subtitle {
-      display: none;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 3px;
-    }
-
-    /* SEARCH */
-
-    .search-area {
-      padding: 18px 15px 8px;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    .search-box {
-      position: relative;
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 48px;
-      padding: 0 48px 0 17px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline: none;
-      background: var(--card);
-      color: var(--text);
-      font-size: 15px;
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 16px;
-      top: 14px;
-      font-size: 19px;
-      opacity: 0.7;
-    }
-
-    /* SIDE MENU */
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 199;
-      display: none;
-    }
-
-    .overlay.show {
-      display: block;
-    }
-
-    .side-menu {
-      position: fixed;
-      top: 0;
-      left: -310px;
-      width: 290px;
-      height: 100vh;
-      z-index: 200;
-      background: var(--header);
-      border-right: 1px solid var(--border);
-      padding: 22px 16px;
-      overflow-y: auto;
-      transition: left 0.25s ease;
-    }
-
-    .side-menu.open {
-      left: 0;
-    }
-
-    .menu-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 5px;
-    }
-
-    .menu-subtitle {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 22px;
-    }
-
-    .menu-close {
-      position: absolute;
-      right: 15px;
-      top: 17px;
-      width: 38px;
-      height: 38px;
-      border: none;
-      border-radius: 10px;
-      background: var(--button);
-      color: var(--text);
-      font-size: 20px;
-    }
-
-    .category {
-      display: block;
-      width: 100%;
-      padding: 13px 14px;
-      margin-bottom: 7px;
-      border: none;
-      border-radius: 11px;
-      background: transparent;
-      color: var(--text);
-      text-align: left;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .category:hover,
-    .category.active {
-      background: var(--button);
-    }
-
-    /* MAIN */
-
-    main {
-      max-width: 1100px;
-      margin: auto;
-      padding: 8px 15px 60px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 17px 0 6px;
-    }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .page-info {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .results-info {
-      color: var(--muted);
-      font-size: 13px;
-      margin: 8px 0 15px;
-    }
-
-    /* MOVIES */
-
-    .movies {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
-    }
-
-    .movie {
-      background: var(--card);
-      border-radius: 13px;
-      overflow: hidden;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      transition: transform 0.18s ease;
-    }
-
-    .movie:active {
-      transform: scale(0.97);
-    }
-
-    .poster {
-      width: 100%;
-      aspect-ratio: 2 / 3;
-      object-fit: cover;
-      display: block;
-      background: var(--button);
-    }
-
-    .movie-info {
-      padding: 10px;
-    }
-
-    .movie-title {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.3;
-      min-height: 36px;
-    }
-
-    .movie-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 5px;
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .rating {
-      color: #e6b84b;
-    }
-
-    /* PAGINATION */
-
-    .pagination {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 28px auto 10px;
-      flex-wrap: wrap;
-    }
-
-    .page-button {
-      min-width: 42px;
-      height: 42px;
-      padding: 0 12px;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: var(--button);
-      color: var(--text);
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .page-button.active {
-      background: var(--text);
-      color: var(--bg);
-      font-weight: 800;
-    }
-
-    .page-button:disabled {
-      opacity: 0.35;
-      cursor: default;
-    }
-
-    /* LOADING */
-
-    .loading,
-    .error {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 55px 10px;
-      color: var(--muted);
-    }
-
-    .spinner {
-      width: 28px;
-      height: 28px;
-      border: 3px solid var(--border);
-      border-top-color: var(--text);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: auto auto 15px;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* DETAILS */
-
-    #details {
-      display: none;
-    }
-
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 14px;
-      margin: 8px 0 20px;
-      border-radius: 11px;
-      background: var(--button);
-      color: var(--text);
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .movie-detail {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .detail-top {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 17px;
-      padding: 16px;
-    }
-
-    .detail-poster {
-      width: 130px;
-      border-radius: 11px;
-    }
-
-    .detail-title {
-      font-size: 23px;
-      line-height: 1.2;
-      margin-bottom: 10px;
-    }
-
-    .detail-text {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .genres {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 12px;
-    }
-
-    .genre {
-      padding: 6px 9px;
-      background: var(--button);
-      border-radius: 20px;
-      font-size: 11px;
-    }
-
-    .overview {
-      padding: 0 16px 20px;
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 14px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
-      padding: 25px 15px;
-      border-top: 1px solid var(--border);
-      margin-top: 35px;
-    }
-
-    @media (min-width: 600px) {
-
-      .subtitle {
-        display: block;
-      }
-
-      .movies {
-        grid-template-columns: repeat(4, 1fr);
-      }
-
-      .detail-top {
-        grid-template-columns: 190px 1fr;
-      }
-
-      .detail-poster {
-        width: 190px;
-      }
-    }
-
-    @media (min-width: 900px) {
-
-      .movies {
-        grid-template-columns: repeat(5, 1fr);
-      }
-
-      .logo {
-        font-size: 22px;
-      }
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unstable Retards 🎬</title>
+
+<style>
+:root {
+  --bg: #0b0b0f;
+  --card: #15151c;
+  --text: #ffffff;
+  --muted: #a1a1aa;
+  --accent: #e50914;
+  --border: #27272a;
+}
+
+body.light {
+  --bg: #f4f4f5;
+  --card: #ffffff;
+  --text: #111113;
+  --muted: #66666d;
+  --border: #dddddf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  transition: background 0.25s, color 0.25s;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  color: var(--text);
+  background: var(--card);
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.search-box {
+  margin-top: 14px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  outline: none;
+  background: var(--card);
+  color: var(--text);
+  font-size: 16px;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px 15px 40px;
+}
+
+h1 {
+  margin: 5px 0 6px;
+  font-size: 25px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+  background: #222;
+}
+
+.card-info {
+  padding: 10px;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.rating {
+  margin-top: 6px;
+  color: #fbbf24;
+  font-size: 13px;
+}
+
+.date {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.page-btn {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+}
+
+.page-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#status {
+  text-align: center;
+  color: var(--muted);
+  margin: 25px 0;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -290px;
+  width: 280px;
+  height: 100vh;
+  background: var(--card);
+  z-index: 100;
+  transition: left 0.25s;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 20px;
+}
+
+.drawer.open {
+  left: 0;
+}
+
+.drawer h2 {
+  margin-top: 0;
+}
+
+.drawer button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.drawer button:hover {
+  background: var(--bg);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 90;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+
+.detail {
+  max-width: 850px;
+  margin: auto;
+}
+
+.back-btn {
+  padding: 10px 14px;
+  border-radius: 9px;
+  margin-bottom: 18px;
+}
+
+.detail-header {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 22px;
+}
+
+.detail-poster {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.detail h2 {
+  font-size: 28px;
+  margin-top: 0;
+}
+
+.meta {
+  color: var(--muted);
+  margin: 8px 0;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.genre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.overview {
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .detail-header {
+    grid-template-columns: 120px 1fr;
+    gap: 15px;
+  }
+
+  .detail h2 {
+    font-size: 20px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
+<header>
+  <div class="topbar">
 
-  <header>
+    <button class="icon-btn" onclick="openMenu()">☰</button>
 
-    <div class="header-left">
+    <div class="logo">Unstable Retards 🎬</div>
 
-      <button
-        class="menu-button"
-        onclick="openMenu()"
-        aria-label="Open menu"
-      >
-        ☰
-      </button>
-
-      <div>
-        <div class="logo">Unstable Retards 🎬</div>
-        <div class="subtitle">Discover movies, actors & trailers</div>
-      </div>
-
-    </div>
-
-    <button
-      class="theme-button"
-      onclick="toggleTheme()"
-      id="themeButton"
-      aria-label="Change theme"
-    >
-      ☀️
-    </button>
-
-  </header>
-
-
-  <!-- SEARCH -->
-
-  <div class="search-area">
-
-    <div class="search-box">
-
-      <input
-        id="search"
-        type="search"
-        placeholder="Search movies..."
-        autocomplete="off"
-      >
-
-      <span class="search-icon">🔎</span>
-
+    <div class="actions">
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
     </div>
 
   </div>
 
-
-  <!-- SIDE MENU -->
-
-  <div
-    id="overlay"
-    class="overlay"
-    onclick="closeMenu()"
-  ></div>
-
-  <aside id="sideMenu" class="side-menu">
-
-    <button
-      class="menu-close"
-      onclick="closeMenu()"
+  <div class="search-box">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search movies..."
+      onkeydown="handleSearch(event)"
     >
-      ×
-    </button>
+  </div>
+</header>
 
-    <div class="menu-title">Movie Categories</div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <div class="menu-subtitle">
-      Browse movies by genre
-    </div>
+<div class="drawer" id="drawer">
+  <h2>Movie Categories</h2>
 
-    <button
-      class="category active"
-      onclick="selectCategory('popular','🔥 Popular Movies')"
-    >
-      🔥 Popular
-    </button>
+  <button onclick="selectCategory('popular','🔥 Popular Movies',this)">
+    🔥 Popular
+  </button>
 
-    <button
-      class="category"
-      onclick="selectCategory('top-rated','⭐ Top Rated')"
-    >
-      ⭐ Top Rated
-    </button>
+  <button onclick="selectCategory('top-rated','⭐ Top Rated',this)">
+    ⭐ Top Rated
+  </button>
 
-    <button
-      class="category"
-      onclick="selectCategory('now-playing','🎬 Now Playing')"
-    >
-      🎬 Now Playing
-    </button>
+  <button onclick="selectCategory('now-playing','🎬 Now Playing',this)">
+    🎬 Now Playing
+  </button>
 
-    <button
-      class="category"
-      onclick="selectCategory('upcoming','🚀 Upcoming')"
-    >
-      🚀 Upcoming
-    </button>
+  <button onclick="selectCategory('upcoming','🚀 Upcoming',this)">
+    🚀 Upcoming
+  </button>
 
-    <hr style="border:none;border-top:1px solid var(--border);margin:15px 0;">
+  <hr>
 
-    <div id="genreButtons">
+  <h3>Genres</h3>
 
-      <div class="category">
-        Loading genres...
-      </div>
+  <div id="genres">
+    Loading genres...
+  </div>
+</div>
 
-    </div>
-
-  </aside>
-
-
-  <!-- MAIN -->
-
-  <main>
-
-    <section id="home">
-
-      <div class="section-header">
-
-        <div
-          id="sectionTitle"
-          class="section-title"
-        >
-          🔥 Popular Movies
-        </div>
-
-        <div
-          id="pageInfo"
-          class="page-info"
-        >
-          Page 1
-        </div>
-
-      </div>
-
-      <div
-        id="resultsInfo"
-        class="results-info"
-      >
-        Loading movies...
-      </div>
-
-      <div
-        id="movies"
-        class="movies"
-      >
-
-        <div class="loading">
-
-          <div class="spinner"></div>
-
-          Loading movies...
-
-        </div>
-
-      </div>
-
-
-      <!-- PAGINATION -->
-
-      <div
-        id="pagination"
-        class="pagination"
-      ></div>
-
-    </section>
-
-
-    <!-- MOVIE DETAILS -->
-
-    <section id="details">
-
-      <button
-        class="back-button"
-        onclick="goBackToMovies()"
-      >
-        ← Back to movies
-      </button>
-
-      <div id="movieDetails">
-
-        <div class="loading">
-
-          <div class="spinner"></div>
-
-          Loading movie...
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <footer>
-
-    This product uses the TMDB API but is not endorsed or certified by TMDB.
-
-  </footer>
-
+<main id="app"></main>
 
 <script>
 
-  const API =
-    "https://movie-api.828477ww.workers.dev";
+const API = "https://movie-api.828477ww.workers.dev";
 
+let currentMode = "popular";
+let currentPage = 1;
+let totalPages = 1;
+let currentTitle = "🔥 Popular Movies";
+let currentQuery = "";
+let currentGenre = "";
 
-  /* =========================
-     APP STATE
-  ========================= */
+let genreMap = {};
 
-  let currentMode = "popular";
+function openMenu() {
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("overlay").classList.add("show");
+}
 
-  let currentQuery = "";
+function closeMenu() {
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("overlay").classList.remove("show");
+}
 
-  let currentGenre = null;
+function toggleTheme() {
+  document.body.classList.toggle("light");
 
-  let currentPage = 1;
+  const light = document.body.classList.contains("light");
 
-  let totalPages = 1;
+  document.getElementById("themeBtn").textContent =
+    light ? "🌙" : "☀️";
 
-  let loading = false;
+  localStorage.setItem("theme", light ? "light" : "dark");
+}
 
-  let searchTimer = null;
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light");
+  document.getElementById("themeBtn").textContent = "🌙";
+}
 
+function handleSearch(event) {
+  if (event.key === "Enter") {
+    const query = event.target.value.trim();
 
-  /* =========================
-     THEME
-  ========================= */
+    if (!query) return;
 
-  function toggleTheme() {
-
-    document.body.classList.toggle("light");
-
-    const light =
-      document.body.classList.contains("light");
-
-    localStorage.setItem(
-      "movieTheme",
-      light ? "light" : "dark"
-    );
-
-    document.getElementById("themeButton").textContent =
-      light ? "🌙" : "☀️";
-  }
-
-
-  function loadTheme() {
-
-    const saved =
-      localStorage.getItem("movieTheme");
-
-    if (saved === "light") {
-
-      document.body.classList.add("light");
-
-      document.getElementById("themeButton").textContent =
-        "🌙";
-    }
-  }
-
-
-  /* =========================
-     MENU
-  ========================= */
-
-  function openMenu() {
-
-    document
-      .getElementById("sideMenu")
-      .classList.add("open");
-
-    document
-      .getElementById("overlay")
-      .classList.add("show");
-  }
-
-
-  function closeMenu() {
-
-    document
-      .getElementById("sideMenu")
-      .classList.remove("open");
-
-    document
-      .getElementById("overlay")
-      .classList.remove("show");
-  }
-
-
-  /* =========================
-     CATEGORY
-  ========================= */
-
-  function selectCategory(mode, title) {
-
-    currentMode = mode;
-
-    currentGenre = null;
-
-    currentQuery = "";
-
+    currentQuery = query;
+    currentGenre = "";
     currentPage = 1;
-
-    document.getElementById("search").value = "";
-
-    document.getElementById("sectionTitle").textContent =
-      title;
-
-    setActiveCategory(event.currentTarget);
-
-    closeMenu();
-
-    showHome();
+    currentMode = "search";
+    currentTitle = "🔎 Search: " + query;
 
     loadMovies();
-  }
-
-
-  function setActiveCategory(button) {
-
-    document
-      .querySelectorAll(".category")
-      .forEach(btn => btn.classList.remove("active"));
-
-    if (button) {
-      button.classList.add("active");
-    }
-  }
-
-
-  /* =========================
-     LOAD GENRES
-  ========================= */
-
-  async function loadGenres() {
-
-    try {
-
-      const response =
-        await fetch(API + "/genres");
-
-      const data =
-        await response.json();
-
-      const genres =
-        data.genres || [];
-
-      const container =
-        document.getElementById("genreButtons");
-
-      container.innerHTML =
-        genres.map(genre => `
-
-          <button
-            class="category"
-            onclick="selectGenre(
-              ${genre.id},
-              '${escapeJS(genre.name)}'
-            )"
-          >
-            ${escapeHTML(genre.name)}
-          </button>
-
-        `).join("");
-
-    } catch (error) {
-
-      document.getElementById("genreButtons").innerHTML = `
-        <div class="category">
-          Genres unavailable
-        </div>
-      `;
-    }
-  }
-
-
-  function selectGenre(id, name) {
-
-    currentMode = "genre";
-
-    currentGenre = id;
-
-    currentQuery = "";
-
-    currentPage = 1;
-
-    document.getElementById("search").value = "";
-
-    document.getElementById("sectionTitle").textContent =
-      "🎭 " + name;
-
     closeMenu();
-
-    showHome();
-
-    loadMovies();
   }
+}
 
+async function loadGenres() {
+  try {
+    const response = await fetch(API + "/genres");
+    const data = await response.json();
 
-  /* =========================
-     LOAD MOVIES
-  ========================= */
+    const container = document.getElementById("genres");
 
-  async function loadMovies() {
+    container.innerHTML = "";
 
-    if (loading) return;
+    data.genres.forEach(genre => {
 
-    loading = true;
+      genreMap[genre.id] = genre.name;
 
-    const container =
-      document.getElementById("movies");
+      const button = document.createElement("button");
 
-    container.innerHTML = `
-      <div class="loading">
+      button.textContent = genre.name;
 
-        <div class="spinner"></div>
+      button.onclick = function() {
+        selectGenre(genre.id, genre.name);
+      };
 
-        Loading movies...
-
-      </div>
-    `;
-
-    try {
-
-      let url = "";
-
-      if (currentMode === "search") {
-
-        url =
-          API +
-          "/search?query=" +
-          encodeURIComponent(currentQuery) +
-          "&page=" +
-          currentPage;
-
-      }
-
-      else if (currentMode === "genre") {
-
-        /*
-          The Worker needs /discover support
-          for complete TMDB genre pagination.
-        */
-
-        url =
-          API +
-          "/discover?with_genres=" +
-          currentGenre +
-          "&page=" +
-          currentPage;
-      }
-
-      else {
-
-        url =
-          API +
-          "/" +
-          currentMode +
-          "?page=" +
-          currentPage;
-      }
-
-
-      const response =
-        await fetch(url);
-
-      if (!response.ok) {
-        throw new Error("API error");
-      }
-
-      const data =
-        await response.json();
-
-      totalPages =
-        Math.min(
-          data.total_pages || 1,
-          500
-        );
-
-      displayMovies(
-        data.results || []
-      );
-
-      updatePagination();
-
-      document.getElementById("pageInfo").textContent =
-        "Page " +
-        currentPage +
-        " of " +
-        totalPages;
-
-      if (data.total_results !== undefined) {
-
-        document.getElementById("resultsInfo").textContent =
-          Number(data.total_results).toLocaleString() +
-          " movies found";
-
-      } else {
-
-        document.getElementById("resultsInfo").textContent =
-          "20 movies per page";
-      }
-
-    } catch (error) {
-
-      container.innerHTML = `
-        <div class="error">
-          Could not load movies.
-        </div>
-      `;
-
-      document.getElementById("pagination").innerHTML = "";
-
-    } finally {
-
-      loading = false;
-    }
-  }
-
-
-  /* =========================
-     DISPLAY MOVIES
-  ========================= */
-
-  function displayMovies(movies) {
-
-    const container =
-      document.getElementById("movies");
-
-    if (!movies.length) {
-
-      container.innerHTML = `
-        <div class="error">
-          No movies found.
-        </div>
-      `;
-
-      return;
-    }
-
-    container.innerHTML =
-      movies.map(movie => {
-
-        const poster =
-          movie.poster_path
-          ? "https://image.tmdb.org/t/p/w500" +
-            movie.poster_path
-          : "";
-
-        const year =
-          movie.release_date
-          ? movie.release_date.substring(0, 4)
-          : "—";
-
-        const rating =
-          movie.vote_average
-          ? movie.vote_average.toFixed(1)
-          : "N/A";
-
-        return `
-
-          <article
-            class="movie"
-            onclick="openMovie(${movie.id})"
-          >
-
-            ${
-              poster
-              ? `
-                <img
-                  class="poster"
-                  src="${poster}"
-                  alt="${escapeHTML(movie.title)}"
-                  loading="lazy"
-                >
-              `
-              : `
-                <div class="poster"></div>
-              `
-            }
-
-            <div class="movie-info">
-
-              <div class="movie-title">
-                ${escapeHTML(movie.title)}
-              </div>
-
-              <div class="movie-meta">
-
-                <span>${year}</span>
-
-                <span class="rating">
-                  ⭐ ${rating}
-                </span>
-
-              </div>
-
-            </div>
-
-          </article>
-        `;
-
-      }).join("");
-  }
-
-
-  /* =========================
-     PAGINATION
-  ========================= */
-
-  function updatePagination() {
-
-    const container =
-      document.getElementById("pagination");
-
-    if (totalPages <= 1) {
-
-      container.innerHTML = "";
-
-      return;
-    }
-
-    let html = "";
-
-    html += `
-      <button
-        class="page-button"
-        onclick="changePage(${currentPage - 1})"
-        ${currentPage === 1 ? "disabled" : ""}
-      >
-        ‹
-      </button>
-    `;
-
-
-    const pages = [];
-
-    pages.push(1);
-
-    for (
-      let i = currentPage - 2;
-      i <= currentPage + 2;
-      i++
-    ) {
-
-      if (i > 1 && i < totalPages) {
-        pages.push(i);
-      }
-    }
-
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-
-    const uniquePages =
-      [...new Set(pages)].sort((a,b) => a-b);
-
-    let previous = null;
-
-    uniquePages.forEach(page => {
-
-      if (
-        previous !== null &&
-        page - previous > 1
-      ) {
-
-        html += `
-          <span
-            style="
-              color:var(--muted);
-              padding:0 3px;
-            "
-          >
-            …
-          </span>
-        `;
-      }
-
-      html += `
-        <button
-          class="page-button
-            ${page === currentPage ? "active" : ""}"
-          onclick="changePage(${page})"
-        >
-          ${page}
-        </button>
-      `;
-
-      previous = page;
+      container.appendChild(button);
     });
 
-
-    html += `
-      <button
-        class="page-button"
-        onclick="changePage(${currentPage + 1})"
-        ${currentPage === totalPages ? "disabled" : ""}
-      >
-        ›
-      </button>
-    `;
-
-    container.innerHTML = html;
+  } catch (error) {
+    document.getElementById("genres").textContent =
+      "Could not load genres.";
   }
+}
 
+function selectCategory(mode, title) {
+  currentMode = mode;
+  currentTitle = title;
+  currentPage = 1;
+  currentQuery = "";
+  currentGenre = "";
 
-  function changePage(page) {
+  document.getElementById("searchInput").value = "";
 
-    if (
-      loading ||
-      page < 1 ||
-      page > totalPages ||
-      page === currentPage
-    ) {
-      return;
-    }
-
-    currentPage = page;
-
-    loadMovies();
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-
-  /* =========================
-     SEARCH
-  ========================= */
-
-  document
-    .getElementById("search")
-    .addEventListener(
-      "input",
-      function() {
-
-        const query =
-          this.value.trim();
-
-        clearTimeout(searchTimer);
-
-        searchTimer =
-          setTimeout(() => {
-
-            if (!query) {
-
-              currentMode = "popular";
-
-              currentGenre = null;
-
-              currentQuery = "";
-
-              currentPage = 1;
-
-              document.getElementById("sectionTitle")
-                .textContent =
-                "🔥 Popular Movies";
-
-              loadMovies();
-
-              return;
-            }
-
-            currentMode = "search";
-
-            currentGenre = null;
-
-            currentQuery = query;
-
-            currentPage = 1;
-
-            document.getElementById("sectionTitle")
-              .textContent =
-              "🔎 Search Results";
-
-            loadMovies();
-
-          }, 450);
-      }
-    );
-
-
-  /* =========================
-     MOVIE DETAILS
-  ========================= */
-
-  async function openMovie(id) {
-
-    history.pushState(
-      {
-        page: "movie",
-        movieId: id
-      },
-      "",
-      "#movie-" + id
-    );
-
-    showDetails();
-
-    const container =
-      document.getElementById("movieDetails");
-
-    container.innerHTML = `
-      <div class="loading">
-
-        <div class="spinner"></div>
-
-        Loading movie...
-
-      </div>
-    `;
-
-    try {
-
-      const response =
-        await fetch(API + "/movie/" + id);
-
-      if (!response.ok) {
-        throw new Error("Movie error");
-      }
-
-      const movie =
-        await response.json();
-
-      const poster =
-        movie.poster_path
-        ? "https://image.tmdb.org/t/p/w500" +
-          movie.poster_path
-        : "";
-
-      const genres =
-        movie.genres || [];
-
-
-      container.innerHTML = `
-
-        <div class="movie-detail">
-
-          <div class="detail-top">
-
-            ${
-              poster
-              ? `
-                <img
-                  class="detail-poster"
-                  src="${poster}"
-                  alt="${escapeHTML(movie.title)}"
-                >
-              `
-              : ""
-            }
-
-            <div>
-
-              <h1 class="detail-title">
-                ${escapeHTML(movie.title)}
-              </h1>
-
-              <div class="detail-text">
-
-                ⭐ ${
-                  movie.vote_average
-                  ? movie.vote_average.toFixed(1)
-                  : "N/A"
-                }
-
-                <br>
-
-                📅 ${movie.release_date || "Unknown"}
-
-              </div>
-
-              <div class="genres">
-
-                ${
-                  genres.map(g => `
-                    <span class="genre">
-                      ${escapeHTML(g.name)}
-                    </span>
-                  `).join("")
-                }
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="overview">
-
-            <strong style="color:var(--text)">
-              Overview
-            </strong>
-
-            <br><br>
-
-            ${
-              escapeHTML(
-                movie.overview ||
-                "No overview available."
-              )
-            }
-
-          </div>
-
-        </div>
-      `;
-
-    } catch (error) {
-
-      container.innerHTML = `
-        <div class="error">
-          Could not load movie details.
-        </div>
-      `;
-    }
-  }
-
-
-  /* =========================
-     NAVIGATION
-  ========================= */
-
-  function showHome() {
-
-    document.getElementById("home").style.display =
-      "block";
-
-    document.getElementById("details").style.display =
-      "none";
-  }
-
-
-  function showDetails() {
-
-    document.getElementById("home").style.display =
-      "none";
-
-    document.getElementById("details").style.display =
-      "block";
-
-    window.scrollTo(0, 0);
-  }
-
-
-  function goBackToMovies() {
-
-    if (history.state && history.state.page === "movie") {
-
-      history.back();
-
-    } else {
-
-      showHome();
-
-      if (location.hash) {
-        history.replaceState(null, "", location.pathname);
-      }
-    }
-  }
-
-
-  /* =========================
-     DEVICE BACK BUTTON
-  ========================= */
-
-  window.addEventListener(
-    "popstate",
-    function() {
-
-      showHome();
-
-      window.scrollTo({
-        top: 0,
-        behavior: "instant"
-      });
-    }
-  );
-
-
-  /* =========================
-     ESCAPE HELPERS
-  ========================= */
-
-  function escapeHTML(text) {
-
-    const div =
-      document.createElement("div");
-
-    div.textContent =
-      text || "";
-
-    return div.innerHTML;
-  }
-
-
-  function escapeJS(text) {
-
-    return String(text)
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'");
-  }
-
-
-  /* =========================
-     START
-  ========================= */
-
-  loadTheme();
-
-  loadGenres();
+  closeMenu();
 
   loadMovies();
+}
+
+function selectGenre(id, name) {
+  currentMode = "discover";
+  currentGenre = id;
+  currentTitle = "🎭 " + name;
+  currentPage = 1;
+  currentQuery = "";
+
+  document.getElementById("searchInput").value = "";
+
+  closeMenu();
+
+  loadMovies();
+}
+
+function buildUrl() {
+
+  if (currentMode === "search") {
+    return API +
+      "/search?query=" +
+      encodeURIComponent(currentQuery) +
+      "&page=" +
+      currentPage;
+  }
+
+  if (currentMode === "discover") {
+    return API +
+      "/discover?with_genres=" +
+      currentGenre +
+      "&sort_by=popularity.desc&page=" +
+      currentPage;
+  }
+
+  return API +
+    "/" +
+    currentMode +
+    "?page=" +
+    currentPage;
+}
+
+async function loadMovies() {
+
+  const app = document.getElementById("app");
+
+  app.innerHTML =
+    "<div id='status'>Loading movies...</div>";
+
+  try {
+
+    const response = await fetch(buildUrl());
+    const data = await response.json();
+
+    if (!data.results) {
+      throw new Error("No results");
+    }
+
+    totalPages = Math.min(data.total_pages || 1, 500);
+
+    renderMovies(data.results);
+
+  } catch (error) {
+
+    app.innerHTML =
+      "<div id='status'>Could not load movies. Please try again.</div>";
+  }
+}
+
+function renderMovies(movies) {
+
+  const app = document.getElementById("app");
+
+  app.innerHTML = `
+    <h1>${escapeHtml(currentTitle)}</h1>
+    <div class="subtitle">
+      Page ${currentPage} of ${totalPages}
+    </div>
+
+    <div class="grid" id="movieGrid"></div>
+
+    <div class="pagination" id="pagination"></div>
+  `;
+
+  const grid = document.getElementById("movieGrid");
+
+  movies.forEach(movie => {
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+    const poster = movie.poster_path
+      ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+      : "";
+
+    card.innerHTML = `
+      <img
+        class="poster"
+        src="${poster}"
+        alt=""
+        loading="lazy"
+      >
+
+      <div class="card-info">
+
+        <div class="card-title">
+          ${escapeHtml(movie.title || "Untitled")}
+        </div>
+
+        <div class="rating">
+          ⭐ ${movie.vote_average
+            ? movie.vote_average.toFixed(1)
+            : "N/A"}
+        </div>
+
+        <div class="date">
+          ${movie.release_date || "Release date unknown"}
+        </div>
+
+      </div>
+    `;
+
+    card.onclick = function() {
+      openMovie(movie.id);
+    };
+
+    grid.appendChild(card);
+  });
+
+  renderPagination();
+}
+
+function renderPagination() {
+
+  const container = document.getElementById("pagination");
+
+  container.innerHTML = "";
+
+  const previous = document.createElement("button");
+
+  previous.className = "page-btn";
+  previous.textContent = "‹";
+  previous.disabled = currentPage === 1;
+
+  previous.onclick = function() {
+    if (currentPage > 1) {
+      currentPage--;
+      loadMovies();
+      window.scrollTo(0, 0);
+    }
+  };
+
+  container.appendChild(previous);
+
+  let start = Math.max(1, currentPage - 2);
+  let end = Math.min(totalPages, currentPage + 2);
+
+  if (currentPage <= 3) {
+    end = Math.min(5, totalPages);
+  }
+
+  if (currentPage >= totalPages - 2) {
+    start = Math.max(1, totalPages - 4);
+  }
+
+  for (let i = start; i <= end; i++) {
+
+    const button = document.createElement("button");
+
+    button.className = "page-btn";
+
+    if (i === currentPage) {
+      button.classList.add("active");
+    }
+
+    button.textContent = i;
+
+    button.onclick = function() {
+      currentPage = i;
+      loadMovies();
+      window.scrollTo(0, 0);
+    };
+
+    container.appendChild(button);
+  }
+
+  const next = document.createElement("button");
+
+  next.className = "page-btn";
+  next.textContent = "›";
+  next.disabled = currentPage === totalPages;
+
+  next.onclick = function() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      loadMovies();
+      window.scrollTo(0, 0);
+    }
+  };
+
+  container.appendChild(next);
+}
+
+async function openMovie(id) {
+
+  history.pushState(
+    { movie: id },
+    "",
+    "#movie-" + id
+  );
+
+  await showMovie(id);
+}
+
+async function showMovie(id) {
+
+  const app = document.getElementById("app");
+
+  app.innerHTML =
+    "<div id='status'>Loading movie...</div>";
+
+  try {
+
+    const response = await fetch(API + "/movie/" + id);
+    const movie = await response.json();
+
+    const poster = movie.poster_path
+      ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+      : "";
+
+    const genres = (movie.genres || [])
+      .map(g => `<span class="genre">${escapeHtml(g.name)}</span>`)
+      .join("");
+
+    app.innerHTML = `
+      <div class="detail">
+
+        <button class="back-btn" onclick="goBack()">
+          ← Back
+        </button>
+
+        <div class="detail-header">
+
+          <img
+            class="detail-poster"
+            src="${poster}"
+            alt=""
+          >
+
+          <div>
+
+            <h2>${escapeHtml(movie.title || "")}</h2>
+
+            <div class="meta">
+              ⭐ ${movie.vote_average
+                ? movie.vote_average.toFixed(1)
+                : "N/A"}
+            </div>
+
+            <div class="meta">
+              📅 ${movie.release_date || "Unknown"}
+            </div>
+
+            <div class="genres">
+              ${genres}
+            </div>
+
+          </div>
+
+        </div>
+
+        <h3>Overview</h3>
+
+        <div class="overview">
+          ${escapeHtml(movie.overview || "No overview available.")}
+        </div>
+
+      </div>
+    `;
+
+    window.scrollTo(0, 0);
+
+  } catch (error) {
+
+    app.innerHTML =
+      "<div id='status'>Could not load movie.</div>";
+  }
+}
+
+function goBack() {
+
+  if (history.state && history.state.movie) {
+    history.back();
+  } else {
+    loadMovies();
+  }
+}
+
+window.addEventListener("popstate", function() {
+
+  if (location.hash.startsWith("#movie-")) {
+
+    const id = location.hash.replace("#movie-", "");
+
+    showMovie(id);
+
+  } else {
+
+    loadMovies();
+  }
+
+});
+
+function escapeHtml(text) {
+
+  const div = document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+}
+
+loadGenres();
+loadMovies();
 
 </script>
 
