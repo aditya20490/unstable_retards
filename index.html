@@ -159,6 +159,31 @@ main{
   color:var(--muted);
 }
 
+/* POPULAR MOVIES ICON */
+
+.popular-heading{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.popular-icon{
+  width:23px;
+  height:23px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  color:var(--accent);
+}
+
+.popular-icon svg{
+  width:23px;
+  height:23px;
+}
+
+/* GENRE ICON */
+
 .genre-heading{
   display:flex;
   align-items:center;
@@ -270,7 +295,6 @@ main{
   cursor:not-allowed;
 }
 
-
 /* SKELETON */
 
 .skeleton{
@@ -286,8 +310,13 @@ main{
 }
 
 @keyframes skeletonShimmer{
-  0%{background-position:200% 0;}
-  100%{background-position:-200% 0;}
+  0%{
+    background-position:200% 0;
+  }
+
+  100%{
+    background-position:-200% 0;
+  }
 }
 
 .skeleton-grid{
@@ -400,9 +429,17 @@ main{
   margin-bottom:9px;
 }
 
-.skeleton-overview-line:nth-child(1){width:95%;}
-.skeleton-overview-line:nth-child(2){width:88%;}
-.skeleton-overview-line:nth-child(3){width:76%;}
+.skeleton-overview-line:nth-child(1){
+  width:95%;
+}
+
+.skeleton-overview-line:nth-child(2){
+  width:88%;
+}
+
+.skeleton-overview-line:nth-child(3){
+  width:76%;
+}
 
 .skeleton-button{
   width:145px;
@@ -425,7 +462,6 @@ main{
   gap:14px;
   padding:12px 0;
 }
-
 
 /* DETAILS */
 
@@ -572,7 +608,6 @@ main{
   gap:14px;
 }
 
-
 /* ABOUT */
 
 .about-page{
@@ -610,7 +645,6 @@ main{
   line-height:1.7;
   font-size:14px;
 }
-
 
 /* TRAILER */
 
@@ -676,7 +710,6 @@ main{
   height:100%;
   border:0;
 }
-
 
 /* MENU */
 
@@ -755,7 +788,6 @@ main{
   color:var(--muted);
 }
 
-
 /* FOOTER */
 
 footer{
@@ -794,7 +826,6 @@ footer{
   opacity:.85;
 }
 
-
 /* RESPONSIVE */
 
 @media(min-width:650px){
@@ -823,13 +854,14 @@ footer{
 
 }
 
+/* MOBILE */
+
 @media(max-width:650px){
 
   .logo{
     font-size:20px;
   }
 
-  /* MOBILE: slightly larger poster */
   .detail-top,
   .skeleton-detail-top{
     grid-template-columns:160px 1fr;
@@ -847,14 +879,6 @@ footer{
   .info-row,
   .skeleton-info-row{
     grid-template-columns:90px 1fr;
-  }
-
-  /* MOBILE: smaller back button */
-  .back-btn{
-    padding:8px 12px;
-    font-size:14px;
-    border-radius:8px;
-    margin-bottom:16px;
   }
 
   .pagination{
@@ -881,6 +905,15 @@ footer{
 
   .info-value{
     line-height:1.4;
+  }
+
+  /* SMALLER MOBILE BACK BUTTON */
+
+  .back-btn{
+    padding:8px 12px;
+    font-size:14px;
+    border-radius:8px;
+    margin-bottom:16px;
   }
 
 }
@@ -1009,13 +1042,11 @@ footer{
 
 </header>
 
-
 <div
   id="menuOverlay"
   class="menu-overlay"
   onclick="closeMenu()"
 ></div>
-
 
 <aside
   id="menu"
@@ -1080,9 +1111,7 @@ footer{
 
 </aside>
 
-
 <main id="app"></main>
-
 
 <footer>
 
@@ -1106,7 +1135,6 @@ footer{
   </div>
 
 </footer>
-
 
 <div
   id="trailerModal"
@@ -1148,7 +1176,6 @@ footer{
 
 </div>
 
-
 <script>
 
 const API =
@@ -1156,7 +1183,6 @@ const API =
 
 const IMAGE =
   "https://image.tmdb.org/t/p/w500";
-
 
 let currentPage = 1;
 let currentSection = "popular";
@@ -1169,7 +1195,6 @@ let currentDirectorId = null;
 let currentDirectorName = null;
 
 let genreCache = {};
-
 
 /* -------------------------
    HELPERS
@@ -1190,9 +1215,7 @@ function escapeHTML(value){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
-
 
 function poster(path){
 
@@ -1201,9 +1224,7 @@ function poster(path){
   }
 
   return IMAGE + path;
-
 }
-
 
 function formatDate(date){
 
@@ -1226,9 +1247,7 @@ function formatDate(date){
       day:"numeric"
     }
   );
-
 }
-
 
 async function getJSON(url){
 
@@ -1240,9 +1259,7 @@ async function getJSON(url){
   }
 
   return await response.json();
-
 }
-
 
 /* -------------------------
    HOME
@@ -1266,9 +1283,7 @@ function goHome(){
   );
 
   loadMovies("popular",1);
-
 }
-
 
 async function loadHomeSection(section){
 
@@ -1288,9 +1303,7 @@ async function loadHomeSection(section){
   );
 
   await loadMovies(section,1);
-
 }
-
 
 async function loadMovies(section,page){
 
@@ -1310,7 +1323,7 @@ async function loadMovies(section,page){
     renderMovies(
       data.results || [],
       section === "popular"
-        ? "🔥 Popular Movies"
+        ? "Popular Movies"
         : section === "top-rated"
         ? "Top Rated Movies"
         : section === "now-playing"
@@ -1352,7 +1365,6 @@ async function loadMovies(section,page){
 
 }
 
-
 function renderMovies(movies,title){
 
   const app =
@@ -1369,12 +1381,53 @@ function renderMovies(movies,title){
     return;
   }
 
+  const popularIcon =
+    title === "Popular Movies"
+      ? `
+        <span
+          class="popular-icon"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+
+            <path
+              d="M12.5 21C8.4 21 5 18.3 5 14.2C5 10.8 7.1 8.7 9.2 6.1C10.2 4.8 10.9 3.2 10.7 2C14.7 4.2 16.5 7.1 16.2 10.1C17.4 9.5 18.1 8.6 18.3 7.4C20.2 9.4 21 11.5 21 14.1C21 18.2 17.8 21 12.5 21Z"
+            ></path>
+
+            <path
+              d="M12.2 17.8C10.8 17.8 9.7 16.8 9.7 15.4C9.7 14.1 10.5 13.2 11.4 12.1C11.8 11.6 12.1 11 12 10.5C13.6 11.5 14.3 12.7 14.1 14C14.7 13.7 15.1 13.3 15.2 12.8C15.9 13.7 16.1 14.6 16.1 15.5C16.1 16.9 14.9 17.8 12.2 17.8Z"
+            ></path>
+
+          </svg>
+
+        </span>
+      `
+      : "";
+
   app.innerHTML = `
 
     <div class="hero">
 
-      <h1>
-        ${escapeHTML(title)}
+      <h1 class="${
+        title === "Popular Movies"
+          ? "popular-heading"
+          : ""
+      }">
+
+        ${popularIcon}
+
+        <span>
+          ${escapeHTML(title)}
+        </span>
+
       </h1>
 
       <p>
@@ -1397,7 +1450,6 @@ function renderMovies(movies,title){
 
 }
 
-
 /* -------------------------
    MOVIE CARD
 ------------------------- */
@@ -1411,7 +1463,7 @@ function movieCard(movie){
 
   return `
 
-    <article
+    <div
       class="movie-card"
       onclick="showMovie(${movie.id})"
     >
@@ -1444,12 +1496,11 @@ function movieCard(movie){
 
       </div>
 
-    </article>
+    </div>
 
   `;
 
 }
-
 
 /* -------------------------
    PAGINATION
@@ -1474,6 +1525,12 @@ function renderPagination(
   if(old){
     old.remove();
   }
+
+  const pagination =
+    document.createElement("div");
+
+  pagination.className =
+    "pagination";
 
   const maxButtons =
     window.innerWidth <= 650
@@ -1512,34 +1569,32 @@ function renderPagination(
       ←
     </button>
 
-    ${
-      Array.from(
-        {
-          length:end-start+1
-        },
-        (_,i)=>{
+    ${Array.from(
+      {
+        length:end-start+1
+      },
+      (_,i)=>{
 
-          const p =
-            start+i;
+        const p =
+          start+i;
 
-          return `
+        return `
 
-            <button
-              class="page-btn ${
-                p===page
-                  ? "active"
-                  : ""
-              }"
-              data-page="${p}"
-            >
-              ${p}
-            </button>
+          <button
+            class="page-btn ${
+              p===page
+                ? "active"
+                : ""
+            }"
+            data-page="${p}"
+          >
+            ${p}
+          </button>
 
-          `;
+        `;
 
-        }
-      ).join("")
-    }
+      }
+    ).join("")}
 
     <button
       class="page-btn"
@@ -1583,7 +1638,6 @@ function renderPagination(
   app.appendChild(pagination);
 
 }
-
 
 /* -------------------------
    MOVIE DETAILS
@@ -1662,7 +1716,6 @@ async function showMovie(id){
 
 }
 
-
 function findTrailer(videos){
 
   const youtube =
@@ -1698,7 +1751,6 @@ function findTrailer(videos){
   ) || null;
 
 }
-
 
 /* -------------------------
    MOVIE DETAIL PAGE
@@ -1744,19 +1796,13 @@ function renderMovieDetails(
         ← Back
       </button>
 
-
       <div class="detail-top">
 
-        <div>
-
-          <img
-            class="detail-poster"
-            src="${poster(movie.poster_path)}"
-            alt="${escapeHTML(movie.title)}"
-          >
-
-        </div>
-
+        <img
+          class="detail-poster"
+          src="${poster(movie.poster_path)}"
+          alt="${escapeHTML(movie.title)}"
+        >
 
         <div class="detail-content">
 
@@ -1773,7 +1819,6 @@ function renderMovieDetails(
               `
               : ""
           }
-
 
           <div class="tag-row">
 
@@ -1797,8 +1842,7 @@ function renderMovieDetails(
 
           </div>
 
-
-          <div class="movie-meta">
+          <div class="overview">
 
             ${
               movie.release_date
@@ -1823,7 +1867,6 @@ function renderMovieDetails(
 
           </div>
 
-
           <p class="overview">
 
             ${escapeHTML(
@@ -1832,7 +1875,6 @@ function renderMovieDetails(
             )}
 
           </p>
-
 
           ${
             currentTrailer
@@ -1853,7 +1895,6 @@ function renderMovieDetails(
 
       </div>
 
-
       <div class="details-box">
 
         <div class="info-row">
@@ -1866,7 +1907,6 @@ function renderMovieDetails(
 
             ${
               cast.length
-
                 ? cast.map(
                     person => `
 
@@ -1879,11 +1919,9 @@ function renderMovieDetails(
                         ${
                           person.character
                             ? `
-
                               <span class="character">
                                 — ${escapeHTML(person.character)}
                               </span>
-
                             `
                             : ""
                         }
@@ -1892,14 +1930,12 @@ function renderMovieDetails(
 
                     `
                   ).join("")
-
                 : "Cast information unavailable."
             }
 
           </div>
 
         </div>
-
 
         <div class="info-row">
 
@@ -1911,7 +1947,6 @@ function renderMovieDetails(
 
             ${
               directors.length
-
                 ? directors.map(
                     person => `
 
@@ -1927,14 +1962,12 @@ function renderMovieDetails(
 
                     `
                   ).join(", ")
-
                 : "Director information unavailable."
             }
 
           </div>
 
         </div>
-
 
         <div class="info-row">
 
@@ -1956,7 +1989,6 @@ function renderMovieDetails(
 
       </div>
 
-
       <section class="section">
 
         <div class="section-header">
@@ -1967,40 +1999,37 @@ function renderMovieDetails(
 
         </div>
 
-
         <div
           id="relatedMovies"
           class="related-grid"
         >
 
-          ${
-            Array.from(
-              {length:6},
-              ()=>`
+          ${Array.from(
+            {length:6},
+            ()=>`
 
-                <div class="skeleton-card">
+              <div class="skeleton-card">
+
+                <div
+                  class="skeleton skeleton-poster"
+                ></div>
+
+                <div class="skeleton-info">
 
                   <div
-                    class="skeleton skeleton-poster"
+                    class="skeleton skeleton-title"
                   ></div>
 
-                  <div class="skeleton-info">
-
-                    <div
-                      class="skeleton skeleton-title"
-                    ></div>
-
-                    <div
-                      class="skeleton skeleton-title short"
-                    ></div>
-
-                  </div>
+                  <div
+                    class="skeleton skeleton-title short"
+                  ></div>
 
                 </div>
 
-              `
-            ).join("")
-          }
+              </div>
+
+            `
+          ).join("")}
 
         </div>
 
@@ -2011,7 +2040,6 @@ function renderMovieDetails(
   `;
 
 }
-
 
 /* -------------------------
    DIRECTOR PAGE
@@ -2091,7 +2119,6 @@ async function showDirector(
 
 }
 
-
 function renderDirectorPage(
   name,
   movies
@@ -2102,7 +2129,7 @@ function renderDirectorPage(
 
   app.innerHTML = `
 
-    <div class="hero">
+    <div class="detail">
 
       <button
         class="back-btn"
@@ -2111,47 +2138,47 @@ function renderDirectorPage(
         ← Back
       </button>
 
-      <h1>
-        ${escapeHTML(name)}
-      </h1>
+      <div class="hero">
 
-      <p>
-        Movies directed by ${escapeHTML(name)}.
-      </p>
+        <h1>
+          ${escapeHTML(name)}
+        </h1>
 
-    </div>
+        <p>
+          Movies directed by ${escapeHTML(name)}.
+        </p>
 
+      </div>
 
-    ${
-      movies.length
+      ${
+        movies.length
+          ? `
 
-        ? `
+            <section class="section">
 
-          <section class="section">
+              <div class="movie-grid">
 
-            <div class="movie-grid">
+                ${movies.map(movieCard).join("")}
 
-              ${movies.map(movieCard).join("")}
+              </div>
 
+            </section>
+
+          `
+          : `
+
+            <div class="empty">
+              No directed movies found.
             </div>
 
-          </section>
+          `
+      }
 
-        `
-
-        : `
-
-          <div class="empty">
-            No directed movies found.
-          </div>
-
-        `
-    }
+    </div>
 
   `;
 
 }
-
 
 /* -------------------------
    RELATED MOVIES
@@ -2210,7 +2237,6 @@ async function loadRelatedMovies(movie){
 
 }
 
-
 /* -------------------------
    TRAILER
 ------------------------- */
@@ -2257,7 +2283,6 @@ function openTrailer(){
 
 }
 
-
 function closeTrailer(){
 
   const modal =
@@ -2278,7 +2303,6 @@ function closeTrailer(){
 
 }
 
-
 function handleModalBackground(event){
 
   if(
@@ -2292,20 +2316,16 @@ function handleModalBackground(event){
 
 }
 
-
 document.addEventListener(
   "keydown",
   event => {
 
     if(event.key === "Escape"){
-
       closeTrailer();
-
     }
 
   }
 );
-
 
 /* -------------------------
    SEARCH
@@ -2315,7 +2335,6 @@ const searchInput =
   document.getElementById(
     "searchInput"
   );
-
 
 searchInput.addEventListener(
   "keydown",
@@ -2343,7 +2362,6 @@ searchInput.addEventListener(
   }
 );
 
-
 function hideSearch(){
 
   document
@@ -2353,7 +2371,6 @@ function hideSearch(){
     .classList.add("hidden");
 
 }
-
 
 function showSearch(){
 
@@ -2371,7 +2388,6 @@ function showSearch(){
   );
 
 }
-
 
 async function searchMovies(query){
 
@@ -2404,7 +2420,6 @@ async function searchMovies(query){
 
 }
 
-
 document.addEventListener(
   "click",
   function(event){
@@ -2436,7 +2451,6 @@ document.addEventListener(
 
   }
 );
-
 
 /* -------------------------
    GENRES
@@ -2472,24 +2486,22 @@ async function loadGenres(){
             </button>
 
           `
-        ).join("");
+        )
+        .join("");
 
   }catch(error){
 
     document.getElementById(
       "genreMenu"
     ).innerHTML = `
-
-      <div class="movie-meta">
+      <div class="empty">
         Genres unavailable.
       </div>
-
     `;
 
   }
 
 }
-
 
 async function loadGenre(
   id,
@@ -2521,7 +2533,6 @@ async function loadGenre(
   );
 
 }
-
 
 async function loadGenreFromTag(
   id,
@@ -2557,7 +2568,6 @@ async function loadGenreFromTag(
   });
 
 }
-
 
 async function loadGenrePage(
   id,
@@ -2617,7 +2627,6 @@ async function loadGenrePage(
 
 }
 
-
 function renderGenreMovies(
   movies,
   name
@@ -2641,44 +2650,8 @@ function renderGenreMovies(
 
     <div class="hero">
 
-      <h1 class="genre-heading">
-
-        <span class="genre-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-
-            <path
-              d="M20.5 13.5L13.5 20.5
-                 C12.7 21.3 11.4 21.3 10.6 20.5
-                 L3.5 13.4
-                 V4
-                 H12.9
-                 L20.5 11.6
-                 C21.3 12.4 21.3 13
-                 20.5 13.5Z"
-            ></path>
-
-            <circle
-              cx="7.5"
-              cy="8"
-              r="1.25"
-            ></circle>
-
-          </svg>
-
-        </span>
-
-        <span>
-          ${escapeHTML(name)}
-        </span>
-
+      <h1>
+        ${escapeHTML(name)}
       </h1>
 
       <p>
@@ -2688,7 +2661,6 @@ function renderGenreMovies(
       </p>
 
     </div>
-
 
     <section class="section">
 
@@ -2703,7 +2675,6 @@ function renderGenreMovies(
   `;
 
 }
-
 
 /* -------------------------
    ABOUT
@@ -2733,18 +2704,13 @@ function showAbout(){
         ← Back
       </button>
 
-      <div class="hero">
+      <h1>
+        About Unstable Retards
+      </h1>
 
-        <h1>
-          About Unstable Retards
-        </h1>
-
-        <p class="about-tagline">
-          Every Movie and TV Show Ever Made.
-        </p>
-
-      </div>
-
+      <p class="about-tagline">
+        Every Movie and TV Show Ever Made.
+      </p>
 
       <div class="about-section">
 
@@ -2763,7 +2729,6 @@ function showAbout(){
 
       </div>
 
-
       <div class="about-section">
 
         <h2>
@@ -2779,7 +2744,6 @@ function showAbout(){
 
       </div>
 
-
       <div class="about-section">
 
         <h2>
@@ -2794,7 +2758,6 @@ function showAbout(){
         </p>
 
       </div>
-
 
       <div class="about-section">
 
@@ -2815,7 +2778,6 @@ function showAbout(){
   `;
 
 }
-
 
 /* -------------------------
    SKELETON
@@ -2849,9 +2811,17 @@ function showMovieSkeleton(){
 
           <div class="skeleton-tags">
 
-            <div class="skeleton skeleton-tag"></div>
-            <div class="skeleton skeleton-tag"></div>
-            <div class="skeleton skeleton-tag"></div>
+            <div
+              class="skeleton skeleton-tag"
+            ></div>
+
+            <div
+              class="skeleton skeleton-tag"
+            ></div>
+
+            <div
+              class="skeleton skeleton-tag"
+            ></div>
 
           </div>
 
@@ -2861,9 +2831,17 @@ function showMovieSkeleton(){
 
           <div class="skeleton-overview">
 
-            <div class="skeleton skeleton-overview-line"></div>
-            <div class="skeleton skeleton-overview-line"></div>
-            <div class="skeleton skeleton-overview-line"></div>
+            <div
+              class="skeleton skeleton-overview-line"
+            ></div>
+
+            <div
+              class="skeleton skeleton-overview-line"
+            ></div>
+
+            <div
+              class="skeleton skeleton-overview-line"
+            ></div>
 
           </div>
 
@@ -2875,27 +2853,41 @@ function showMovieSkeleton(){
 
       </div>
 
-
       <div class="skeleton-details-box">
 
         <div class="skeleton-info-row">
 
-          <div class="skeleton skeleton-label"></div>
-          <div class="skeleton skeleton-value"></div>
+          <div
+            class="skeleton skeleton-title"
+          ></div>
+
+          <div
+            class="skeleton skeleton-title"
+          ></div>
 
         </div>
 
         <div class="skeleton-info-row">
 
-          <div class="skeleton skeleton-label"></div>
-          <div class="skeleton skeleton-value"></div>
+          <div
+            class="skeleton skeleton-title"
+          ></div>
+
+          <div
+            class="skeleton skeleton-title"
+          ></div>
 
         </div>
 
         <div class="skeleton-info-row">
 
-          <div class="skeleton skeleton-label"></div>
-          <div class="skeleton skeleton-value"></div>
+          <div
+            class="skeleton skeleton-title"
+          ></div>
+
+          <div
+            class="skeleton skeleton-title"
+          ></div>
 
         </div>
 
@@ -2906,7 +2898,6 @@ function showMovieSkeleton(){
   `;
 
 }
-
 
 function showMovieGridSkeleton(){
 
@@ -2924,39 +2915,36 @@ function showMovieGridSkeleton(){
 
     </div>
 
-
     <section class="section">
 
-      <div class="skeleton-grid">
+      <div class="movie-grid">
 
-        ${
-          Array.from(
-            {length:12},
-            ()=>`
+        ${Array.from(
+          {length:12},
+          ()=>`
 
-              <div class="skeleton-card">
+            <div class="skeleton-card">
+
+              <div
+                class="skeleton skeleton-poster"
+              ></div>
+
+              <div class="skeleton-info">
 
                 <div
-                  class="skeleton skeleton-poster"
+                  class="skeleton skeleton-title"
                 ></div>
 
-                <div class="skeleton-info">
-
-                  <div
-                    class="skeleton skeleton-title"
-                  ></div>
-
-                  <div
-                    class="skeleton skeleton-title short"
-                  ></div>
-
-                </div>
+                <div
+                  class="skeleton skeleton-title short"
+                ></div>
 
               </div>
 
-            `
-          ).join("")
-        }
+            </div>
+
+          `
+        ).join("")}
 
       </div>
 
@@ -2965,7 +2953,6 @@ function showMovieGridSkeleton(){
   `;
 
 }
-
 
 /* -------------------------
    MENU
@@ -2983,7 +2970,6 @@ function openMenu(){
 
 }
 
-
 function closeMenu(){
 
   document
@@ -2995,7 +2981,6 @@ function closeMenu(){
     .classList.remove("show");
 
 }
-
 
 /* -------------------------
    THEME
@@ -3013,7 +2998,6 @@ function updateThemeIcon(){
       "light"
     );
 
-
   if(isLight){
 
     svg.innerHTML = `
@@ -3024,17 +3008,15 @@ function updateThemeIcon(){
         r="4"
       ></circle>
 
-      <line x1="12" y1="2" x2="12" y2="4"></line>
-      <line x1="12" y1="20" x2="12" y2="22"></line>
+      <line x1="12" y1="2" x2="12" y2="5"></line>
+      <line x1="12" y1="19" x2="12" y2="22"></line>
+      <line x1="2" y1="12" x2="5" y2="12"></line>
+      <line x1="19" y1="12" x2="22" y2="12"></line>
 
-      <line x1="2" y1="12" x2="4" y2="12"></line>
-      <line x1="20" y1="12" x2="22" y2="12"></line>
-
-      <line x1="4.9" y1="4.9" x2="6.3" y2="6.3"></line>
-      <line x1="17.7" y1="17.7" x2="19.1" y2="19.1"></line>
-
-      <line x1="17.7" y1="6.3" x2="19.1" y2="4.9"></line>
-      <line x1="4.9" y1="19.1" x2="6.3" y2="17.7"></line>
+      <line x1="4.9" y1="4.9" x2="7" y2="7"></line>
+      <line x1="17" y1="17" x2="19.1" y2="19.1"></line>
+      <line x1="17" y1="7" x2="19.1" y2="4.9"></line>
+      <line x1="4.9" y1="19.1" x2="7" y2="17"></line>
 
     `;
 
@@ -3043,11 +3025,7 @@ function updateThemeIcon(){
     svg.innerHTML = `
 
       <path
-        d="M20 15.5
-           A8.5 8.5 0 0 1
-           8.5 4
-           A8.5 8.5 0 1 0
-           20 15.5Z"
+        d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5A8.5 8.5 0 1 0 20.5 15.2Z"
       ></path>
 
     `;
@@ -3055,7 +3033,6 @@ function updateThemeIcon(){
   }
 
 }
-
 
 function toggleTheme(){
 
@@ -3073,7 +3050,6 @@ function toggleTheme(){
 
 }
 
-
 function loadSavedTheme(){
 
   const theme =
@@ -3089,7 +3065,6 @@ function loadSavedTheme(){
   updateThemeIcon();
 
 }
-
 
 /* -------------------------
    BACK / HISTORY
@@ -3108,7 +3083,6 @@ function goBack(){
   }
 
 }
-
 
 window.addEventListener(
   "popstate",
@@ -3130,7 +3104,6 @@ window.addEventListener(
 
     const directorId =
       params.get("director");
-
 
     if(movieId){
 
@@ -3170,14 +3143,9 @@ window.addEventListener(
                 )
             );
 
-        const directorName =
-          directed[0]?.crew?.name ||
-          currentDirectorName ||
-          "Director";
-
         renderDirectorPage(
           currentDirectorName ||
-          directorName,
+          "Director",
           directed
         );
 
@@ -3225,7 +3193,6 @@ window.addEventListener(
 
   }
 );
-
 
 /* -------------------------
    GENRE ID HELPER
@@ -3277,7 +3244,6 @@ async function findGenreIdByName(
   return 0;
 
 }
-
 
 /* -------------------------
    MOVIE WITHOUT HISTORY
@@ -3349,14 +3315,12 @@ async function showMovieWithoutHistory(
 
 }
 
-
 /* -------------------------
    INITIALIZE
 ------------------------- */
 
 loadSavedTheme();
 loadGenres();
-
 
 const initialParams =
   new URLSearchParams(
@@ -3374,7 +3338,6 @@ const initialAbout =
 
 const initialDirector =
   initialParams.get("director");
-
 
 if(initialMovie){
 
