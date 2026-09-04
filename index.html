@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Discover movies, actors and trailers.">
+  <meta name="description" content="Discover movies, ratings and movie information.">
   <title>Unstable Retards — Movies</title>
 
   <style>
@@ -55,10 +55,14 @@
       outline: none;
     }
 
+    input:focus {
+      border-color: #777;
+    }
+
     main {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: auto;
-      padding: 5px 16px 40px;
+      padding: 5px 16px 50px;
     }
 
     h2 {
@@ -77,6 +81,11 @@
       border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .movie:hover {
+      transform: translateY(-3px);
     }
 
     .poster {
@@ -103,6 +112,12 @@
       margin-top: 6px;
     }
 
+    .movie-rating {
+      color: #ffd166;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
     .loading,
     .error {
       text-align: center;
@@ -111,9 +126,29 @@
       grid-column: 1 / -1;
     }
 
+    .load-more {
+      display: block;
+      margin: 25px auto 10px;
+      padding: 13px 25px;
+      border: none;
+      border-radius: 12px;
+      background: #292933;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .load-more:hover {
+      background: #383842;
+    }
+
+    .load-more:disabled {
+      opacity: 0.5;
+    }
+
     .details {
       display: none;
-      max-width: 800px;
+      max-width: 850px;
       margin: auto;
     }
 
@@ -128,17 +163,17 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 150px 1fr;
-      gap: 18px;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
     }
 
     .hero-poster {
-      width: 150px;
+      width: 180px;
       border-radius: 12px;
     }
 
     .details h1 {
-      font-size: 25px;
+      font-size: 28px;
       margin-bottom: 10px;
     }
 
@@ -164,12 +199,24 @@
     .overview {
       color: #ccc;
       line-height: 1.6;
-      margin-top: 20px;
+      margin-top: 22px;
+    }
+
+    .results-info {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 12px;
     }
 
     @media (min-width: 600px) {
       .movies {
         grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .movies {
+        grid-template-columns: repeat(5, 1fr);
       }
     }
 
@@ -197,37 +244,88 @@
 </header>
 
 <div class="search-box">
-  <input id="search" type="text" placeholder="Search movies...">
+  <input
+    id="search"
+    type="text"
+    placeholder="Search any movie..."
+    autocomplete="off"
+  >
 </div>
 
 <main>
 
   <section id="home">
-    <h2>🔥 Popular Movies</h2>
+
+    <h2 id="sectionTitle">🔥 Popular Movies</h2>
+
+    <div id="resultsInfo" class="results-info">
+      Loading movies...
+    </div>
 
     <div id="movies" class="movies">
       <div class="loading">Loading movies...</div>
     </div>
+
+    <button
+      id="loadMore"
+      class="load-more"
+      onclick="loadMoreMovies()"
+    >
+      Load More Movies
+    </button>
+
   </section>
 
   <section id="details" class="details">
-    <div class="back" onclick="goHome()">← Back to movies</div>
+
+    <div class="back" onclick="goHome()">
+      ← Back to movies
+    </div>
 
     <div id="movieDetails">
       <div class="loading">Loading...</div>
     </div>
+
   </section>
 
 </main>
 
 <script>
+
   const API = "https://movie-api.828477ww.workers.dev";
 
-  async function loadPopular() {
-    const container = document.getElementById("movies");
+  let currentPage = 1;
+  let totalPages = 1;
+  let currentMode = "popular";
+  let currentQuery = "";
+  let loading = false;
+
+
+  // =========================
+  // LOAD POPULAR MOVIES
+  // =========================
+
+  async function loadPopular(reset = true) {
+
+    if (loading) return;
+
+    loading = true;
+
+    if (reset) {
+      currentPage = 1;
+      totalPages = 1;
+      document.getElementById("movies").innerHTML =
+        '<div class="loading">Loading movies...</div>';
+
+      document.getElementById("sectionTitle").textContent =
+        "🔥 Popular Movies";
+    }
 
     try {
-      const response = await fetch(API + "/popular");
+
+      const response = await fetch(
+        API + "/popular?page=" + currentPage
+      );
 
       if (!response.ok) {
         throw new Error("API error");
@@ -235,43 +333,120 @@
 
       const data = await response.json();
 
-      displayMovies(data.results || []);
+      totalPages = data.total_pages || 1;
+
+      if (reset) {
+        displayMovies(data.results || [], false);
+      } else {
+        displayMovies(data.results || [], true);
+      }
+
+      updateResultsInfo();
 
     } catch (error) {
-      container.innerHTML =
-        '<div class="error">Could not load movies.</div>';
+
+      if (reset) {
+        document.getElementById("movies").innerHTML =
+          '<div class="error">Could not load movies.</div>';
+      }
+
+    } finally {
+
+      loading = false;
+
+      updateLoadMoreButton();
     }
   }
 
-  function displayMovies(movies) {
+
+  // =========================
+  // LOAD MORE
+  // =========================
+
+  async function loadMoreMovies() {
+
+    if (loading) return;
+
+    if (currentMode === "search") {
+
+      currentPage++;
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+        return;
+      }
+
+      await searchMovies(currentQuery, false);
+
+    } else {
+
+      currentPage++;
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+        return;
+      }
+
+      await loadPopular(false);
+    }
+  }
+
+
+  // =========================
+  // DISPLAY MOVIES
+  // =========================
+
+  function displayMovies(movies, append) {
+
     const container = document.getElementById("movies");
 
-    if (!movies.length) {
+    if (!append) {
+      container.innerHTML = "";
+    }
+
+    if (!movies.length && !append) {
+
       container.innerHTML =
         '<div class="error">No movies found.</div>';
+
       return;
     }
 
-    container.innerHTML = movies.map(movie => {
+    const html = movies.map(movie => {
 
       const poster = movie.poster_path
-        ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+        ? "https://image.tmdb.org/t/p/w500" +
+          movie.poster_path
         : "";
 
       const year = movie.release_date
         ? movie.release_date.substring(0, 4)
-        : "";
+        : "Unknown";
+
+      const rating =
+        movie.vote_average
+        ? movie.vote_average.toFixed(1)
+        : "N/A";
 
       return `
-        <div class="movie" onclick="openMovie(${movie.id})">
+        <div
+          class="movie"
+          onclick="openMovie(${movie.id})"
+        >
 
           ${
             poster
-            ? `<img class="poster" src="${poster}" alt="">`
+            ? `<img
+                 class="poster"
+                 src="${poster}"
+                 alt=""
+                 loading="lazy"
+               >`
             : `<div class="poster"></div>`
           }
 
           <div class="movie-info">
+
             <div class="movie-title">
               ${escapeHTML(movie.title)}
             </div>
@@ -279,28 +454,144 @@
             <div class="movie-date">
               ${year}
             </div>
+
+            <div class="movie-rating">
+              ⭐ ${rating}
+            </div>
+
           </div>
 
         </div>
       `;
+
     }).join("");
+
+    container.insertAdjacentHTML("beforeend", html);
   }
+
+
+  // =========================
+  // SEARCH
+  // =========================
+
+  let searchTimer;
+
+  document
+    .getElementById("search")
+    .addEventListener("input", function() {
+
+      const query = this.value.trim();
+
+      clearTimeout(searchTimer);
+
+      searchTimer = setTimeout(() => {
+
+        if (!query) {
+
+          currentMode = "popular";
+          currentQuery = "";
+
+          loadPopular(true);
+
+        } else {
+
+          currentMode = "search";
+          currentQuery = query;
+          currentPage = 1;
+
+          searchMovies(query, true);
+        }
+
+      }, 500);
+    });
+
+
+  async function searchMovies(query, reset = true) {
+
+    if (loading) return;
+
+    loading = true;
+
+    if (reset) {
+
+      currentPage = 1;
+
+      document.getElementById("movies").innerHTML =
+        '<div class="loading">Searching...</div>';
+
+      document.getElementById("sectionTitle").textContent =
+        "🔎 Search Results";
+    }
+
+    try {
+
+      const response = await fetch(
+        API +
+        "/search?query=" +
+        encodeURIComponent(query) +
+        "&page=" +
+        currentPage
+      );
+
+      if (!response.ok) {
+        throw new Error("Search error");
+      }
+
+      const data = await response.json();
+
+      totalPages = data.total_pages || 1;
+
+      displayMovies(
+        data.results || [],
+        !reset
+      );
+
+      updateResultsInfo(
+        data.total_results
+      );
+
+    } catch (error) {
+
+      if (reset) {
+
+        document.getElementById("movies").innerHTML =
+          '<div class="error">Search failed.</div>';
+      }
+
+    } finally {
+
+      loading = false;
+
+      updateLoadMoreButton();
+    }
+  }
+
+
+  // =========================
+  // MOVIE DETAILS
+  // =========================
 
   async function openMovie(id) {
 
-    document.getElementById("home").style.display = "none";
-    document.getElementById("details").style.display = "block";
+    document.getElementById("home").style.display =
+      "none";
+
+    document.getElementById("details").style.display =
+      "block";
 
     window.scrollTo(0, 0);
 
-    const container = document.getElementById("movieDetails");
+    const container =
+      document.getElementById("movieDetails");
 
     container.innerHTML =
       '<div class="loading">Loading movie...</div>';
 
     try {
 
-      const response = await fetch(API + "/movie/" + id);
+      const response = await fetch(
+        API + "/movie/" + id
+      );
 
       if (!response.ok) {
         throw new Error("Movie not found");
@@ -309,44 +600,73 @@
       const movie = await response.json();
 
       const poster = movie.poster_path
-        ? "https://image.tmdb.org/t/p/w500" + movie.poster_path
+        ? "https://image.tmdb.org/t/p/w500" +
+          movie.poster_path
         : "";
 
       const genres = movie.genres || [];
 
       container.innerHTML = `
+
         <div class="hero">
 
           ${
             poster
-            ? `<img class="hero-poster" src="${poster}" alt="">`
+            ? `<img
+                 class="hero-poster"
+                 src="${poster}"
+                 alt=""
+               >`
             : ""
           }
 
           <div>
-            <h1>${escapeHTML(movie.title)}</h1>
+
+            <h1>
+              ${escapeHTML(movie.title)}
+            </h1>
 
             <div class="rating">
-              ⭐ ${movie.vote_average
+              ⭐ ${
+                movie.vote_average
                 ? movie.vote_average.toFixed(1)
-                : "N/A"}
+                : "N/A"
+              }
             </div>
 
             <div>
-              ${movie.release_date || "Release date unknown"}
+              📅 ${movie.release_date || "Unknown"}
             </div>
 
             <div class="genres">
-              ${genres.map(g =>
-                `<span class="genre">${escapeHTML(g.name)}</span>`
-              ).join("")}
+
+              ${
+                genres.map(g =>
+                  `<span class="genre">
+                    ${escapeHTML(g.name)}
+                  </span>`
+                ).join("")
+              }
+
             </div>
+
           </div>
 
         </div>
 
         <div class="overview">
-          ${escapeHTML(movie.overview || "No description available.")}
+
+          <strong>Overview</strong>
+
+          <br><br>
+
+          ${
+            escapeHTML(
+              movie.overview ||
+              "No description available."
+            )
+          }
+
         </div>
       `;
 
@@ -357,45 +677,97 @@
     }
   }
 
+
+  // =========================
+  // BACK HOME
+  // =========================
+
   function goHome() {
-    document.getElementById("details").style.display = "none";
-    document.getElementById("home").style.display = "block";
+
+    document.getElementById("details").style.display =
+      "none";
+
+    document.getElementById("home").style.display =
+      "block";
+
     window.scrollTo(0, 0);
   }
 
-  document.getElementById("search").addEventListener("input", async function() {
 
-    const query = this.value.trim();
+  // =========================
+  // LOAD MORE BUTTON
+  // =========================
 
-    if (!query) {
-      loadPopular();
-      return;
+  function updateLoadMoreButton() {
+
+    const button =
+      document.getElementById("loadMore");
+
+    if (currentPage >= totalPages) {
+
+      button.style.display = "none";
+
+    } else {
+
+      button.style.display = "block";
+
+      button.disabled = loading;
+
+      button.textContent =
+        loading
+        ? "Loading..."
+        : "Load More Movies";
     }
+  }
 
-    try {
 
-      const response = await fetch(
-        API + "/search?query=" + encodeURIComponent(query)
-      );
+  // =========================
+  // RESULTS INFO
+  // =========================
 
-      const data = await response.json();
+  function updateResultsInfo(total) {
 
-      displayMovies(data.results || []);
+    const info =
+      document.getElementById("resultsInfo");
 
-    } catch (error) {
+    if (currentMode === "search" && total) {
 
-      document.getElementById("movies").innerHTML =
-        '<div class="error">Search failed.</div>';
+      info.textContent =
+        total.toLocaleString() +
+        " movies found";
+
+    } else {
+
+      info.textContent =
+        "Page " +
+        currentPage +
+        " of " +
+        totalPages;
     }
-  });
+  }
+
+
+  // =========================
+  // SECURITY
+  // =========================
 
   function escapeHTML(text) {
-    const div = document.createElement("div");
+
+    const div =
+      document.createElement("div");
+
     div.textContent = text || "";
+
     return div.innerHTML;
   }
 
-  loadPopular();
+
+  // =========================
+  // START
+  // =========================
+
+  loadPopular(true);
+
 </script>
 
 </body>
