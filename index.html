@@ -756,59 +756,90 @@ main{
   }
 }
 
-/* SEARCH RESULTS */
-.search-person-result {
+/* SEARCH RESULTS - OPTION 1: GRID LAYOUT FOR PEOPLE */
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.person-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 15px 20px;
-  margin-bottom: 20px;
+  overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 15px;
+  transition: transform .18s, border-color .18s;
 }
 
-.search-person-result:hover {
-  transform: translateY(-2px);
+.person-card:hover {
+  transform: translateY(-3px);
   border-color: var(--yellow);
 }
 
-.search-person-result .person-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+.person-card .person-photo {
+  width: 100%;
+  aspect-ratio: 2/3;
   object-fit: cover;
-  flex-shrink: 0;
+  display: block;
   background: var(--card2);
 }
 
-.search-person-result .person-info {
-  flex: 1;
+.person-card .person-info {
+  padding: 11px;
 }
 
-.search-person-result .person-info .name {
+.person-card .person-name {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.search-person-result .person-info .known-for {
+.person-card .person-role-tag {
+  font-size: 12px;
   color: var(--muted);
-  font-size: 14px;
+  margin-top: 3px;
 }
 
-.search-person-result .person-info .role-badge {
+.person-card .person-role-tag span {
   display: inline-block;
   background: var(--accent);
   color: white;
   padding: 1px 10px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  margin-top: 3px;
 }
 
+.person-card .person-click-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+  transition: color .2s;
+}
+
+.person-card:hover .person-click-hint {
+  color: var(--yellow);
+}
+
+@media(min-width:650px){
+  .people-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media(min-width:900px){
+  .people-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* SUGGESTION BOX */
 .suggestion-box {
   background: var(--card);
   border: 1px solid var(--border);
@@ -1329,7 +1360,7 @@ async function fetchStreams(movieId) {
 
 
 /* -------------------------
-   SPELLING CORRECTION (Levenshtein Distance)
+   SPELLING CORRECTION
 ------------------------- */
 
 function levenshteinDistance(a, b) {
@@ -1721,7 +1752,7 @@ async function showActor(id, name){
 
 
 /* -------------------------
-   PERSON PAGE (Reusable)
+   PERSON PAGE
 ------------------------- */
 
 function renderPersonPage(name, movies, person, role){
@@ -1813,7 +1844,7 @@ async function loadRelatedMovies(movie){
 
 
 /* -------------------------
-   SEARCH WITH PERSON + SPELLING CORRECTION
+   SEARCH WITH GRID PEOPLE
 ------------------------- */
 
 async function searchMovies(query){
@@ -1825,30 +1856,21 @@ async function searchMovies(query){
     const movieData = await getJSON(API + "/search?query=" + encodeURIComponent(query) + "&page=1");
     const movieResults = movieData.results || [];
 
-    // Step 2: Search for people (actors/directors)
+    // Step 2: Search for people
     let personResults = [];
     try {
-      // Use the person search endpoint
-      const personData = await getJSON(API + "/search/person?query=" + encodeURIComponent(query) + "&page=1");
+      const personData = await getJSON(`https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(query)}&api_key=1865f43a0549ca50d341dd9ab8b29f49`);
       personResults = personData.results || [];
     } catch {
-      // If person search fails, try alternative endpoint
-      try {
-        const personData = await getJSON(`https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(query)}&api_key=1865f43a0549ca50d341dd9ab8b29f49`);
-        personResults = personData.results || [];
-      } catch {
-        personResults = [];
-      }
+      personResults = [];
     }
 
     // Step 3: If no results, try spelling correction
     if (movieResults.length === 0 && personResults.length === 0) {
-      // Get popular movie titles for correction suggestions
       const popularData = await getJSON(API + "/popular?page=1");
       const popularMovies = popularData.results || [];
       const movieTitles = popularMovies.map(m => m.title);
       
-      // Get popular person names for correction suggestions
       let personNames = [];
       try {
         const popularPeople = await getJSON(`https://api.themoviedb.org/3/person/popular?api_key=1865f43a0549ca50d341dd9ab8b29f49&page=1`);
@@ -1864,15 +1886,15 @@ async function searchMovies(query){
       }
     }
 
-    // Step 4: Render results
-    renderSearchResults(query, movieResults, personResults);
+    // Step 4: Render results with grid
+    renderSearchResultsGrid(query, movieResults, personResults);
 
   } catch (error) {
     document.getElementById("app").innerHTML = `<div class="error">Search failed. Please try again.</div>`;
   }
 }
 
-function renderSearchResults(query, movies, people) {
+function renderSearchResultsGrid(query, movies, people) {
   const app = document.getElementById("app");
   let html = `
     <div class="hero">
@@ -1881,27 +1903,27 @@ function renderSearchResults(query, movies, people) {
     </div>
   `;
 
-  // Show people results first
+  // Show people results as grid
   if (people && people.length > 0) {
     html += `<h2 style="margin-top:20px;margin-bottom:15px;">👤 People</h2>`;
+    html += `<div class="people-grid">`;
     for (const person of people) {
       const profileImg = person.profile_path ? poster(person.profile_path) : "";
       const knownFor = person.known_for_department || "";
       const isActor = knownFor === "Acting";
-      const roleLabel = isActor ? "Actor" : knownFor || "Person";
       
       html += `
-        <div class="search-person-result" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
-          ${profileImg ? `<img class="person-avatar" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-avatar" style="display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--card2);">👤</div>`}
+        <div class="person-card" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
+          ${profileImg ? `<img class="person-photo" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--muted);background:var(--card2);">👤</div>`}
           <div class="person-info">
-            <div class="name">${escapeHTML(person.name)}</div>
-            <div class="known-for">${escapeHTML(knownFor)}</div>
-            <span class="role-badge">${escapeHTML(roleLabel)}</span>
+            <div class="person-name">${escapeHTML(person.name)}</div>
+            <div class="person-role-tag"><span>${escapeHTML(knownFor || "Person")}</span></div>
+            <div class="person-click-hint">Click to view →</div>
           </div>
-          <div style="color:var(--muted);font-size:14px;">Click to view →</div>
         </div>
       `;
     }
+    html += `</div>`;
   }
 
   // Show movie results
@@ -1932,27 +1954,27 @@ function renderSearchResultsWithSuggestion(query, suggestion, movies, people) {
     </div>
   `;
 
-  // Show people results if any
+  // Show people as grid if any
   if (people && people.length > 0) {
     html += `<h2 style="margin-top:20px;margin-bottom:15px;">👤 People</h2>`;
+    html += `<div class="people-grid">`;
     for (const person of people) {
       const profileImg = person.profile_path ? poster(person.profile_path) : "";
       const knownFor = person.known_for_department || "";
       const isActor = knownFor === "Acting";
-      const roleLabel = isActor ? "Actor" : knownFor || "Person";
       
       html += `
-        <div class="search-person-result" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
-          ${profileImg ? `<img class="person-avatar" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-avatar" style="display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--card2);">👤</div>`}
+        <div class="person-card" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
+          ${profileImg ? `<img class="person-photo" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-photo" style="display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--muted);background:var(--card2);">👤</div>`}
           <div class="person-info">
-            <div class="name">${escapeHTML(person.name)}</div>
-            <div class="known-for">${escapeHTML(knownFor)}</div>
-            <span class="role-badge">${escapeHTML(roleLabel)}</span>
+            <div class="person-name">${escapeHTML(person.name)}</div>
+            <div class="person-role-tag"><span>${escapeHTML(knownFor || "Person")}</span></div>
+            <div class="person-click-hint">Click to view →</div>
           </div>
-          <div style="color:var(--muted);font-size:14px;">Click to view →</div>
         </div>
       `;
     }
+    html += `</div>`;
   }
 
   // Show movie results if any
@@ -2013,7 +2035,6 @@ searchInput.addEventListener("keydown", function(event){
   event.preventDefault();
   const query = this.value.trim();
   if(!query) return;
-  // Clear URL params
   window.history.pushState({}, "", window.location.pathname);
   searchMovies(query);
   hideSearch();
@@ -2418,4 +2439,4 @@ if(initialMovie){
 </script>
 
 </body>
-</html>
+  </html>
