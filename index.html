@@ -659,20 +659,28 @@ main{
 
 .director-profile-img {
   width: 180px;
-  height: 180px;
-  border-radius: 50%;
+  height: 220px;
+  border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 3px solid var(--yellow);
+  border: 2px solid var(--border);
+  background: var(--card2);
 }
 
 .director-profile-info {
   flex: 1;
+  min-width: 0;
 }
 
 .director-profile-info h1 {
   font-size: 28px;
   margin-bottom: 5px;
+}
+
+.director-profile-info .director-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 3px;
 }
 
 .director-profile-info .director-bio {
@@ -682,10 +690,33 @@ main{
   margin-top: 8px;
 }
 
-.director-profile-info .director-meta {
-  color: var(--muted);
+.director-profile-info .director-bio-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.director-profile-info .director-bio-content.collapsed {
+  max-height: 80px;
+}
+
+.director-profile-info .director-bio-content.expanded {
+  max-height: 1000px;
+}
+
+.director-profile-info .read-more-btn {
+  background: none;
+  border: none;
+  color: var(--yellow);
+  cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
+  padding: 5px 0;
   margin-top: 5px;
+  transition: color 0.2s;
+}
+
+.director-profile-info .read-more-btn:hover {
+  color: var(--accent);
 }
 
 @media (max-width: 650px) {
@@ -695,8 +726,8 @@ main{
     text-align: center;
   }
   .director-profile-img {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 170px;
   }
   .director-profile-info h1 {
     font-size: 22px;
@@ -2205,12 +2236,15 @@ async function showDirector(
   name
 ){
 
+  window.scrollTo(0, 0);
+
   currentDirectorId = id;
   currentDirectorName = name;
 
   closeMenu();
   hideSearch();
 
+  // Store both ID and name in URL
   window.history.pushState(
     {
       page:"director",
@@ -2218,15 +2252,13 @@ async function showDirector(
       name
     },
     "",
-    "?director=" +
-    id
+    "?director=" + id + "&name=" + encodeURIComponent(name)
   );
 
   showMovieGridSkeleton();
 
   try{
 
-    // Fetch both credits and person details in parallel
     const [credits, person] = await Promise.all([
       getJSON(
         API +
@@ -2272,7 +2304,6 @@ async function showDirector(
 
   }catch(error){
 
-    // If person details fail, still show movies
     try{
       const data =
         await getJSON(
@@ -2333,6 +2364,7 @@ function renderDirectorPage(
     document.getElementById("app");
 
   let profileHTML = "";
+  let bioHTML = "";
 
   if (person) {
     const profilePicUrl = person.profile_path ? poster(person.profile_path) : "";
@@ -2341,12 +2373,27 @@ function renderDirectorPage(
     const birthPlace = person.place_of_birth || "";
     const deathDate = person.deathday ? formatDate(person.deathday) : "";
 
+    // Bio with Read More
+    if (bio) {
+      const bioId = "bio_" + (person.id || Date.now());
+      const isLong = bio.length > 250;
+
+      bioHTML = `
+        <div class="director-bio">
+          <div id="${bioId}" class="director-bio-content ${isLong ? 'collapsed' : 'expanded'}">
+            ${escapeHTML(bio)}
+          </div>
+          ${isLong ? `<button class="read-more-btn" onclick="toggleBio('${bioId}', this)">More ▼</button>` : ""}
+        </div>
+      `;
+    }
+
     profileHTML = `
       <div class="director-profile">
         ${
           profilePicUrl
             ? `<img class="director-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">`
-            : `<div class="director-profile-img" style="background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);">👤</div>`
+            : `<div class="director-profile-img" style="display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);background:var(--card2);border:2px solid var(--border);border-radius:8px;">👤</div>`
         }
         <div class="director-profile-info">
           <h1>${escapeHTML(name)}</h1>
@@ -2360,11 +2407,7 @@ function renderDirectorPage(
               ? `<div class="director-meta">🕊️ Died: ${deathDate}</div>`
               : ""
           }
-          ${
-            bio
-              ? `<div class="director-bio">${escapeHTML(bio)}</div>`
-              : ""
-          }
+          ${bioHTML}
         </div>
       </div>
     `;
@@ -2423,6 +2466,20 @@ function renderDirectorPage(
 
   `;
 
+}
+
+
+function toggleBio(bioId, btn) {
+  const bio = document.getElementById(bioId);
+  if (bio.classList.contains('collapsed')) {
+    bio.classList.remove('collapsed');
+    bio.classList.add('expanded');
+    btn.textContent = 'Less ▲';
+  } else {
+    bio.classList.remove('expanded');
+    bio.classList.add('collapsed');
+    btn.textContent = 'More ▼';
+  }
 }
 
 
@@ -3388,6 +3445,9 @@ window.addEventListener(
     const directorId =
       params.get("director");
 
+    const directorName =
+      params.get("name");
+
 
     if(movieId){
 
@@ -3397,7 +3457,9 @@ window.addEventListener(
 
     }else if(directorId){
 
-      // When going back to director page, we need to fetch both credits and person
+      // Use the name from URL or fallback
+      const name = directorName ? decodeURIComponent(directorName) : currentDirectorName || "Director";
+
       Promise.all([
         getJSON(
           API +
@@ -3435,12 +3497,8 @@ window.addEventListener(
                 )
             );
 
-        const directorName =
-          currentDirectorName ||
-          "Director";
-
         renderDirectorPage(
-          directorName,
+          name,
           directed,
           person
         );
@@ -3638,6 +3696,9 @@ const initialAbout =
 const initialDirector =
   initialParams.get("director");
 
+const initialDirectorName =
+  initialParams.get("name");
+
 
 if(initialMovie){
 
@@ -3646,6 +3707,8 @@ if(initialMovie){
   );
 
 }else if(initialDirector){
+
+  const name = initialDirectorName ? decodeURIComponent(initialDirectorName) : "Director";
 
   Promise.all([
     getJSON(
@@ -3685,7 +3748,7 @@ if(initialMovie){
         );
 
     renderDirectorPage(
-      "Director",
+      name,
       directed,
       person
     );
