@@ -1003,6 +1003,7 @@ main{
 .legal-page {
   max-width: 850px;
   margin: auto;
+  padding-bottom: 50px;
 }
 
 .about-page h1,
@@ -1206,11 +1207,12 @@ main{
   color: var(--yellow);
 }
 
-/* Footer links horizontal */
+/* Footer links - SINGLE HORIZONTAL LINE */
 .footer-links-horizontal {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 20px;
+  gap: 20px;
+  align-items: center;
 }
 
 .footer-links-horizontal a {
@@ -1218,6 +1220,7 @@ main{
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 
 .footer-links-horizontal a:hover {
@@ -1230,8 +1233,8 @@ main{
     gap: 20px;
   }
   .footer-links-horizontal {
-    flex-direction: column;
-    gap: 6px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
 
@@ -1241,8 +1244,9 @@ main{
     text-align: center;
   }
   .footer-links-horizontal {
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
 
@@ -1426,7 +1430,7 @@ main{
 
 
 <!-- FOOTER - 4 COLUMN LAYOUT -->
-<footer class="footer-area">
+<footer class="footer-area" id="mainFooter">
 
   <div class="footer-container">
 
@@ -1436,14 +1440,14 @@ main{
       <p class="footer-desc">Every Movie and TV Show Ever Made. Discover, explore, and enjoy.</p>
     </div>
 
-    <!-- Column 2: Quick Links (Horizontal) - Open in new tab -->
+    <!-- Column 2: Quick Links (Horizontal) -->
     <div class="footer-col">
       <h3>Quick Links</h3>
       <div class="footer-links-horizontal">
-        <a href="#" onclick="openLegalPage('about'); return false;">About Us</a>
-        <a href="#" onclick="openLegalPage('contact'); return false;">Contact Us</a>
-        <a href="#" onclick="openLegalPage('dmca'); return false;">DMCA</a>
-        <a href="#" onclick="openLegalPage('privacy'); return false;">Privacy Policy</a>
+        <a href="#" onclick="showAbout(); return false;">About Us</a>
+        <a href="#" onclick="showContact(); return false;">Contact Us</a>
+        <a href="#" onclick="showDmca(); return false;">DMCA</a>
+        <a href="#" onclick="showPrivacy(); return false;">Privacy Policy</a>
       </div>
     </div>
 
@@ -1506,6 +1510,7 @@ let currentActorName = null;
 let pendingSearchQuery = null;
 
 let genreCache = {};
+let isLegalPage = false;
 
 
 /* -------------------------
@@ -1560,19 +1565,143 @@ async function fetchStreams(movieId) {
   }
 }
 
+function hideFooter() {
+  const footer = document.getElementById("mainFooter");
+  if (footer) footer.style.display = "none";
+}
+
+function showFooter() {
+  const footer = document.getElementById("mainFooter");
+  if (footer) footer.style.display = "block";
+}
+
 
 /* -------------------------
-   LEGAL PAGES - OPEN IN NEW TAB
+   LEGAL PAGES - SAME TAB, NO FOOTER, NO BACK BUTTON
 ------------------------- */
 
-function openLegalPage(page) {
-  const pageUrls = {
-    about: window.location.pathname + '?about=1',
-    contact: window.location.pathname + '?contact=1',
-    dmca: window.location.pathname + '?dmca=1',
-    privacy: window.location.pathname + '?privacy=1'
-  };
-  window.open(pageUrls[page], '_blank');
+function showAbout(){
+  isLegalPage = true;
+  hideFooter();
+  document.getElementById("app").innerHTML = `
+    <div class="about-page">
+      <h1>About Unstable Retards</h1>
+      <p class="about-tagline">Every Movie and TV Show Ever Made.</p>
+      <div class="about-section">
+        <h2>What is Unstable Retards?</h2>
+        <p>Unstable Retards is a movie discovery website built to make exploring movies simple, fast and fun. Discover movies, explore genres, learn about filmmakers and cast members, and find official trailers in one place.</p>
+      </div>
+      <div class="about-section">
+        <h2>Why was it made?</h2>
+        <p>The idea is simple: create a place where movie lovers can discover something new without having to jump between different websites just to find basic movie details.</p>
+      </div>
+      <div class="about-section">
+        <h2>Movie Information</h2>
+        <p>Movie information and metadata are provided using the TMDB API. Unstable Retards does not host or distribute movie files.</p>
+        <p style="margin-top:10px;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+      </div>
+      <div class="about-section">
+        <h2>About the Creator</h2>
+        <p>Unstable Retards was created by Aditya Chauhan as an independent movie-discovery project.</p>
+      </div>
+    </div>
+  `;
+}
+
+function showDmca(){
+  isLegalPage = true;
+  hideFooter();
+  document.getElementById("app").innerHTML = `
+    <div class="legal-page">
+      <h1>DMCA Policy</h1>
+      <div class="legal-section">
+        <h2>DMCA Notice Process</h2>
+        <p>If you are a rights owner or authorized representative, you can submit a DMCA notice for review.</p>
+      </div>
+      <div class="legal-section">
+        <h2>Required Information</h2>
+        <ul>
+          <li>Your full name and contact information.</li>
+          <li>Proof of ownership or authorization.</li>
+          <li>The exact URL(s) to review.</li>
+          <li>A good-faith statement regarding unauthorized use.</li>
+        </ul>
+      </div>
+      <div class="legal-section">
+        <h2>Review Timeline</h2>
+        <p>Valid reports are reviewed as quickly as possible. Incomplete reports may require additional details.</p>
+      </div>
+      <div class="legal-section">
+        <h2>DMCA Contact</h2>
+        <p>Email: <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
+      </div>
+    </div>
+  `;
+}
+
+function showPrivacy(){
+  isLegalPage = true;
+  hideFooter();
+  document.getElementById("app").innerHTML = `
+    <div class="legal-page">
+      <h1>Privacy Policy</h1>
+      <div class="legal-section">
+        <h2>Overview</h2>
+        <p>This policy explains how Unstable Retards handles visitor data and privacy.</p>
+      </div>
+      <div class="legal-section">
+        <h2>Data We May Collect</h2>
+        <ul>
+          <li>Basic usage information (pages viewed, browser/device type).</li>
+          <li>Information voluntarily sent through email communication.</li>
+        </ul>
+      </div>
+      <div class="legal-section">
+        <h2>How Data Is Used</h2>
+        <p>Data is used to improve site quality, monitor technical health, and respond to support requests.</p>
+      </div>
+      <div class="legal-section">
+        <h2>Cookies</h2>
+        <p>Cookies may be used for analytics and preferences. You can disable them from your browser settings.</p>
+      </div>
+      <div class="legal-section">
+        <h2>Privacy Contact</h2>
+        <p>Email: <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
+      </div>
+    </div>
+  `;
+}
+
+function showContact(){
+  isLegalPage = true;
+  hideFooter();
+  document.getElementById("app").innerHTML = `
+    <div class="legal-page">
+      <h1>Contact Us</h1>
+      <div class="legal-section">
+        <h2>Contact Information</h2>
+        <p>For support, corrections, legal communication, or partnership queries, contact us using the details below.</p>
+        <p style="margin-top:10px;"><strong>Email:</strong> <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+919335661664" style="color:var(--yellow);">+91 93356 61664</a></p>
+      </div>
+      <div class="legal-section">
+        <h2>Include These Details</h2>
+        <ul>
+          <li>Exact page URL.</li>
+          <li>Short issue description.</li>
+          <li>Screenshot (if available).</li>
+        </ul>
+      </div>
+      <div class="legal-section">
+        <h2>Response Time</h2>
+        <p>Most messages are reviewed within 24 to 72 hours.</p>
+      </div>
+      <div class="legal-section">
+        <h2>Request Types</h2>
+        <p>We can assist with metadata corrections, link issues, policy inquiries, and general website feedback.</p>
+      </div>
+    </div>
+  `;
 }
 
 
@@ -1624,6 +1753,8 @@ function getSimilarWord(query, wordList, maxDistance = 3) {
 ------------------------- */
 
 function goHome(){
+  isLegalPage = false;
+  showFooter();
   closeMenu();
   hideSearch();
   currentSection = "popular";
@@ -1633,6 +1764,8 @@ function goHome(){
 }
 
 async function loadHomeSection(section){
+  isLegalPage = false;
+  showFooter();
   closeMenu();
   hideSearch();
   currentSection = section;
@@ -1735,6 +1868,8 @@ function renderPagination(page, totalPages, callback){
 ------------------------- */
 
 async function showMovie(id){
+  isLegalPage = false;
+  showFooter();
   window.scrollTo(0, 0);
   currentMovieId = id;
   hideSearch();
@@ -1897,6 +2032,8 @@ async function loadVideoPlayer(movieId) {
 ------------------------- */
 
 async function showDirector(id, name){
+  isLegalPage = false;
+  showFooter();
   window.scrollTo(0, 0);
   currentDirectorId = id;
   currentDirectorName = name;
@@ -1935,6 +2072,8 @@ async function showDirector(id, name){
 ------------------------- */
 
 async function showActor(id, name){
+  isLegalPage = false;
+  showFooter();
   window.scrollTo(0, 0);
   currentActorId = id;
   currentActorName = name;
@@ -2065,6 +2204,8 @@ async function loadRelatedMovies(movie){
 ------------------------- */
 
 async function searchMovies(query){
+  isLegalPage = false;
+  showFooter();
   showMovieGridSkeleton();
   pendingSearchQuery = query;
 
@@ -2288,6 +2429,8 @@ async function loadGenres(){
 }
 
 async function loadGenre(id, name){
+  isLegalPage = false;
+  showFooter();
   closeMenu();
   hideSearch();
   currentGenreId = id;
@@ -2298,6 +2441,8 @@ async function loadGenre(id, name){
 }
 
 async function loadGenreFromTag(id, name){
+  isLegalPage = false;
+  showFooter();
   hideSearch();
   currentGenreId = id;
   currentGenreName = name;
@@ -2338,131 +2483,6 @@ function renderGenreMovies(movies, name){
         ${movies.map(movieCard).join("")}
       </div>
     </section>
-  `;
-}
-
-
-/* -------------------------
-   LEGAL PAGES (Internal - for new tab)
-------------------------- */
-
-function showAbout(){
-  document.getElementById("app").innerHTML = `
-    <div class="about-page">
-      <button class="back-btn" onclick="window.close()">← Back</button>
-      <h1>About Unstable Retards</h1>
-      <p class="about-tagline">Every Movie and TV Show Ever Made.</p>
-      <div class="about-section">
-        <h2>What is Unstable Retards?</h2>
-        <p>Unstable Retards is a movie discovery website built to make exploring movies simple, fast and fun. Discover movies, explore genres, learn about filmmakers and cast members, and find official trailers in one place.</p>
-      </div>
-      <div class="about-section">
-        <h2>Why was it made?</h2>
-        <p>The idea is simple: create a place where movie lovers can discover something new without having to jump between different websites just to find basic movie details.</p>
-      </div>
-      <div class="about-section">
-        <h2>Movie Information</h2>
-        <p>Movie information and metadata are provided using the TMDB API. Unstable Retards does not host or distribute movie files.</p>
-        <p style="margin-top:10px;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
-      </div>
-      <div class="about-section">
-        <h2>About the Creator</h2>
-        <p>Unstable Retards was created by Aditya Chauhan as an independent movie-discovery project.</p>
-      </div>
-    </div>
-  `;
-}
-
-function showDmca(){
-  document.getElementById("app").innerHTML = `
-    <div class="legal-page">
-      <button class="back-btn" onclick="window.close()">← Back</button>
-      <h1>DMCA Policy</h1>
-      <div class="legal-section">
-        <h2>DMCA Notice Process</h2>
-        <p>If you are a rights owner or authorized representative, you can submit a DMCA notice for review.</p>
-      </div>
-      <div class="legal-section">
-        <h2>Required Information</h2>
-        <ul>
-          <li>Your full name and contact information.</li>
-          <li>Proof of ownership or authorization.</li>
-          <li>The exact URL(s) to review.</li>
-          <li>A good-faith statement regarding unauthorized use.</li>
-        </ul>
-      </div>
-      <div class="legal-section">
-        <h2>Review Timeline</h2>
-        <p>Valid reports are reviewed as quickly as possible. Incomplete reports may require additional details.</p>
-      </div>
-      <div class="legal-section">
-        <h2>DMCA Contact</h2>
-        <p>Email: <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
-      </div>
-    </div>
-  `;
-}
-
-function showPrivacy(){
-  document.getElementById("app").innerHTML = `
-    <div class="legal-page">
-      <button class="back-btn" onclick="window.close()">← Back</button>
-      <h1>Privacy Policy</h1>
-      <div class="legal-section">
-        <h2>Overview</h2>
-        <p>This policy explains how Unstable Retards handles visitor data and privacy.</p>
-      </div>
-      <div class="legal-section">
-        <h2>Data We May Collect</h2>
-        <ul>
-          <li>Basic usage information (pages viewed, browser/device type).</li>
-          <li>Information voluntarily sent through email communication.</li>
-        </ul>
-      </div>
-      <div class="legal-section">
-        <h2>How Data Is Used</h2>
-        <p>Data is used to improve site quality, monitor technical health, and respond to support requests.</p>
-      </div>
-      <div class="legal-section">
-        <h2>Cookies</h2>
-        <p>Cookies may be used for analytics and preferences. You can disable them from your browser settings.</p>
-      </div>
-      <div class="legal-section">
-        <h2>Privacy Contact</h2>
-        <p>Email: <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
-      </div>
-    </div>
-  `;
-}
-
-function showContact(){
-  document.getElementById("app").innerHTML = `
-    <div class="legal-page">
-      <button class="back-btn" onclick="window.close()">← Back</button>
-      <h1>Contact Us</h1>
-      <div class="legal-section">
-        <h2>Contact Information</h2>
-        <p>For support, corrections, legal communication, or partnership queries, contact us using the details below.</p>
-        <p style="margin-top:10px;"><strong>Email:</strong> <a href="mailto:828477ss@gmail.com" style="color:var(--yellow);">828477ss@gmail.com</a></p>
-        <p><strong>Phone:</strong> <a href="tel:+919335661664" style="color:var(--yellow);">+91 93356 61664</a></p>
-      </div>
-      <div class="legal-section">
-        <h2>Include These Details</h2>
-        <ul>
-          <li>Exact page URL.</li>
-          <li>Short issue description.</li>
-          <li>Screenshot (if available).</li>
-        </ul>
-      </div>
-      <div class="legal-section">
-        <h2>Response Time</h2>
-        <p>Most messages are reviewed within 24 to 72 hours.</p>
-      </div>
-      <div class="legal-section">
-        <h2>Request Types</h2>
-        <p>We can assist with metadata corrections, link issues, policy inquiries, and general website feedback.</p>
-      </div>
-    </div>
   `;
 }
 
@@ -2588,7 +2608,7 @@ function loadSavedTheme(){
 
 
 /* -------------------------
-   BACK / HISTORY - FIXED
+   BACK / HISTORY
 ------------------------- */
 
 function goBack(){
@@ -2683,6 +2703,8 @@ async function findGenreIdByName(name){
 ------------------------- */
 
 async function showMovieWithoutHistory(id){
+  isLegalPage = false;
+  showFooter();
   currentMovieId = id;
   showMovieSkeleton();
   try{
@@ -2707,6 +2729,7 @@ async function showMovieWithoutHistory(id){
 
 loadSavedTheme();
 loadGenres();
+showFooter();
 
 const initialParams = new URLSearchParams(window.location.search);
 const initialSearch = initialParams.get("search");
