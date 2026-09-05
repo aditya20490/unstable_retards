@@ -1146,6 +1146,7 @@ let currentGenreName = null;
 let currentDirectorId = null;
 let currentDirectorName = null;
 let currentUser = null;
+let currentSession = null;
 
 let genreCache = {};
 
@@ -1154,19 +1155,53 @@ let genreCache = {};
    AUTH FUNCTIONS
 ------------------------- */
 
-async function checkAuth() {
-  try {
-    const response = await fetch(API + "/auth/user", {
-      credentials: "include"
-    });
-    const data = await response.json();
-    currentUser = data.user;
+function getSessionFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const session = params.get("session");
+  const name = params.get("name");
+  const email = params.get("email");
+  const picture = params.get("picture");
+  
+  if (session && name) {
+    // Clear URL params
+    const newUrl = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, "", newUrl);
+    
+    return {
+      session: session,
+      user: {
+        name: decodeURIComponent(name),
+        email: decodeURIComponent(email || ""),
+        picture: decodeURIComponent(picture || "")
+      }
+    };
+  }
+  return null;
+}
+
+function saveSession(session, user) {
+  currentSession = session;
+  currentUser = user;
+  localStorage.setItem("session", session);
+  localStorage.setItem("user", JSON.stringify(user));
+  updateAuthUI();
+}
+
+function loadSession() {
+  // Check URL first (after login)
+  const urlSession = getSessionFromURL();
+  if (urlSession) {
+    saveSession(urlSession.session, urlSession.user);
+    return;
+  }
+  
+  // Check localStorage
+  const session = localStorage.getItem("session");
+  const user = localStorage.getItem("user");
+  if (session && user) {
+    currentSession = session;
+    currentUser = JSON.parse(user);
     updateAuthUI();
-    return currentUser;
-  } catch {
-    currentUser = null;
-    updateAuthUI();
-    return null;
   }
 }
 
@@ -1190,11 +1225,13 @@ function handleLogin() {
 }
 
 async function handleLogout() {
-  await fetch(API + "/auth/logout", {
-    method: "POST",
-    credentials: "include"
-  });
+  if (currentSession) {
+    await fetch(API + "/auth/logout?session=" + currentSession);
+  }
+  currentSession = null;
   currentUser = null;
+  localStorage.removeItem("session");
+  localStorage.removeItem("user");
   updateAuthUI();
   goHome();
 }
@@ -1210,8 +1247,8 @@ async function toggleFavorite(movieId, movieTitle, posterPath) {
     const response = await fetch(API + "/favorites/toggle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify({
+        session: currentSession,
         movieId: movieId,
         movieData: {
           title: movieTitle,
@@ -1221,7 +1258,6 @@ async function toggleFavorite(movieId, movieTitle, posterPath) {
     });
     const data = await response.json();
     
-    // Update button UI
     const btn = document.getElementById("favBtn");
     if (data.favorited) {
       btn.classList.add("active");
@@ -1238,9 +1274,7 @@ async function toggleFavorite(movieId, movieTitle, posterPath) {
 async function checkFavoriteStatus(movieId) {
   if (!currentUser) return false;
   try {
-    const response = await fetch(API + `/favorites/check?movieId=${movieId}`, {
-      credentials: "include"
-    });
+    const response = await fetch(API + `/favorites/check?movieId=${movieId}&session=${currentSession}`);
     const data = await response.json();
     return data.favorited;
   } catch {
@@ -1258,9 +1292,11 @@ function showFavorites() {
 async function loadFavorites() {
   showMovieGridSkeleton();
   try {
-    const response = await fetch(API + "/favorites", {
-      credentials: "include"
-    });
+    let url = API + "/favorites";
+    if (currentSession) {
+      url += "?session=" + currentSession;
+    }
+    const response = await fetch(url);
     const data = await response.json();
     
     const app = document.getElementById("app");
@@ -2069,7 +2105,7 @@ async function showMovieWithoutHistory(id){
 
 loadSavedTheme();
 loadGenres();
-checkAuth();
+loadSession();
 
 const initialParams = new URLSearchParams(window.location.search);
 const initialMovie = initialParams.get("movie");
