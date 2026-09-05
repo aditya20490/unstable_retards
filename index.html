@@ -1668,6 +1668,8 @@ function renderPagination(
 
 async function showMovie(id){
 
+  window.scrollTo(0, 0);  // <--- THIS IS THE FIX
+
   currentMovieId = id;
 
   hideSearch();
@@ -3527,4 +3529,4 @@ if(initialMovie){
 </script>
 
 </body>
-  </html>
+</html>
