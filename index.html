@@ -646,6 +646,63 @@ main{
   }
 }
 
+/* DIRECTOR PAGE */
+.director-profile {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.director-profile-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid var(--yellow);
+}
+
+.director-profile-info {
+  flex: 1;
+}
+
+.director-profile-info h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.director-profile-info .director-bio {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.director-profile-info .director-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+@media (max-width: 650px) {
+  .director-profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .director-profile-img {
+    width: 120px;
+    height: 120px;
+  }
+  .director-profile-info h1 {
+    font-size: 22px;
+  }
+}
+
 
 /* ABOUT */
 
@@ -1269,6 +1326,17 @@ function poster(path){
 }
 
 
+function profilePic(path){
+
+  if(!path){
+    return "";
+  }
+
+  return IMAGE + path;
+
+}
+
+
 function formatDate(date){
 
   if(!date){
@@ -1668,7 +1736,7 @@ function renderPagination(
 
 async function showMovie(id){
 
-  window.scrollTo(0, 0);  // <--- THIS IS THE FIX
+  window.scrollTo(0, 0);
 
   currentMovieId = id;
 
@@ -2129,7 +2197,7 @@ async function loadVideoPlayer(movieId) {
 
 
 /* -------------------------
-   DIRECTOR PAGE
+   DIRECTOR PAGE WITH PHOTO
 ------------------------- */
 
 async function showDirector(
@@ -2158,16 +2226,23 @@ async function showDirector(
 
   try{
 
-    const data =
-      await getJSON(
+    // Fetch both credits and person details in parallel
+    const [credits, person] = await Promise.all([
+      getJSON(
         API +
         "/person/" +
         id +
         "/credits"
-      );
+      ),
+      getJSON(
+        API +
+        "/person/" +
+        id
+      )
+    ]);
 
     const directedMovies =
-      (data.crew || [])
+      (credits.crew || [])
         .filter(
           item =>
             item.media_type === "movie" &&
@@ -2191,16 +2266,57 @@ async function showDirector(
 
     renderDirectorPage(
       name,
-      directedMovies
+      directedMovies,
+      person
     );
 
   }catch(error){
 
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this director.
-      </div>
-    `;
+    // If person details fail, still show movies
+    try{
+      const data =
+        await getJSON(
+          API +
+          "/person/" +
+          id +
+          "/credits"
+        );
+
+      const directedMovies =
+        (data.crew || [])
+          .filter(
+            item =>
+              item.media_type === "movie" &&
+              item.job === "Director"
+          )
+          .filter(
+            (item,index,array) =>
+              array.findIndex(
+                movie =>
+                  movie.id === item.id
+              ) === index
+          )
+          .sort(
+            (a,b) =>
+              (
+                b.release_date || ""
+              ).localeCompare(
+                a.release_date || ""
+              )
+          );
+
+      renderDirectorPage(
+        name,
+        directedMovies,
+        null
+      );
+    } catch {
+      document.getElementById("app").innerHTML = `
+        <div class="error">
+          Unable to load this director.
+        </div>
+      `;
+    }
 
   }
 
@@ -2209,11 +2325,50 @@ async function showDirector(
 
 function renderDirectorPage(
   name,
-  movies
+  movies,
+  person
 ){
 
   const app =
     document.getElementById("app");
+
+  let profileHTML = "";
+
+  if (person) {
+    const profilePicUrl = person.profile_path ? poster(person.profile_path) : "";
+    const bio = person.biography || "";
+    const birthDate = person.birthday ? formatDate(person.birthday) : "";
+    const birthPlace = person.place_of_birth || "";
+    const deathDate = person.deathday ? formatDate(person.deathday) : "";
+
+    profileHTML = `
+      <div class="director-profile">
+        ${
+          profilePicUrl
+            ? `<img class="director-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">`
+            : `<div class="director-profile-img" style="background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);">👤</div>`
+        }
+        <div class="director-profile-info">
+          <h1>${escapeHTML(name)}</h1>
+          ${
+            birthDate
+              ? `<div class="director-meta">📅 Born: ${birthDate}${birthPlace ? `, ${escapeHTML(birthPlace)}` : ""}</div>`
+              : ""
+          }
+          ${
+            deathDate
+              ? `<div class="director-meta">🕊️ Died: ${deathDate}</div>`
+              : ""
+          }
+          ${
+            bio
+              ? `<div class="director-bio">${escapeHTML(bio)}</div>`
+              : ""
+          }
+        </div>
+      </div>
+    `;
+  }
 
   app.innerHTML = `
 
@@ -2226,7 +2381,9 @@ function renderDirectorPage(
         ← Back
       </button>
 
-      <div class="hero">
+      ${profileHTML}
+
+      <div class="hero" style="margin-top:0;">
 
         <h1>
           ${escapeHTML(name)}
@@ -3240,15 +3397,23 @@ window.addEventListener(
 
     }else if(directorId){
 
-      getJSON(
-        API +
-        "/person/" +
-        directorId +
-        "/credits"
-      ).then(data => {
+      // When going back to director page, we need to fetch both credits and person
+      Promise.all([
+        getJSON(
+          API +
+          "/person/" +
+          directorId +
+          "/credits"
+        ),
+        getJSON(
+          API +
+          "/person/" +
+          directorId
+        )
+      ]).then(([credits, person]) => {
 
         const directed =
-          (data.crew || [])
+          (credits.crew || [])
             .filter(
               item =>
                 item.media_type === "movie" &&
@@ -3276,12 +3441,11 @@ window.addEventListener(
 
         renderDirectorPage(
           directorName,
-          directed
+          directed,
+          person
         );
 
-      }).catch(
-        () => loadMovies("popular",1)
-      );
+      }).catch(() => loadMovies("popular",1));
 
     }else if(genre){
 
@@ -3483,10 +3647,50 @@ if(initialMovie){
 
 }else if(initialDirector){
 
-  showDirector(
-    initialDirector,
-    "Director"
-  );
+  Promise.all([
+    getJSON(
+      API +
+      "/person/" +
+      initialDirector +
+      "/credits"
+    ),
+    getJSON(
+      API +
+      "/person/" +
+      initialDirector
+    )
+  ]).then(([credits, person]) => {
+
+    const directed =
+      (credits.crew || [])
+        .filter(
+          item =>
+            item.media_type === "movie" &&
+            item.job === "Director"
+        )
+        .filter(
+          (item,index,array) =>
+            array.findIndex(
+              movie =>
+                movie.id === item.id
+            ) === index
+        )
+        .sort(
+          (a,b) =>
+            (
+              b.release_date || ""
+            ).localeCompare(
+              a.release_date || ""
+            )
+        );
+
+    renderDirectorPage(
+      "Director",
+      directed,
+      person
+    );
+
+  }).catch(() => loadMovies("popular",1));
 
 }else if(initialGenre){
 
