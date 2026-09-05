@@ -73,7 +73,7 @@ body.light header{
 
 .logo{
   font-family:Impact,"Arial Black",Arial,sans-serif;
-  font-size:25px;
+  font-size:32px;
   font-weight:900;
   letter-spacing:-.5px;
   color:var(--text);
@@ -151,7 +151,7 @@ main{
 }
 
 .hero h1{
-  font-size:30px;
+  font-size:24px;
   margin-bottom:7px;
 }
 
@@ -756,7 +756,7 @@ main{
   }
 }
 
-/* SEARCH RESULTS - OPTION 4: HORIZONTAL SCROLL */
+/* SEARCH RESULTS - HORIZONTAL SCROLL */
 .people-horizontal {
   display: flex;
   gap: 14px;
@@ -879,6 +879,13 @@ main{
   color: var(--accent);
 }
 
+/* MENU */
+.menu-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--yellow);
+}
+
 
 /* ABOUT */
 
@@ -985,7 +992,7 @@ main{
 }
 
 
-/* MENU */
+/* MENU OVERLAY */
 
 .menu{
   position:fixed;
@@ -1010,12 +1017,6 @@ main{
   justify-content:space-between;
   align-items:center;
   margin-bottom:20px;
-}
-
-.menu-title{
-  font-size:28px;
-  font-weight:900;
-  color:var(--yellow);
 }
 
 .menu-item{
@@ -1129,7 +1130,7 @@ footer{
 @media(max-width:650px){
 
   .logo{
-    font-size:20px;
+    font-size:26px;
   }
 
   .detail-top,
@@ -1210,6 +1211,14 @@ footer{
 
   <div class="header-inner">
 
+    <button class="icon-btn" onclick="openMenu()" aria-label="Menu" style="order:-1;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+    </button>
+
     <div class="logo" onclick="goHome()">
       Unstable Retards
     </div>
@@ -1226,14 +1235,6 @@ footer{
     <button id="themeIcon" class="icon-btn" onclick="toggleTheme()" aria-label="Theme">
       <svg id="themeSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 A8.5 8.5 0 1 0 20.5 14.5Z"></path>
-      </svg>
-    </button>
-
-    <button class="icon-btn" onclick="openMenu()" aria-label="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
-        <line x1="4" y1="7" x2="20" y2="7"></line>
-        <line x1="4" y1="12" x2="20" y2="12"></line>
-        <line x1="4" y1="17" x2="20" y2="17"></line>
       </svg>
     </button>
 
@@ -1258,12 +1259,6 @@ footer{
 
   <button class="menu-item" onclick="loadHomeSection('popular')">🔥 Popular</button>
   <button class="menu-item" onclick="loadHomeSection('top-rated')">⭐ Top Rated</button>
-  <button class="menu-item" onclick="loadHomeSection('now-playing')">🎬 Now Playing</button>
-  <button class="menu-item" onclick="loadHomeSection('upcoming')">🚀 Upcoming</button>
-  <button class="menu-item" onclick="showAbout()">ℹ️ About Us</button>
-
-  <div class="menu-section">Genres</div>
-  <div id="genreMenu"></div>
 
 </aside>
 
@@ -1445,9 +1440,7 @@ async function loadMovies(section,page){
     renderMovies(
       data.results || [],
       section === "popular" ? "Popular Movies" :
-      section === "top-rated" ? "Top Rated Movies" :
-      section === "now-playing" ? "Now Playing" :
-      section === "upcoming" ? "Upcoming Movies" : "Movies"
+      section === "top-rated" ? "Top Rated Movies" : "Movies"
     );
     renderPagination(
       data.page || page,
@@ -1865,6 +1858,9 @@ async function searchMovies(query){
   showMovieGridSkeleton();
   pendingSearchQuery = query;
 
+  // Update URL to preserve search query
+  window.history.pushState({ page:"search", query }, "", "?search=" + encodeURIComponent(query));
+
   try {
     const movieData = await getJSON(API + "/search?query=" + encodeURIComponent(query) + "&page=1");
     const movieResults = movieData.results || [];
@@ -1908,13 +1904,13 @@ function renderSearchResultsHorizontal(query, movies, people) {
   const app = document.getElementById("app");
   let html = `
     <div class="hero">
-      <h1>🔍 Search Results</h1>
+      <h1>Search Results</h1>
       <p>Showing results for "${escapeHTML(query)}"</p>
     </div>
   `;
 
   if (people && people.length > 0) {
-    html += `<h2 style="margin-top:20px;margin-bottom:12px;">👤 People</h2>`;
+    html += `<h2 style="margin-top:20px;margin-bottom:12px;">People</h2>`;
     html += `<div class="people-horizontal">`;
     for (const person of people) {
       const profileImg = person.profile_path ? poster(person.profile_path) : "";
@@ -1936,7 +1932,7 @@ function renderSearchResultsHorizontal(query, movies, people) {
   }
 
   if (movies && movies.length > 0) {
-    html += `<h2 style="margin-top:20px;margin-bottom:15px;">📽️ Movies</h2>`;
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">Movies</h2>`;
     html += `<section class="section"><div class="movie-grid">${movies.map(movieCard).join("")}</div></section>`;
   }
 
@@ -1951,7 +1947,7 @@ function renderSearchResultsWithSuggestion(query, suggestion, movies, people) {
   const app = document.getElementById("app");
   let html = `
     <div class="hero">
-      <h1>🔍 Search Results</h1>
+      <h1>Search Results</h1>
       <p>Showing results for "${escapeHTML(query)}"</p>
     </div>
     <div class="suggestion-box">
@@ -1962,7 +1958,7 @@ function renderSearchResultsWithSuggestion(query, suggestion, movies, people) {
   `;
 
   if (people && people.length > 0) {
-    html += `<h2 style="margin-top:20px;margin-bottom:12px;">👤 People</h2>`;
+    html += `<h2 style="margin-top:20px;margin-bottom:12px;">People</h2>`;
     html += `<div class="people-horizontal">`;
     for (const person of people) {
       const profileImg = person.profile_path ? poster(person.profile_path) : "";
@@ -1984,7 +1980,7 @@ function renderSearchResultsWithSuggestion(query, suggestion, movies, people) {
   }
 
   if (movies && movies.length > 0) {
-    html += `<h2 style="margin-top:20px;margin-bottom:15px;">📽️ Movies</h2>`;
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">Movies</h2>`;
     html += `<section class="section"><div class="movie-grid">${movies.map(movieCard).join("")}</div></section>`;
   }
 
@@ -2039,7 +2035,6 @@ searchInput.addEventListener("keydown", function(event){
   event.preventDefault();
   const query = this.value.trim();
   if(!query) return;
-  window.history.pushState({}, "", window.location.pathname);
   searchMovies(query);
   hideSearch();
 });
@@ -2306,10 +2301,13 @@ window.addEventListener("popstate", function(){
   const directorName = params.get("name");
   const actorId = params.get("actor");
   const actorName = params.get("name");
+  const searchQuery = params.get("search");
 
-  if(movieId){
+  if(searchQuery){
+    searchMovies(searchQuery);
+  } else if(movieId){
     showMovieWithoutHistory(movieId);
-  }else if(directorId){
+  } else if(directorId){
     const name = directorName ? decodeURIComponent(directorName) : currentDirectorName || "Director";
     Promise.all([
       getJSON(API + "/person/" + directorId + "/credits"),
@@ -2321,7 +2319,7 @@ window.addEventListener("popstate", function(){
         .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
       renderPersonPage(name, directed, person, "director");
     }).catch(() => loadMovies("popular",1));
-  }else if(actorId){
+  } else if(actorId){
     const name = actorName ? decodeURIComponent(actorName) : currentActorName || "Actor";
     Promise.all([
       getJSON(API + "/person/" + actorId + "/credits"),
@@ -2333,14 +2331,14 @@ window.addEventListener("popstate", function(){
         .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
       renderPersonPage(name, acted, person, "actor");
     }).catch(() => loadMovies("popular",1));
-  }else if(genre){
+  } else if(genre){
     findGenreIdByName(genre).then(id => {
       if(id) loadGenrePage(id, genre, 1);
       else loadMovies("popular",1);
     });
-  }else if(about){
+  } else if(about){
     showAbout();
-  }else{
+  } else {
     loadMovies("popular",1);
   }
 });
@@ -2395,6 +2393,7 @@ loadSavedTheme();
 loadGenres();
 
 const initialParams = new URLSearchParams(window.location.search);
+const initialSearch = initialParams.get("search");
 const initialMovie = initialParams.get("movie");
 const initialGenre = initialParams.get("genre");
 const initialAbout = initialParams.get("about");
@@ -2403,9 +2402,11 @@ const initialDirectorName = initialParams.get("name");
 const initialActor = initialParams.get("actor");
 const initialActorName = initialParams.get("name");
 
-if(initialMovie){
+if(initialSearch){
+  searchMovies(initialSearch);
+} else if(initialMovie){
   showMovieWithoutHistory(initialMovie);
-}else if(initialDirector){
+} else if(initialDirector){
   const name = initialDirectorName ? decodeURIComponent(initialDirectorName) : "Director";
   Promise.all([
     getJSON(API + "/person/" + initialDirector + "/credits"),
@@ -2417,7 +2418,7 @@ if(initialMovie){
       .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
     renderPersonPage(name, directed, person, "director");
   }).catch(() => loadMovies("popular",1));
-}else if(initialActor){
+} else if(initialActor){
   const name = initialActorName ? decodeURIComponent(initialActorName) : "Actor";
   Promise.all([
     getJSON(API + "/person/" + initialActor + "/credits"),
@@ -2429,14 +2430,14 @@ if(initialMovie){
       .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
     renderPersonPage(name, acted, person, "actor");
   }).catch(() => loadMovies("popular",1));
-}else if(initialGenre){
+} else if(initialGenre){
   findGenreIdByName(initialGenre).then(id => {
     if(id) loadGenrePage(id, initialGenre, 1);
     else loadMovies("popular",1);
   });
-}else if(initialAbout){
+} else if(initialAbout){
   showAbout();
-}else{
+} else {
   loadMovies("popular",1);
 }
 
