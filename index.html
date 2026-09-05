@@ -1127,38 +1127,81 @@ main{
 }
 
 
-/* FOOTER */
-
-footer{
-  max-width:1200px;
-  margin:auto;
-  padding:25px 16px 40px;
-  color:var(--muted);
-  font-size:12px;
-  text-align:center;
-  line-height:1.8;
+/* FOOTER - 4 COLUMN LAYOUT */
+.footer-area {
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  padding: 40px 20px 20px;
+  margin-top: 40px;
 }
 
-.footer-links{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:16px;
-  margin-bottom:12px;
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
 }
 
-.footer-link{
-  color:var(--text);
-  text-decoration:none;
-  cursor:pointer;
+.footer-col h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--text);
 }
 
-.footer-link:hover{
-  color:var(--yellow);
+.footer-col p,
+.footer-col a {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  text-decoration: none;
+  display: block;
 }
 
-.footer-credit{
-  margin-bottom:5px;
+.footer-col a:hover {
+  color: var(--yellow);
+}
+
+.footer-col .footer-logo-text {
+  font-family: Impact, "Arial Black", Arial, sans-serif;
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.footer-col .footer-desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer-bottom span {
+  color: var(--yellow);
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
 }
 
 
@@ -1340,12 +1383,44 @@ footer{
 <main id="app"></main>
 
 
-<footer>
+<!-- FOOTER - 4 COLUMN LAYOUT -->
+<footer class="footer-area">
 
-  <div class="footer-links">
-    <span class="footer-link" onclick="showAbout()">About Us</span>
+  <div class="footer-container">
+
+    <!-- Column 1: Brand -->
+    <div class="footer-col">
+      <div class="footer-logo-text">Unstable Retards</div>
+      <p class="footer-desc">Every Movie and TV Show Ever Made. Discover, explore, and enjoy.</p>
+    </div>
+
+    <!-- Column 2: Quick Links -->
+    <div class="footer-col">
+      <h3>Quick Links</h3>
+      <a href="#" onclick="showAbout(); return false;">About Us</a>
+      <a href="mailto:828477ss@gmail.com">Contact Us</a>
+      <a href="#" onclick="alert('DMCA Page Coming Soon'); return false;">DMCA</a>
+      <a href="#" onclick="alert('Privacy Policy Page Coming Soon'); return false;">Privacy Policy</a>
+    </div>
+
+    <!-- Column 3: Connect -->
+    <div class="footer-col">
+      <h3>Connect</h3>
+      <p>📧 <a href="mailto:828477ss@gmail.com">828477ss@gmail.com</a></p>
+      <p>📱 <a href="tel:+919335661664">+91 93356 61664</a></p>
+    </div>
+
+    <!-- Column 4: Stay Updated -->
+    <div class="footer-col">
+      <h3>Stay Updated</h3>
+      <p>Get notified about the latest movies and updates.</p>
+    </div>
+
   </div>
-  <div class="footer-credit">Made by Aditya Chauhan • 2026</div>
+
+  <div class="footer-bottom">
+    Made by <span>Aditya Chauhan</span> • 2026
+  </div>
 
 </footer>
 
