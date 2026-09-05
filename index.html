@@ -517,6 +517,26 @@ main{
   cursor:pointer;
 }
 
+.watch-now-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:18px;
+  border:0;
+  background:#ff9800;
+  color:white;
+  padding:12px 18px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  margin-right:10px;
+  transition:background 0.2s;
+}
+
+.watch-now-btn:hover {
+  background:#e68900;
+}
+
 .details-box{
   margin-top:28px;
   background:var(--card);
@@ -570,6 +590,39 @@ main{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:14px;
+}
+
+/* STREAM LINKS STYLES */
+.stream-links {
+  margin-top: 15px;
+  padding: 15px;
+  background: var(--card2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.stream-links a {
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  background: var(--card);
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.stream-links a:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.stream-links .quality {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 10px;
 }
 
 
@@ -1234,6 +1287,18 @@ async function getJSON(url){
 }
 
 
+async function fetchStreams(movieId) {
+  try {
+    const url = API + "/stream?id=" + movieId;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { success: false, message: "Error fetching streams" };
+  }
+}
+
+
 /* -------------------------
    HOME
 ------------------------- */
@@ -1813,18 +1878,28 @@ function renderMovieDetails(
             )}
           </p>
 
-          ${
-            currentTrailer
-              ? `
-                <button
-                  class="watch-btn"
-                  onclick="openTrailer()"
-                >
-                  ▶ Watch Trailer
-                </button>
-              `
-              : ""
-          }
+          <div>
+            <button
+              class="watch-now-btn"
+              onclick="getStreamLinks('${movie.id}')"
+            >
+              ▶ Watch Now
+            </button>
+            ${
+              currentTrailer
+                ? `
+                  <button
+                    class="watch-btn"
+                    onclick="openTrailer()"
+                  >
+                    Watch Trailer
+                  </button>
+                `
+                : ""
+            }
+          </div>
+
+          <div id="streamLinksContainer"></div>
 
         </div>
 
@@ -1980,6 +2055,52 @@ function renderMovieDetails(
 
   `;
 
+}
+
+
+/* -------------------------
+   GET STREAM LINKS
+------------------------- */
+
+async function getStreamLinks(movieId) {
+  const container = document.getElementById("streamLinksContainer");
+  
+  container.innerHTML = `
+    <div class="stream-links">
+      <div style="text-align:center;padding:15px;color:var(--muted);">
+        ⏳ Searching for streams...
+      </div>
+    </div>
+  `;
+
+  const result = await fetchStreams(movieId);
+
+  if (!result.success || !result.streams || result.streams.length === 0) {
+    container.innerHTML = `
+      <div class="stream-links">
+        <div style="text-align:center;padding:15px;color:var(--muted);">
+          ❌ No streams found for this movie.
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  let linksHTML = `<div class="stream-links"><div style="font-weight:bold;margin-bottom:10px;color:var(--yellow);">📺 Available Streams:</div>`;
+  
+  result.streams.forEach((stream, index) => {
+    const quality = stream.quality || "Auto";
+    const provider = stream.name || "Stream";
+    linksHTML += `
+      <a href="${stream.url}" target="_blank" rel="noopener noreferrer">
+        ▶ ${provider} - ${quality}
+        <span class="quality">${stream.title || ""}</span>
+      </a>
+    `;
+  });
+
+  linksHTML += `</div>`;
+  container.innerHTML = linksHTML;
 }
 
 
