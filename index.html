@@ -350,7 +350,7 @@ main{
 
 .skeleton-detail-top{
   display:grid;
-  grid-template-columns:320px 1fr;
+  grid-template-columns:380px 1fr;
   gap:30px;
 }
 
@@ -446,30 +446,20 @@ main{
 
 .detail-top{
   display:grid;
-  grid-template-columns:320px 1fr;
-  gap:35px;
+  grid-template-columns:380px 1fr;
+  gap:40px;
   align-items:start;
 }
 
 .detail-poster-wrapper {
   position: relative;
   border-radius: 10px;
-  padding: 3px;
-  background: linear-gradient(135deg, #ffd21f, #ff8c00, #ffd21f);
-  background-size: 300% 300%;
-  animation: glowPulse 3s ease-in-out infinite;
-  box-shadow: 0 0 40px rgba(255, 210, 31, 0.25), 0 0 80px rgba(255, 210, 31, 0.1);
-}
-
-@keyframes glowPulse {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  box-shadow: 0 0 50px rgba(255, 210, 31, 0.3), 0 0 100px rgba(255, 210, 31, 0.1);
 }
 
 .detail-poster {
   width: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
   display: block;
 }
 
@@ -898,9 +888,9 @@ main{
 
 /* MENU */
 .menu-title {
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 900;
-  color: var(--yellow);
+  color: #ffffff;
 }
 
 .menu{
@@ -909,9 +899,9 @@ main{
   left:-310px;
   width:290px;
   height:100%;
-  background: rgba(11, 11, 15, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(11, 11, 15, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-right:1px solid var(--border);
   z-index:100;
   transition:.25s;
@@ -1118,7 +1108,7 @@ main{
 .menu-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.5);
   z-index:90;
   display:none;
   transition: opacity 0.3s ease;
