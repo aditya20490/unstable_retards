@@ -657,7 +657,7 @@ main{
   }
 }
 
-/* DIRECTOR / ACTOR PAGE */
+/* PERSON PROFILE */
 .person-profile {
   display: flex;
   gap: 25px;
@@ -754,6 +754,84 @@ main{
   .person-profile-info h1 {
     font-size: 22px;
   }
+}
+
+/* SEARCH RESULTS */
+.search-person-result {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-person-result:hover {
+  transform: translateY(-2px);
+  border-color: var(--yellow);
+}
+
+.search-person-result .person-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--card2);
+}
+
+.search-person-result .person-info {
+  flex: 1;
+}
+
+.search-person-result .person-info .name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.search-person-result .person-info .known-for {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.search-person-result .person-info .role-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.suggestion-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.suggestion-box .suggestion-text {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.suggestion-box .suggestion-text .suggestion-link {
+  color: var(--yellow);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.suggestion-box .suggestion-text .suggestion-link:hover {
+  color: var(--accent);
 }
 
 
@@ -1087,173 +1165,59 @@ footer{
 
   <div class="header-inner">
 
-    <div
-      class="logo"
-      onclick="goHome()"
-    >
+    <div class="logo" onclick="goHome()">
       Unstable Retards
     </div>
 
     <div class="header-spacer"></div>
 
-    <button
-      id="searchIcon"
-      class="icon-btn"
-      onclick="showSearch()"
-      aria-label="Search"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.8"
-        stroke-linecap="round"
-      >
-
-        <circle
-          cx="10.8"
-          cy="10.8"
-          r="6.5"
-        ></circle>
-
-        <line
-          x1="16"
-          y1="16"
-          x2="21"
-          y2="21"
-        ></line>
-
+    <button id="searchIcon" class="icon-btn" onclick="showSearch()" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="10.8" cy="10.8" r="6.5"></circle>
+        <line x1="16" y1="16" x2="21" y2="21"></line>
       </svg>
-
     </button>
 
-    <button
-      id="themeIcon"
-      class="icon-btn"
-      onclick="toggleTheme()"
-      aria-label="Theme"
-    >
-
-      <svg
-        id="themeSvg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      ></svg>
-
+    <button id="themeIcon" class="icon-btn" onclick="toggleTheme()" aria-label="Theme">
+      <svg id="themeSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 A8.5 8.5 0 1 0 20.5 14.5Z"></path>
+      </svg>
     </button>
 
-    <button
-      class="icon-btn"
-      onclick="openMenu()"
-      aria-label="Menu"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-      >
-
+    <button class="icon-btn" onclick="openMenu()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
         <line x1="4" y1="7" x2="20" y2="7"></line>
         <line x1="4" y1="12" x2="20" y2="12"></line>
         <line x1="4" y1="17" x2="20" y2="17"></line>
-
       </svg>
-
     </button>
 
   </div>
 
-  <div
-    id="searchWrap"
-    class="search-wrap hidden"
-  >
-
-    <input
-      id="searchInput"
-      type="search"
-      placeholder="Search movies..."
-      autocomplete="off"
-    >
-
+  <div id="searchWrap" class="search-wrap hidden">
+    <input id="searchInput" type="search" placeholder="Search movies, actors, directors..." autocomplete="off">
   </div>
 
 </header>
 
 
-<div
-  id="menuOverlay"
-  class="menu-overlay"
-  onclick="closeMenu()"
-></div>
+<div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
 
 
-<aside
-  id="menu"
-  class="menu"
->
+<aside id="menu" class="menu">
 
   <div class="menu-top">
-
-    <div class="menu-title">
-      Explore
-    </div>
-
-    <button
-      class="close-btn"
-      onclick="closeMenu()"
-    >
-      ×
-    </button>
-
+    <div class="menu-title">Explore</div>
+    <button class="close-btn" onclick="closeMenu()">×</button>
   </div>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('popular')"
-  >
-    🔥 Popular
-  </button>
+  <button class="menu-item" onclick="loadHomeSection('popular')">🔥 Popular</button>
+  <button class="menu-item" onclick="loadHomeSection('top-rated')">⭐ Top Rated</button>
+  <button class="menu-item" onclick="loadHomeSection('now-playing')">🎬 Now Playing</button>
+  <button class="menu-item" onclick="loadHomeSection('upcoming')">🚀 Upcoming</button>
+  <button class="menu-item" onclick="showAbout()">ℹ️ About Us</button>
 
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('top-rated')"
-  >
-    ⭐ Top Rated
-  </button>
-
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('now-playing')"
-  >
-    🎬 Now Playing
-  </button>
-
-  <button
-    class="menu-item"
-    onclick="loadHomeSection('upcoming')"
-  >
-    🚀 Upcoming
-  </button>
-
-  <button
-    class="menu-item"
-    onclick="showAbout()"
-  >
-    ℹ️ About Us
-  </button>
-
-  <div class="menu-section">
-    Genres
-  </div>
-
+  <div class="menu-section">Genres</div>
   <div id="genreMenu"></div>
 
 </aside>
@@ -1265,57 +1229,24 @@ footer{
 <footer>
 
   <div class="footer-links">
-
-    <span
-      class="footer-link"
-      onclick="showAbout()"
-    >
-      About Us
-    </span>
-
+    <span class="footer-link" onclick="showAbout()">About Us</span>
   </div>
-
-  <div class="footer-credit">
-    Made by Aditya Chauhan • 2026
-  </div>
+  <div class="footer-credit">Made by Aditya Chauhan • 2026</div>
 
 </footer>
 
 
-<div
-  id="trailerModal"
-  class="modal"
-  onclick="handleModalBackground(event)"
->
+<div id="trailerModal" class="modal" onclick="handleModalBackground(event)">
 
   <div class="trailer-box">
 
     <div class="trailer-header">
-
-      <div
-        id="trailerTitle"
-        class="trailer-title"
-      >
-        Official Trailer
-      </div>
-
-      <button
-        class="close-btn"
-        onclick="closeTrailer()"
-      >
-        ×
-      </button>
-
+      <div id="trailerTitle" class="trailer-title">Official Trailer</div>
+      <button class="close-btn" onclick="closeTrailer()">×</button>
     </div>
 
     <div class="video-wrap">
-
-      <iframe
-        id="trailerFrame"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-
+      <iframe id="trailerFrame" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
     </div>
 
   </div>
@@ -1325,12 +1256,8 @@ footer{
 
 <script>
 
-const API =
-  "https://movie-stream.828477ww.workers.dev";
-
-const IMAGE =
-  "https://image.tmdb.org/t/p/w500";
-
+const API = "https://movie-stream.828477ww.workers.dev";
+const IMAGE = "https://image.tmdb.org/t/p/w500";
 
 let currentPage = 1;
 let currentSection = "popular";
@@ -1343,6 +1270,7 @@ let currentDirectorId = null;
 let currentDirectorName = null;
 let currentActorId = null;
 let currentActorName = null;
+let pendingSearchQuery = null;
 
 let genreCache = {};
 
@@ -1352,84 +1280,41 @@ let genreCache = {};
 ------------------------- */
 
 function escapeHTML(value){
-
-  if(
-    value === null ||
-    value === undefined
-  ){
-    return "";
-  }
-
+  if(value === null || value === undefined) return "";
   return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
-
 
 function poster(path){
-
-  if(!path){
-    return "https://via.placeholder.com/500x750?text=No+Poster";
-  }
-
+  if(!path) return "https://via.placeholder.com/500x750?text=No+Poster";
   return IMAGE + path;
-
 }
-
 
 function profilePic(path){
-
-  if(!path){
-    return "";
-  }
-
+  if(!path) return "";
   return IMAGE + path;
-
 }
-
 
 function formatDate(date){
-
-  if(!date){
-    return "Not available";
-  }
-
-  const d =
-    new Date(date + "T00:00:00");
-
-  if(Number.isNaN(d.getTime())){
-    return date;
-  }
-
-  return d.toLocaleDateString(
-    "en-US",
-    {
-      year:"numeric",
-      month:"long",
-      day:"numeric"
-    }
-  );
-
+  if(!date) return "Not available";
+  const d = new Date(date + "T00:00:00");
+  if(Number.isNaN(d.getTime())) return date;
+  return d.toLocaleDateString("en-US", {
+    year:"numeric",
+    month:"long",
+    day:"numeric"
+  });
 }
-
 
 async function getJSON(url){
-
-  const response =
-    await fetch(url);
-
-  if(!response.ok){
-    throw new Error("Request failed");
-  }
-
+  const response = await fetch(url);
+  if(!response.ok) throw new Error("Request failed");
   return await response.json();
-
 }
-
 
 async function fetchStreams(movieId) {
   try {
@@ -1444,344 +1329,158 @@ async function fetchStreams(movieId) {
 
 
 /* -------------------------
+   SPELLING CORRECTION (Levenshtein Distance)
+------------------------- */
+
+function levenshteinDistance(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b[i-1] === a[j-1]) {
+        matrix[i][j] = matrix[i-1][j-1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i-1][j-1] + 1,
+          matrix[i][j-1] + 1,
+          matrix[i-1][j] + 1
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function getSimilarWord(query, wordList, maxDistance = 3) {
+  let best = null;
+  let bestDistance = Infinity;
+  const lowerQuery = query.toLowerCase();
+  for (const word of wordList) {
+    const dist = levenshteinDistance(lowerQuery, word.toLowerCase());
+    if (dist < bestDistance && dist <= maxDistance) {
+      bestDistance = dist;
+      best = word;
+    }
+  }
+  return best;
+}
+
+
+/* -------------------------
    HOME
 ------------------------- */
 
 function goHome(){
-
   closeMenu();
   hideSearch();
-
   currentSection = "popular";
   currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"home",
-      section:"popular"
-    },
-    "",
-    window.location.pathname
-  );
-
+  window.history.pushState({ page:"home", section:"popular" }, "", window.location.pathname);
   loadMovies("popular",1);
-
 }
-
 
 async function loadHomeSection(section){
-
   closeMenu();
   hideSearch();
-
   currentSection = section;
   currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"home",
-      section
-    },
-    "",
-    window.location.pathname
-  );
-
+  window.history.pushState({ page:"home", section }, "", window.location.pathname);
   await loadMovies(section,1);
-
 }
 
-
 async function loadMovies(section,page){
-
   showMovieGridSkeleton();
-
   try{
-
-    const data =
-      await getJSON(
-        API +
-        "/" +
-        section +
-        "?page=" +
-        page
-      );
-
+    const data = await getJSON(API + "/" + section + "?page=" + page);
     renderMovies(
       data.results || [],
-      section === "popular"
-        ? "Popular Movies"
-        : section === "top-rated"
-        ? "Top Rated Movies"
-        : section === "now-playing"
-        ? "Now Playing"
-        : section === "upcoming"
-        ? "Upcoming Movies"
-        : "Movies"
+      section === "popular" ? "Popular Movies" :
+      section === "top-rated" ? "Top Rated Movies" :
+      section === "now-playing" ? "Now Playing" :
+      section === "upcoming" ? "Upcoming Movies" : "Movies"
     );
-
     renderPagination(
       data.page || page,
       data.total_pages || 1,
       function(newPage){
-
         currentPage = newPage;
-
-        loadMovies(
-          section,
-          newPage
-        );
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
+        loadMovies(section, newPage);
+        window.scrollTo({ top:0, behavior:"smooth" });
       }
     );
-
   }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load movies right now.
-      </div>
-    `;
-
+    document.getElementById("app").innerHTML = `<div class="error">Unable to load movies right now.</div>`;
   }
-
 }
 
-
 function renderMovies(movies,title){
-
-  const app =
-    document.getElementById("app");
-
+  const app = document.getElementById("app");
   if(!movies.length){
-
-    app.innerHTML = `
-      <div class="empty">
-        No movies found.
-      </div>
-    `;
-
+    app.innerHTML = `<div class="empty">No movies found.</div>`;
     return;
-
   }
-
   app.innerHTML = `
     <div class="hero">
-
-      <h1>
-        ${escapeHTML(title)}
-      </h1>
-
-      <p>
-        Every Movie and TV Show Ever Made.
-      </p>
-
+      <h1>${escapeHTML(title)}</h1>
+      <p>Every Movie and TV Show Ever Made.</p>
     </div>
-
     <section class="section">
-
       <div class="movie-grid">
         ${movies.map(movieCard).join("")}
       </div>
-
     </section>
   `;
-
 }
-
-
-/* -------------------------
-   MOVIE CARD
-------------------------- */
 
 function movieCard(movie){
-
-  const year =
-    movie.release_date
-      ? movie.release_date.slice(0,4)
-      : "";
-
+  const year = movie.release_date ? movie.release_date.slice(0,4) : "";
   return `
-
-    <div
-      class="movie-card"
-      onclick="showMovie(${movie.id})"
-    >
-
-      <img
-        class="poster"
-        src="${poster(movie.poster_path)}"
-        alt="${escapeHTML(movie.title || "Movie")}"
-        loading="lazy"
-      >
-
+    <div class="movie-card" onclick="showMovie(${movie.id})">
+      <img class="poster" src="${poster(movie.poster_path)}" alt="${escapeHTML(movie.title || "Movie")}" loading="lazy">
       <div class="movie-info">
-
-        <div class="movie-title">
-          ${escapeHTML(movie.title)}
-        </div>
-
+        <div class="movie-title">${escapeHTML(movie.title)}</div>
         <div class="movie-meta">
-
           ${escapeHTML(year)}
-
-          ${
-            movie.vote_average
-              ? " • ⭐ " +
-                movie.vote_average.toFixed(1)
-              : ""
-          }
-
+          ${movie.vote_average ? " • ⭐ " + movie.vote_average.toFixed(1) : ""}
         </div>
-
       </div>
-
     </div>
-
   `;
-
 }
 
-
-/* -------------------------
-   PAGINATION
-------------------------- */
-
-function renderPagination(
-  page,
-  totalPages,
-  callback
-){
-
-  const app =
-    document.getElementById("app");
-
-  if(totalPages <= 1){
-    return;
+function renderPagination(page, totalPages, callback){
+  const app = document.getElementById("app");
+  if(totalPages <= 1) return;
+  const old = document.querySelector(".pagination");
+  if(old) old.remove();
+  const pagination = document.createElement("div");
+  pagination.className = "pagination";
+  const maxButtons = window.innerWidth <= 650 ? 6 : 7;
+  let start = Math.max(1,page-3);
+  let end = Math.min(totalPages, start + maxButtons - 1);
+  if(end-start < maxButtons-1){
+    start = Math.max(1, end-maxButtons+1);
   }
-
-  const old =
-    document.querySelector(".pagination");
-
-  if(old){
-    old.remove();
-  }
-
-  const pagination =
-    document.createElement("div");
-
-  pagination.className =
-    "pagination";
-
-  const maxButtons =
-    window.innerWidth <= 650
-      ? 6
-      : 7;
-
-  let start =
-    Math.max(1,page-3);
-
-  let end =
-    Math.min(
-      totalPages,
-      start + maxButtons - 1
-    );
-
-  if(
-    end-start <
-    maxButtons-1
-  ){
-
-    start =
-      Math.max(
-        1,
-        end-maxButtons+1
-      );
-
-  }
-
   pagination.innerHTML = `
-
-    <button
-      class="page-btn"
-      ${page===1 ? "disabled" : ""}
-      data-page="${page-1}"
-    >
-      ←
-    </button>
-
-    ${
-      Array.from(
-        {
-          length:end-start+1
-        },
-        (_,i)=>{
-
-          const p =
-            start+i;
-
-          return `
-            <button
-              class="page-btn ${
-                p===page
-                  ? "active"
-                  : ""
-              }"
-              data-page="${p}"
-            >
-              ${p}
-            </button>
-          `;
-
-        }
-      ).join("")
-    }
-
-    <button
-      class="page-btn"
-      ${
-        page===totalPages
-          ? "disabled"
-          : ""
-      }
-      data-page="${page+1}"
-    >
-      →
-    </button>
-
+    <button class="page-btn" ${page===1 ? "disabled" : ""} data-page="${page-1}">←</button>
+    ${Array.from({length:end-start+1}, (_,i)=>{
+      const p = start+i;
+      return `<button class="page-btn ${p===page ? "active" : ""}" data-page="${p}">${p}</button>`;
+    }).join("")}
+    <button class="page-btn" ${page===totalPages ? "disabled" : ""} data-page="${page+1}">→</button>
   `;
-
-  pagination
-    .querySelectorAll(".page-btn")
-    .forEach(btn=>{
-
-      btn.addEventListener(
-        "click",
-        ()=>{
-
-          const p =
-            Number(btn.dataset.page);
-
-          if(
-            p>=1 &&
-            p<=totalPages
-          ){
-
-            callback(p);
-
-          }
-
-        }
-      );
-
+  pagination.querySelectorAll(".page-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const p = Number(btn.dataset.page);
+      if(p>=1 && p<=totalPages) callback(p);
     });
-
+  });
   app.appendChild(pagination);
-
 }
 
 
@@ -1790,420 +1489,115 @@ function renderPagination(
 ------------------------- */
 
 async function showMovie(id){
-
   window.scrollTo(0, 0);
-
   currentMovieId = id;
-
   hideSearch();
-
-  window.history.pushState(
-    {
-      page:"movie",
-      id
-    },
-    "",
-    "?movie=" + id
-  );
-
+  window.history.pushState({ page:"movie", id }, "", "?movie=" + id);
   showMovieSkeleton();
 
   try{
-
-    const [
-      movie,
-      credits,
-      videos
-    ] = await Promise.all([
-
-      getJSON(
-        API +
-        "/movie/" +
-        id
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/credits"
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/videos"
-      )
-
+    const [movie, credits, videos] = await Promise.all([
+      getJSON(API + "/movie/" + id),
+      getJSON(API + "/movie/" + id + "/credits"),
+      getJSON(API + "/movie/" + id + "/videos")
     ]);
-
     currentMovie = movie;
-
-    currentTrailer =
-      findTrailer(
-        videos.results || []
-      );
-
-    renderMovieDetails(
-      movie,
-      credits
-    );
-
+    currentTrailer = findTrailer(videos.results || []);
+    renderMovieDetails(movie, credits);
     loadRelatedMovies(movie);
-
   }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this movie.
-      </div>
-    `;
-
+    document.getElementById("app").innerHTML = `<div class="error">Unable to load this movie.</div>`;
   }
-
 }
-
 
 function findTrailer(videos){
-
-  const youtube =
-    videos.filter(
-      video =>
-        video.site === "YouTube" &&
-        video.key
-    );
-
-  if(!youtube.length){
-    return null;
-  }
-
-  const officialTrailer =
-    youtube.find(
-      video =>
-        video.type === "Trailer" &&
-        (
-          video.official === true ||
-          /official/i.test(
-            video.name || ""
-          )
-        )
-    );
-
-  if(officialTrailer){
-    return officialTrailer;
-  }
-
-  return youtube.find(
-    video =>
-      video.type === "Trailer"
-  ) || null;
-
+  const youtube = videos.filter(video => video.site === "YouTube" && video.key);
+  if(!youtube.length) return null;
+  const officialTrailer = youtube.find(video =>
+    video.type === "Trailer" && (video.official === true || /official/i.test(video.name || ""))
+  );
+  return officialTrailer || youtube.find(video => video.type === "Trailer") || null;
 }
 
-
-/* -------------------------
-   MOVIE DETAIL PAGE
-------------------------- */
-
-function renderMovieDetails(
-  movie,
-  credits
-){
-
-  const app =
-    document.getElementById("app");
-
-  const cast =
-    (credits.cast || [])
-      .slice(0,10);
-
-  const directors =
-    (credits.crew || [])
-      .filter(
-        person =>
-          person.job === "Director"
-      )
-      .filter(
-        (person,index,array) =>
-          array.findIndex(
-            item =>
-              item.id === person.id
-          ) === index
-      );
-
-  const genres =
-    movie.genres || [];
+function renderMovieDetails(movie, credits){
+  const app = document.getElementById("app");
+  const cast = (credits.cast || []).slice(0,10);
+  const directors = (credits.crew || [])
+    .filter(person => person.job === "Director")
+    .filter((person,index,array) => array.findIndex(item => item.id === person.id) === index);
+  const genres = movie.genres || [];
 
   app.innerHTML = `
-
     <div class="detail">
-
-      <button
-        class="back-btn"
-        onclick="goBack()"
-      >
-        ← Back
-      </button>
-
+      <button class="back-btn" onclick="goBack()">← Back</button>
       <div class="detail-top">
-
-        <img
-          class="detail-poster"
-          src="${poster(movie.poster_path)}"
-          alt="${escapeHTML(movie.title)}"
-        >
-
+        <img class="detail-poster" src="${poster(movie.poster_path)}" alt="${escapeHTML(movie.title)}">
         <div class="detail-content">
-
-          <h1>
-            ${escapeHTML(movie.title)}
-          </h1>
-
-          ${
-            movie.tagline
-              ? `
-                <p class="movie-tagline">
-                  ${escapeHTML(movie.tagline)}
-                </p>
-              `
-              : ""
-          }
-
+          <h1>${escapeHTML(movie.title)}</h1>
+          ${movie.tagline ? `<p class="movie-tagline">${escapeHTML(movie.tagline)}</p>` : ""}
           <div class="tag-row">
-
-            ${
-              genres.map(
-                genre => `
-
-                  <button
-                    class="tag"
-                    onclick="loadGenreFromTag(
-                      ${genre.id},
-                      '${escapeHTML(genre.name)}'
-                    )"
-                  >
-                    ${escapeHTML(genre.name)}
-                  </button>
-
-                `
-              ).join("")
-            }
-
+            ${genres.map(genre => `
+              <button class="tag" onclick="loadGenreFromTag(${genre.id}, '${escapeHTML(genre.name)}')">${escapeHTML(genre.name)}</button>
+            `).join("")}
           </div>
-
           <div class="movie-meta">
-
-            ${
-              movie.release_date
-                ? formatDate(movie.release_date)
-                : "Release date unavailable"
-            }
-
-            ${
-              movie.runtime
-                ? " • " +
-                  movie.runtime +
-                  " min"
-                : ""
-            }
-
-            ${
-              movie.vote_average
-                ? " • ⭐ " +
-                  movie.vote_average.toFixed(1)
-                : ""
-            }
-
+            ${movie.release_date ? formatDate(movie.release_date) : "Release date unavailable"}
+            ${movie.runtime ? " • " + movie.runtime + " min" : ""}
+            ${movie.vote_average ? " • ⭐ " + movie.vote_average.toFixed(1) : ""}
           </div>
-
-          <p class="overview">
-            ${escapeHTML(
-              movie.overview ||
-              "No description is available for this title."
-            )}
-          </p>
-
+          <p class="overview">${escapeHTML(movie.overview || "No description is available for this title.")}</p>
+          
           <div>
-            <button
-              class="watch-now-btn"
-              onclick="loadVideoPlayer('${movie.id}')"
-            >
-              ▶ Watch Now
-            </button>
-            ${
-              currentTrailer
-                ? `
-                  <button
-                    class="watch-btn"
-                    onclick="openTrailer()"
-                  >
-                    Watch Trailer
-                  </button>
-                `
-                : ""
-            }
+            <button class="watch-now-btn" onclick="loadVideoPlayer('${movie.id}')">▶ Watch Now</button>
+            ${currentTrailer ? `<button class="watch-btn" onclick="openTrailer()">Watch Trailer</button>` : ""}
           </div>
 
           <div id="streamLinksContainer"></div>
-
         </div>
-
       </div>
-
 
       <div class="details-box">
-
         <div class="info-row">
-
-          <div class="info-label">
-            Stars
-          </div>
-
+          <div class="info-label">Stars</div>
           <div class="info-value">
-
-            ${
-              cast.length
-                ? cast.map(
-                    person => `
-
-                      <div>
-
-                        <span
-                          class="cast-name actor-link"
-                          onclick="showActor(${person.id}, '${escapeHTML(person.name)}')"
-                        >
-                          ${escapeHTML(person.name)}
-                        </span>
-
-                        ${
-                          person.character
-                            ? `
-                              <span class="character">
-                                — ${escapeHTML(person.character)}
-                              </span>
-                            `
-                            : ""
-                        }
-
-                      </div>
-
-                    `
-                  ).join("")
-                : "Cast information unavailable."
-            }
-
+            ${cast.length ? cast.map(person => `
+              <div>
+                <span class="cast-name actor-link" onclick="showActor(${person.id}, '${escapeHTML(person.name)}')">${escapeHTML(person.name)}</span>
+                ${person.character ? `<span class="character">— ${escapeHTML(person.character)}</span>` : ""}
+              </div>
+            `).join("") : "Cast information unavailable."}
           </div>
-
         </div>
-
-
         <div class="info-row">
-
-          <div class="info-label">
-            Director
-          </div>
-
+          <div class="info-label">Director</div>
           <div class="info-value">
-
-            ${
-              directors.length
-                ? directors.map(
-                    person => `
-
-                      <span
-                        class="director-link"
-                        onclick="showDirector(
-                          ${person.id},
-                          '${escapeHTML(person.name)}'
-                        )"
-                      >
-                        ${escapeHTML(person.name)}
-                      </span>
-
-                    `
-                  ).join(", ")
-                : "Director information unavailable."
-            }
-
+            ${directors.length ? directors.map(person => `
+              <span class="director-link" onclick="showDirector(${person.id}, '${escapeHTML(person.name)}')">${escapeHTML(person.name)}</span>
+            `).join(", ") : "Director information unavailable."}
           </div>
-
         </div>
-
-
         <div class="info-row">
-
-          <div class="info-label">
-            Release Date
-          </div>
-
-          <div class="info-value">
-
-            ${
-              movie.release_date
-                ? formatDate(movie.release_date)
-                : "Release date unavailable."
-            }
-
-          </div>
-
+          <div class="info-label">Release Date</div>
+          <div class="info-value">${movie.release_date ? formatDate(movie.release_date) : "Release date unavailable."}</div>
         </div>
-
       </div>
 
-
       <section class="section">
-
-        <div class="section-header">
-
-          <h2>
-            More Like This
-          </h2>
-
+        <div class="section-header"><h2>More Like This</h2></div>
+        <div id="relatedMovies" class="related-grid">
+          ${Array.from({length:6}, ()=>`
+            <div class="skeleton-card">
+              <div class="skeleton skeleton-poster"></div>
+              <div class="skeleton-info">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-title short"></div>
+              </div>
+            </div>
+          `).join("")}
         </div>
-
-        <div
-          id="relatedMovies"
-          class="related-grid"
-        >
-
-          ${
-            Array.from(
-              {length:6},
-              ()=>`
-
-                <div class="skeleton-card">
-
-                  <div
-                    class="skeleton skeleton-poster"
-                  ></div>
-
-                  <div class="skeleton-info">
-
-                    <div
-                      class="skeleton skeleton-title"
-                    ></div>
-
-                    <div
-                      class="skeleton skeleton-title short"
-                    ></div>
-
-                  </div>
-
-                </div>
-
-              `
-            ).join("")
-          }
-
-        </div>
-
       </section>
-
     </div>
-
   `;
-
 }
 
 
@@ -2214,7 +1608,6 @@ function renderMovieDetails(
 async function loadVideoPlayer(movieId) {
   const container = document.getElementById("streamLinksContainer");
   
-  // Show loading
   container.innerHTML = `
     <div class="stream-links">
       <div style="text-align:center;padding:15px;color:var(--muted);">
@@ -2236,10 +1629,7 @@ async function loadVideoPlayer(movieId) {
     return;
   }
 
-  // Get the first stream URL
   const streamUrl = result.streams[0].url;
-  
-  // Open in new tab
   window.open(streamUrl, "_blank");
   
   container.innerHTML = `
@@ -2258,127 +1648,37 @@ async function loadVideoPlayer(movieId) {
    DIRECTOR PAGE
 ------------------------- */
 
-async function showDirector(
-  id,
-  name
-){
-
+async function showDirector(id, name){
   window.scrollTo(0, 0);
-
   currentDirectorId = id;
   currentDirectorName = name;
-
   closeMenu();
   hideSearch();
-
-  window.history.pushState(
-    {
-      page:"director",
-      id,
-      name
-    },
-    "",
-    "?director=" + id + "&name=" + encodeURIComponent(name)
-  );
-
+  window.history.pushState({ page:"director", id, name }, "", "?director=" + id + "&name=" + encodeURIComponent(name));
   showMovieGridSkeleton();
 
   try{
-
     const [credits, person] = await Promise.all([
-      getJSON(
-        API +
-        "/person/" +
-        id +
-        "/credits"
-      ),
-      getJSON(
-        API +
-        "/person/" +
-        id
-      )
+      getJSON(API + "/person/" + id + "/credits"),
+      getJSON(API + "/person/" + id)
     ]);
-
-    const directedMovies =
-      (credits.crew || [])
-        .filter(
-          item =>
-            item.media_type === "movie" &&
-            item.job === "Director"
-        )
-        .filter(
-          (item,index,array) =>
-            array.findIndex(
-              movie =>
-                movie.id === item.id
-            ) === index
-        )
-        .sort(
-          (a,b) =>
-            (
-              b.release_date || ""
-            ).localeCompare(
-              a.release_date || ""
-            )
-        );
-
-    renderPersonPage(
-      name,
-      directedMovies,
-      person,
-      "director"
-    );
-
+    const directedMovies = (credits.crew || [])
+      .filter(item => item.media_type === "movie" && item.job === "Director")
+      .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+      .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+    renderPersonPage(name, directedMovies, person, "director");
   }catch(error){
-
     try{
-      const data =
-        await getJSON(
-          API +
-          "/person/" +
-          id +
-          "/credits"
-        );
-
-      const directedMovies =
-        (data.crew || [])
-          .filter(
-            item =>
-              item.media_type === "movie" &&
-              item.job === "Director"
-          )
-          .filter(
-            (item,index,array) =>
-              array.findIndex(
-                movie =>
-                  movie.id === item.id
-              ) === index
-          )
-          .sort(
-            (a,b) =>
-              (
-                b.release_date || ""
-              ).localeCompare(
-                a.release_date || ""
-              )
-          );
-
-      renderPersonPage(
-        name,
-        directedMovies,
-        null,
-        "director"
-      );
+      const data = await getJSON(API + "/person/" + id + "/credits");
+      const directedMovies = (data.crew || [])
+        .filter(item => item.media_type === "movie" && item.job === "Director")
+        .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+        .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+      renderPersonPage(name, directedMovies, null, "director");
     } catch {
-      document.getElementById("app").innerHTML = `
-        <div class="error">
-          Unable to load this director.
-        </div>
-      `;
+      document.getElementById("app").innerHTML = `<div class="error">Unable to load this director.</div>`;
     }
-
   }
-
 }
 
 
@@ -2386,145 +1686,48 @@ async function showDirector(
    ACTOR PAGE
 ------------------------- */
 
-async function showActor(
-  id,
-  name
-){
-
+async function showActor(id, name){
   window.scrollTo(0, 0);
-
   currentActorId = id;
   currentActorName = name;
-
   closeMenu();
   hideSearch();
-
-  window.history.pushState(
-    {
-      page:"actor",
-      id,
-      name
-    },
-    "",
-    "?actor=" + id + "&name=" + encodeURIComponent(name)
-  );
-
+  window.history.pushState({ page:"actor", id, name }, "", "?actor=" + id + "&name=" + encodeURIComponent(name));
   showMovieGridSkeleton();
 
   try{
-
     const [credits, person] = await Promise.all([
-      getJSON(
-        API +
-        "/person/" +
-        id +
-        "/credits"
-      ),
-      getJSON(
-        API +
-        "/person/" +
-        id
-      )
+      getJSON(API + "/person/" + id + "/credits"),
+      getJSON(API + "/person/" + id)
     ]);
-
-    const actedMovies =
-      (credits.cast || [])
-        .filter(
-          item =>
-            item.media_type === "movie"
-        )
-        .filter(
-          (item,index,array) =>
-            array.findIndex(
-              movie =>
-                movie.id === item.id
-            ) === index
-        )
-        .sort(
-          (a,b) =>
-            (
-              b.release_date || ""
-            ).localeCompare(
-              a.release_date || ""
-            )
-        );
-
-    renderPersonPage(
-      name,
-      actedMovies,
-      person,
-      "actor"
-    );
-
+    const actedMovies = (credits.cast || [])
+      .filter(item => item.media_type === "movie")
+      .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+      .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+    renderPersonPage(name, actedMovies, person, "actor");
   }catch(error){
-
     try{
-      const data =
-        await getJSON(
-          API +
-          "/person/" +
-          id +
-          "/credits"
-        );
-
-      const actedMovies =
-        (data.cast || [])
-          .filter(
-            item =>
-              item.media_type === "movie"
-          )
-          .filter(
-            (item,index,array) =>
-              array.findIndex(
-                movie =>
-                  movie.id === item.id
-              ) === index
-          )
-          .sort(
-            (a,b) =>
-              (
-                b.release_date || ""
-              ).localeCompare(
-                a.release_date || ""
-              )
-          );
-
-      renderPersonPage(
-        name,
-        actedMovies,
-        null,
-        "actor"
-      );
+      const data = await getJSON(API + "/person/" + id + "/credits");
+      const actedMovies = (data.cast || [])
+        .filter(item => item.media_type === "movie")
+        .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+        .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+      renderPersonPage(name, actedMovies, null, "actor");
     } catch {
-      document.getElementById("app").innerHTML = `
-        <div class="error">
-          Unable to load this actor.
-        </div>
-      `;
+      document.getElementById("app").innerHTML = `<div class="error">Unable to load this actor.</div>`;
     }
-
   }
-
 }
 
 
 /* -------------------------
-   PERSON PAGE (Reusable for Director & Actor)
+   PERSON PAGE (Reusable)
 ------------------------- */
 
-function renderPersonPage(
-  name,
-  movies,
-  person,
-  role
-){
-
-  const app =
-    document.getElementById("app");
-
+function renderPersonPage(name, movies, person, role){
+  const app = document.getElementById("app");
   let profileHTML = "";
   let bioHTML = "";
-
   const roleLabel = role === "director" ? "Directed" : "Starred In";
 
   if (person) {
@@ -2538,7 +1741,6 @@ function renderPersonPage(
     if (bio) {
       const bioId = "bio_" + (person.id || Date.now());
       const isLong = bio.length > 250;
-
       bioHTML = `
         <div class="person-bio">
           <div id="${bioId}" class="person-bio-content ${isLong ? 'collapsed' : 'expanded'}">
@@ -2551,24 +1753,12 @@ function renderPersonPage(
 
     profileHTML = `
       <div class="person-profile">
-        ${
-          profilePicUrl
-            ? `<img class="person-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">`
-            : `<div class="person-profile-img" style="display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);background:var(--card2);border:2px solid var(--border);border-radius:8px;">👤</div>`
-        }
+        ${profilePicUrl ? `<img class="person-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">` : `<div class="person-profile-img" style="display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);background:var(--card2);border:2px solid var(--border);border-radius:8px;">👤</div>`}
         <div class="person-profile-info">
           <h1>${escapeHTML(name)}</h1>
           ${knownFor ? `<span class="person-role">${escapeHTML(knownFor)}</span>` : ""}
-          ${
-            birthDate
-              ? `<div class="person-meta">📅 Born: ${birthDate}${birthPlace ? `, ${escapeHTML(birthPlace)}` : ""}</div>`
-              : ""
-          }
-          ${
-            deathDate
-              ? `<div class="person-meta">🕊️ Died: ${deathDate}</div>`
-              : ""
-          }
+          ${birthDate ? `<div class="person-meta">📅 Born: ${birthDate}${birthPlace ? `, ${escapeHTML(birthPlace)}` : ""}</div>` : ""}
+          ${deathDate ? `<div class="person-meta">🕊️ Died: ${deathDate}</div>` : ""}
           ${bioHTML}
         </div>
       </div>
@@ -2576,60 +1766,17 @@ function renderPersonPage(
   }
 
   app.innerHTML = `
-
     <div class="detail">
-
-      <button
-        class="back-btn"
-        onclick="goBack()"
-      >
-        ← Back
-      </button>
-
+      <button class="back-btn" onclick="goBack()">← Back</button>
       ${profileHTML}
-
       <div class="hero" style="margin-top:0;">
-
-        <h1>
-          ${escapeHTML(name)}
-        </h1>
-
-        <p>
-          Movies ${roleLabel} by ${escapeHTML(name)}.
-        </p>
-
+        <h1>${escapeHTML(name)}</h1>
+        <p>Movies ${roleLabel} by ${escapeHTML(name)}.</p>
       </div>
-
-      ${
-        movies.length
-          ? `
-
-            <section class="section">
-
-              <div class="movie-grid">
-
-                ${movies.map(movieCard).join("")}
-
-              </div>
-
-            </section>
-
-          `
-          : `
-
-            <div class="empty">
-              No movies found.
-            </div>
-
-          `
-      }
-
+      ${movies.length ? `<section class="section"><div class="movie-grid">${movies.map(movieCard).join("")}</div></section>` : `<div class="empty">No movies found.</div>`}
     </div>
-
   `;
-
 }
-
 
 function toggleBio(bioId, btn) {
   const bio = document.getElementById(bioId);
@@ -2650,57 +1797,176 @@ function toggleBio(bioId, btn) {
 ------------------------- */
 
 async function loadRelatedMovies(movie){
-
-  const container =
-    document.getElementById(
-      "relatedMovies"
-    );
-
-  if(!container){
-    return;
-  }
-
-  const genreIds =
-    (movie.genres || [])
-      .map(
-        genre => genre.id
-      );
-
-  if(!genreIds.length){
-
-    container.innerHTML = "";
-
-    return;
-
-  }
+  const container = document.getElementById("relatedMovies");
+  if(!container) return;
+  const genreIds = (movie.genres || []).map(genre => genre.id);
+  if(!genreIds.length){ container.innerHTML = ""; return; }
 
   try{
-
-    const data =
-      await getJSON(
-        API +
-        "/discover?with_genres=" +
-        genreIds.join("|") +
-        "&sort_by=popularity.desc&page=1"
-      );
-
-    const movies =
-      (data.results || [])
-        .filter(
-          item =>
-            item.id !== movie.id
-        )
-        .slice(0,6);
-
-    container.innerHTML =
-      movies.map(movieCard).join("");
-
+    const data = await getJSON(API + "/discover?with_genres=" + genreIds.join("|") + "&sort_by=popularity.desc&page=1");
+    const movies = (data.results || []).filter(item => item.id !== movie.id).slice(0,6);
+    container.innerHTML = movies.map(movieCard).join("");
   }catch(error){
-
     container.innerHTML = "";
+  }
+}
 
+
+/* -------------------------
+   SEARCH WITH PERSON + SPELLING CORRECTION
+------------------------- */
+
+async function searchMovies(query){
+  showMovieGridSkeleton();
+  pendingSearchQuery = query;
+
+  try {
+    // Step 1: Search for movies
+    const movieData = await getJSON(API + "/search?query=" + encodeURIComponent(query) + "&page=1");
+    const movieResults = movieData.results || [];
+
+    // Step 2: Search for people (actors/directors)
+    let personResults = [];
+    try {
+      // Use the person search endpoint
+      const personData = await getJSON(API + "/search/person?query=" + encodeURIComponent(query) + "&page=1");
+      personResults = personData.results || [];
+    } catch {
+      // If person search fails, try alternative endpoint
+      try {
+        const personData = await getJSON(`https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(query)}&api_key=1865f43a0549ca50d341dd9ab8b29f49`);
+        personResults = personData.results || [];
+      } catch {
+        personResults = [];
+      }
+    }
+
+    // Step 3: If no results, try spelling correction
+    if (movieResults.length === 0 && personResults.length === 0) {
+      // Get popular movie titles for correction suggestions
+      const popularData = await getJSON(API + "/popular?page=1");
+      const popularMovies = popularData.results || [];
+      const movieTitles = popularMovies.map(m => m.title);
+      
+      // Get popular person names for correction suggestions
+      let personNames = [];
+      try {
+        const popularPeople = await getJSON(`https://api.themoviedb.org/3/person/popular?api_key=1865f43a0549ca50d341dd9ab8b29f49&page=1`);
+        personNames = (popularPeople.results || []).map(p => p.name);
+      } catch {}
+
+      const allNames = [...movieTitles, ...personNames];
+      const suggestion = getSimilarWord(query, allNames, 3);
+
+      if (suggestion) {
+        renderSearchResultsWithSuggestion(query, suggestion, [], []);
+        return;
+      }
+    }
+
+    // Step 4: Render results
+    renderSearchResults(query, movieResults, personResults);
+
+  } catch (error) {
+    document.getElementById("app").innerHTML = `<div class="error">Search failed. Please try again.</div>`;
+  }
+}
+
+function renderSearchResults(query, movies, people) {
+  const app = document.getElementById("app");
+  let html = `
+    <div class="hero">
+      <h1>🔍 Search Results</h1>
+      <p>Showing results for "${escapeHTML(query)}"</p>
+    </div>
+  `;
+
+  // Show people results first
+  if (people && people.length > 0) {
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">👤 People</h2>`;
+    for (const person of people) {
+      const profileImg = person.profile_path ? poster(person.profile_path) : "";
+      const knownFor = person.known_for_department || "";
+      const isActor = knownFor === "Acting";
+      const roleLabel = isActor ? "Actor" : knownFor || "Person";
+      
+      html += `
+        <div class="search-person-result" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
+          ${profileImg ? `<img class="person-avatar" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-avatar" style="display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--card2);">👤</div>`}
+          <div class="person-info">
+            <div class="name">${escapeHTML(person.name)}</div>
+            <div class="known-for">${escapeHTML(knownFor)}</div>
+            <span class="role-badge">${escapeHTML(roleLabel)}</span>
+          </div>
+          <div style="color:var(--muted);font-size:14px;">Click to view →</div>
+        </div>
+      `;
+    }
   }
 
+  // Show movie results
+  if (movies && movies.length > 0) {
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">📽️ Movies</h2>`;
+    html += `<section class="section"><div class="movie-grid">${movies.map(movieCard).join("")}</div></section>`;
+  }
+
+  // If no results at all
+  if ((!people || people.length === 0) && (!movies || movies.length === 0)) {
+    html += `<div class="empty">No results found for "${escapeHTML(query)}".</div>`;
+  }
+
+  app.innerHTML = html;
+}
+
+function renderSearchResultsWithSuggestion(query, suggestion, movies, people) {
+  const app = document.getElementById("app");
+  let html = `
+    <div class="hero">
+      <h1>🔍 Search Results</h1>
+      <p>Showing results for "${escapeHTML(query)}"</p>
+    </div>
+    <div class="suggestion-box">
+      <div class="suggestion-text">
+        🤔 Did you mean: <span class="suggestion-link" onclick="searchMovies('${escapeHTML(suggestion)}')">"${escapeHTML(suggestion)}"</span>?
+      </div>
+    </div>
+  `;
+
+  // Show people results if any
+  if (people && people.length > 0) {
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">👤 People</h2>`;
+    for (const person of people) {
+      const profileImg = person.profile_path ? poster(person.profile_path) : "";
+      const knownFor = person.known_for_department || "";
+      const isActor = knownFor === "Acting";
+      const roleLabel = isActor ? "Actor" : knownFor || "Person";
+      
+      html += `
+        <div class="search-person-result" onclick="${isActor ? `showActor(${person.id}, '${escapeHTML(person.name)}')` : `showDirector(${person.id}, '${escapeHTML(person.name)}')`}">
+          ${profileImg ? `<img class="person-avatar" src="${profileImg}" alt="${escapeHTML(person.name)}">` : `<div class="person-avatar" style="display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--card2);">👤</div>`}
+          <div class="person-info">
+            <div class="name">${escapeHTML(person.name)}</div>
+            <div class="known-for">${escapeHTML(knownFor)}</div>
+            <span class="role-badge">${escapeHTML(roleLabel)}</span>
+          </div>
+          <div style="color:var(--muted);font-size:14px;">Click to view →</div>
+        </div>
+      `;
+    }
+  }
+
+  // Show movie results if any
+  if (movies && movies.length > 0) {
+    html += `<h2 style="margin-top:20px;margin-bottom:15px;">📽️ Movies</h2>`;
+    html += `<section class="section"><div class="movie-grid">${movies.map(movieCard).join("")}</div></section>`;
+  }
+
+  // If no results at all
+  if ((!people || people.length === 0) && (!movies || movies.length === 0)) {
+    html += `<div class="empty">No results found for "${escapeHTML(query)}".</div>`;
+  }
+
+  app.innerHTML = html;
 }
 
 
@@ -2709,226 +1975,66 @@ async function loadRelatedMovies(movie){
 ------------------------- */
 
 function openTrailer(){
-
-  if(!currentTrailer){
-    return;
-  }
-
-  const modal =
-    document.getElementById(
-      "trailerModal"
-    );
-
-  const title =
-    document.getElementById(
-      "trailerTitle"
-    );
-
-  const frame =
-    document.getElementById(
-      "trailerFrame"
-    );
-
-  title.textContent =
-    (
-      currentMovie?.title ||
-      "Movie"
-    ) +
-    " Official Trailer";
-
-  frame.src =
-    "https://www.youtube.com/embed/" +
-    encodeURIComponent(
-      currentTrailer.key
-    ) +
-    "?autoplay=1&rel=0";
-
+  if(!currentTrailer) return;
+  const modal = document.getElementById("trailerModal");
+  const title = document.getElementById("trailerTitle");
+  const frame = document.getElementById("trailerFrame");
+  title.textContent = (currentMovie?.title || "Movie") + " Official Trailer";
+  frame.src = "https://www.youtube.com/embed/" + encodeURIComponent(currentTrailer.key) + "?autoplay=1&rel=0";
   modal.classList.add("show");
-
-  document.body.style.overflow =
-    "hidden";
-
+  document.body.style.overflow = "hidden";
 }
-
 
 function closeTrailer(){
-
-  const modal =
-    document.getElementById(
-      "trailerModal"
-    );
-
-  const frame =
-    document.getElementById(
-      "trailerFrame"
-    );
-
+  const modal = document.getElementById("trailerModal");
+  const frame = document.getElementById("trailerFrame");
   frame.src = "";
-
   modal.classList.remove("show");
-
   document.body.style.overflow = "";
-
 }
-
 
 function handleModalBackground(event){
-
-  if(
-    event.target.id ===
-    "trailerModal"
-  ){
-
-    closeTrailer();
-
-  }
-
+  if(event.target.id === "trailerModal") closeTrailer();
 }
 
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if(event.key === "Escape"){
-
-      closeTrailer();
-
-    }
-
-  }
-);
+document.addEventListener("keydown", event => {
+  if(event.key === "Escape") closeTrailer();
+});
 
 
 /* -------------------------
-   SEARCH
+   SEARCH INPUT
 ------------------------- */
 
-const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
+const searchInput = document.getElementById("searchInput");
 
-
-searchInput.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key !== "Enter"
-    ){
-      return;
-    }
-
-    event.preventDefault();
-
-    const query =
-      this.value.trim();
-
-    if(!query){
-      return;
-    }
-
-    searchMovies(query);
-
-    hideSearch();
-
-  }
-);
-
+searchInput.addEventListener("keydown", function(event){
+  if(event.key !== "Enter") return;
+  event.preventDefault();
+  const query = this.value.trim();
+  if(!query) return;
+  // Clear URL params
+  window.history.pushState({}, "", window.location.pathname);
+  searchMovies(query);
+  hideSearch();
+});
 
 function hideSearch(){
-
-  document
-    .getElementById(
-      "searchWrap"
-    )
-    .classList.add("hidden");
-
+  document.getElementById("searchWrap").classList.add("hidden");
 }
-
 
 function showSearch(){
-
-  document
-    .getElementById(
-      "searchWrap"
-    )
-    .classList.remove("hidden");
-
-  setTimeout(
-    ()=>{
-      searchInput.focus();
-    },
-    50
-  );
-
+  document.getElementById("searchWrap").classList.remove("hidden");
+  setTimeout(() => searchInput.focus(), 50);
 }
 
-
-async function searchMovies(query){
-
-  showMovieGridSkeleton();
-
-  try{
-
-    const data =
-      await getJSON(
-        API +
-        "/search?query=" +
-        encodeURIComponent(query) +
-        "&page=1"
-      );
-
-    renderMovies(
-      data.results || [],
-      "Search Results"
-    );
-
-  }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Search failed.
-      </div>
-    `;
-
-  }
-
-}
-
-
-document.addEventListener(
-  "click",
-  function(event){
-
-    const searchWrap =
-      document.getElementById(
-        "searchWrap"
-      );
-
-    const searchIcon =
-      document.getElementById(
-        "searchIcon"
-      );
-
-    if(
-      searchWrap.classList.contains("hidden")
-    ){
-      return;
-    }
-
-    if(
-      searchWrap.contains(event.target) ||
-      searchIcon.contains(event.target)
-    ){
-      return;
-    }
-
-    hideSearch();
-
-  }
-);
+document.addEventListener("click", function(event){
+  const searchWrap = document.getElementById("searchWrap");
+  const searchIcon = document.getElementById("searchIcon");
+  if(searchWrap.classList.contains("hidden")) return;
+  if(searchWrap.contains(event.target) || searchIcon.contains(event.target)) return;
+  hideSearch();
+});
 
 
 /* -------------------------
@@ -2936,225 +2042,69 @@ document.addEventListener(
 ------------------------- */
 
 async function loadGenres(){
-
   try{
-
-    const data =
-      await getJSON(
-        API + "/genres"
-      );
-
-    const container =
-      document.getElementById(
-        "genreMenu"
-      );
-
-    container.innerHTML =
-      (data.genres || [])
-        .map(
-          genre => `
-
-            <button
-              class="menu-item"
-              onclick="loadGenre(
-                ${genre.id},
-                '${escapeHTML(genre.name)}'
-              )"
-            >
-              ${escapeHTML(genre.name)}
-            </button>
-
-          `
-        ).join("");
-
+    const data = await getJSON(API + "/genres");
+    const container = document.getElementById("genreMenu");
+    container.innerHTML = (data.genres || []).map(genre => `
+      <button class="menu-item" onclick="loadGenre(${genre.id}, '${escapeHTML(genre.name)}')">${escapeHTML(genre.name)}</button>
+    `).join("");
   }catch(error){
-
-    document.getElementById(
-      "genreMenu"
-    ).innerHTML = `
-      <div class="error">
-        Genres unavailable.
-      </div>
-    `;
-
+    document.getElementById("genreMenu").innerHTML = `<div class="error">Genres unavailable.</div>`;
   }
-
 }
 
-
-async function loadGenre(
-  id,
-  name
-){
-
+async function loadGenre(id, name){
   closeMenu();
   hideSearch();
-
   currentGenreId = id;
   currentGenreName = name;
   currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"genre",
-      id,
-      name
-    },
-    "",
-    "?genre=" +
-    encodeURIComponent(name)
-  );
-
-  await loadGenrePage(
-    id,
-    name,
-    1
-  );
-
+  window.history.pushState({ page:"genre", id, name }, "", "?genre=" + encodeURIComponent(name));
+  await loadGenrePage(id, name, 1);
 }
 
-
-async function loadGenreFromTag(
-  id,
-  name
-){
-
+async function loadGenreFromTag(id, name){
   hideSearch();
-
   currentGenreId = id;
   currentGenreName = name;
   currentPage = 1;
-
-  window.history.pushState(
-    {
-      page:"genre",
-      id,
-      name
-    },
-    "",
-    "?genre=" +
-    encodeURIComponent(name)
-  );
-
-  await loadGenrePage(
-    id,
-    name,
-    1
-  );
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
+  window.history.pushState({ page:"genre", id, name }, "", "?genre=" + encodeURIComponent(name));
+  await loadGenrePage(id, name, 1);
+  window.scrollTo({ top:0, behavior:"smooth" });
 }
 
-
-async function loadGenrePage(
-  id,
-  name,
-  page
-){
-
+async function loadGenrePage(id, name, page){
   showMovieGridSkeleton();
-
   try{
-
-    const data =
-      await getJSON(
-        API +
-        "/discover?with_genres=" +
-        id +
-        "&sort_by=popularity.desc&page=" +
-        page
-      );
-
-    renderGenreMovies(
-      data.results || [],
-      name
-    );
-
-    renderPagination(
-      data.page || page,
-      data.total_pages || 1,
-      function(newPage){
-
-        currentPage =
-          newPage;
-
-        loadGenrePage(
-          id,
-          name,
-          newPage
-        );
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
-      }
-    );
-
+    const data = await getJSON(API + "/discover?with_genres=" + id + "&sort_by=popularity.desc&page=" + page);
+    renderGenreMovies(data.results || [], name);
+    renderPagination(data.page || page, data.total_pages || 1, function(newPage){
+      currentPage = newPage;
+      loadGenrePage(id, name, newPage);
+      window.scrollTo({ top:0, behavior:"smooth" });
+    });
   }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this genre.
-      </div>
-    `;
-
+    document.getElementById("app").innerHTML = `<div class="error">Unable to load this genre.</div>`;
   }
-
 }
 
-
-function renderGenreMovies(
-  movies,
-  name
-){
-
-  const app =
-    document.getElementById("app");
-
+function renderGenreMovies(movies, name){
+  const app = document.getElementById("app");
   if(!movies.length){
-
-    app.innerHTML = `
-      <div class="empty">
-        No movies found for this genre.
-      </div>
-    `;
-
+    app.innerHTML = `<div class="empty">No movies found for this genre.</div>`;
     return;
-
   }
-
   app.innerHTML = `
-
     <div class="hero">
-
-      <h1>
-        ${escapeHTML(name)}
-      </h1>
-
-      <p>
-        Movies in the
-        ${escapeHTML(name)}
-        genre.
-      </p>
-
+      <h1>${escapeHTML(name)}</h1>
+      <p>Movies in the ${escapeHTML(name)} genre.</p>
     </div>
-
     <section class="section">
-
       <div class="movie-grid">
         ${movies.map(movieCard).join("")}
       </div>
-
     </section>
-
   `;
-
 }
 
 
@@ -3163,111 +2113,33 @@ function renderGenreMovies(
 ------------------------- */
 
 function showAbout(){
-
   closeMenu();
   hideSearch();
-
-  window.history.pushState(
-    {
-      page:"about"
-    },
-    "",
-    "?about=1"
-  );
-
+  window.history.pushState({ page:"about" }, "", "?about=1");
   document.getElementById("app").innerHTML = `
-
     <div class="about-page">
-
-      <button
-        class="back-btn"
-        onclick="goBack()"
-      >
-        ← Back
-      </button>
-
-      <h1>
-        About Unstable Retards
-      </h1>
-
-      <p class="about-tagline">
-        Every Movie and TV Show Ever Made.
-      </p>
-
-
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <h1>About Unstable Retards</h1>
+      <p class="about-tagline">Every Movie and TV Show Ever Made.</p>
       <div class="about-section">
-
-        <h2>
-          What is Unstable Retards?
-        </h2>
-
-        <p>
-          Unstable Retards is a movie discovery
-          website built to make exploring movies
-          simple, fast and fun. Discover movies,
-          explore genres, learn about filmmakers
-          and cast members, and find official
-          trailers in one place.
-        </p>
-
+        <h2>What is Unstable Retards?</h2>
+        <p>Unstable Retards is a movie discovery website built to make exploring movies simple, fast and fun. Discover movies, explore genres, learn about filmmakers and cast members, and find official trailers in one place.</p>
       </div>
-
-
       <div class="about-section">
-
-        <h2>
-          Why was it made?
-        </h2>
-
-        <p>
-          The idea is simple: create a place where
-          movie lovers can discover something new
-          without having to jump between different
-          websites just to find basic movie details.
-        </p>
-
+        <h2>Why was it made?</h2>
+        <p>The idea is simple: create a place where movie lovers can discover something new without having to jump between different websites just to find basic movie details.</p>
       </div>
-
-
       <div class="about-section">
-
-        <h2>
-          Movie Information
-        </h2>
-
-        <p>
-          Movie information and metadata are
-          provided using the TMDB API. Unstable
-          Retards does not host or distribute
-          movie files.
-        </p>
-
-        <p style="margin-top:10px;">
-          This product uses the TMDB API but is not
-          endorsed or certified by TMDB.
-        </p>
-
+        <h2>Movie Information</h2>
+        <p>Movie information and metadata are provided using the TMDB API. Unstable Retards does not host or distribute movie files.</p>
+        <p style="margin-top:10px;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
       </div>
-
-
       <div class="about-section">
-
-        <h2>
-          About the Creator
-        </h2>
-
-        <p>
-          Unstable Retards was created by
-          Aditya Chauhan as an independent
-          movie-discovery project.
-        </p>
-
+        <h2>About the Creator</h2>
+        <p>Unstable Retards was created by Aditya Chauhan as an independent movie-discovery project.</p>
       </div>
-
     </div>
-
   `;
-
 }
 
 
@@ -3276,174 +2148,64 @@ function showAbout(){
 ------------------------- */
 
 function showMovieSkeleton(){
-
   document.getElementById("app").innerHTML = `
-
     <div class="detail-skeleton">
-
-      <div
-        class="skeleton skeleton-back"
-      ></div>
-
+      <div class="skeleton skeleton-back"></div>
       <div class="skeleton-detail-top">
-
-        <div
-          class="skeleton skeleton-detail-poster"
-        ></div>
-
+        <div class="skeleton skeleton-detail-poster"></div>
         <div>
-
-          <div
-            class="skeleton skeleton-detail-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-detail-line"
-          ></div>
-
-          <div
-            class="skeleton skeleton-detail-line medium"
-          ></div>
-
+          <div class="skeleton skeleton-detail-title"></div>
+          <div class="skeleton skeleton-detail-line"></div>
+          <div class="skeleton skeleton-detail-line medium"></div>
           <div class="skeleton-tags">
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
-            <div
-              class="skeleton skeleton-tag"
-            ></div>
-
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
+            <div class="skeleton skeleton-tag"></div>
           </div>
-
           <div class="skeleton-overview">
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
-            <div
-              class="skeleton skeleton-overview-line"
-            ></div>
-
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
+            <div class="skeleton skeleton-overview-line"></div>
           </div>
-
-          <div
-            class="skeleton skeleton-button"
-          ></div>
-
+          <div class="skeleton skeleton-button"></div>
         </div>
-
       </div>
-
-
       <div class="skeleton-details-box">
-
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-title"></div>
         </div>
-
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-title"></div>
         </div>
-
         <div class="skeleton-info-row">
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
-          <div
-            class="skeleton skeleton-title"
-          ></div>
-
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-title"></div>
         </div>
-
       </div>
-
     </div>
-
   `;
-
 }
 
-
 function showMovieGridSkeleton(){
-
   document.getElementById("app").innerHTML = `
-
     <div class="hero">
-
-      <div
-        class="skeleton skeleton-hero-title"
-      ></div>
-
-      <div
-        class="skeleton skeleton-hero-text"
-      ></div>
-
+      <div class="skeleton skeleton-hero-title"></div>
+      <div class="skeleton skeleton-hero-text"></div>
     </div>
-
     <div class="skeleton-grid">
-
-      ${
-        Array.from(
-          {length:12},
-          ()=>`
-
-            <div class="skeleton-card">
-
-              <div
-                class="skeleton skeleton-poster"
-              ></div>
-
-              <div class="skeleton-info">
-
-                <div
-                  class="skeleton skeleton-title"
-                ></div>
-
-                <div
-                  class="skeleton skeleton-title short"
-                ></div>
-
-              </div>
-
-            </div>
-
-          `
-        ).join("")
-      }
-
+      ${Array.from({length:12}, ()=>`
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-poster"></div>
+          <div class="skeleton-info">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-title short"></div>
+          </div>
+        </div>
+      `).join("")}
     </div>
-
   `;
-
 }
 
 
@@ -3452,28 +2214,13 @@ function showMovieGridSkeleton(){
 ------------------------- */
 
 function openMenu(){
-
-  document
-    .getElementById("menu")
-    .classList.add("open");
-
-  document
-    .getElementById("menuOverlay")
-    .classList.add("show");
-
+  document.getElementById("menu").classList.add("open");
+  document.getElementById("menuOverlay").classList.add("show");
 }
 
-
 function closeMenu(){
-
-  document
-    .getElementById("menu")
-    .classList.remove("open");
-
-  document
-    .getElementById("menuOverlay")
-    .classList.remove("show");
-
+  document.getElementById("menu").classList.remove("open");
+  document.getElementById("menuOverlay").classList.remove("show");
 }
 
 
@@ -3482,88 +2229,37 @@ function closeMenu(){
 ------------------------- */
 
 function updateThemeIcon(){
-
-  const svg =
-    document.getElementById(
-      "themeSvg"
-    );
-
-  const isLight =
-    document.body.classList.contains(
-      "light"
-    );
-
+  const svg = document.getElementById("themeSvg");
+  const isLight = document.body.classList.contains("light");
   if(isLight){
-
     svg.innerHTML = `
-
-      <circle
-        cx="12"
-        cy="12"
-        r="4"
-      ></circle>
-
+      <circle cx="12" cy="12" r="4"></circle>
       <line x1="12" y1="2" x2="12" y2="5"></line>
       <line x1="12" y1="19" x2="12" y2="22"></line>
-
       <line x1="2" y1="12" x2="5" y2="12"></line>
       <line x1="19" y1="12" x2="22" y2="12"></line>
-
       <line x1="4.9" y1="4.9" x2="7" y2="7"></line>
       <line x1="17" y1="17" x2="19.1" y2="19.1"></line>
-
       <line x1="17" y1="7" x2="19.1" y2="4.9"></line>
       <line x1="4.9" y1="19.1" x2="7" y2="17"></line>
-
     `;
-
   }else{
-
     svg.innerHTML = `
-
-      <path
-        d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5
-        A8.5 8.5 0 1 0 20.5 14.5Z"
-      ></path>
-
+      <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 A8.5 8.5 0 1 0 20.5 14.5Z"></path>
     `;
-
   }
-
 }
-
 
 function toggleTheme(){
-
-  document.body
-    .classList.toggle("light");
-
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light")
-      ? "light"
-      : "dark"
-  );
-
+  document.body.classList.toggle("light");
+  localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
   updateThemeIcon();
-
 }
 
-
 function loadSavedTheme(){
-
-  const theme =
-    localStorage.getItem("theme");
-
-  if(theme === "light"){
-
-    document.body
-      .classList.add("light");
-
-  }
-
+  const theme = localStorage.getItem("theme");
+  if(theme === "light") document.body.classList.add("light");
   updateThemeIcon();
-
 }
 
 
@@ -3572,247 +2268,74 @@ function loadSavedTheme(){
 ------------------------- */
 
 function goBack(){
-
-  if(window.history.length > 1){
-
-    window.history.back();
-
-  }else{
-
-    goHome();
-
-  }
-
+  if(window.history.length > 1) window.history.back();
+  else goHome();
 }
 
+window.addEventListener("popstate", function(){
+  const params = new URLSearchParams(window.location.search);
+  const movieId = params.get("movie");
+  const genre = params.get("genre");
+  const about = params.get("about");
+  const directorId = params.get("director");
+  const directorName = params.get("name");
+  const actorId = params.get("actor");
+  const actorName = params.get("name");
 
-window.addEventListener(
-  "popstate",
-  function(){
-
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-    const movieId =
-      params.get("movie");
-
-    const genre =
-      params.get("genre");
-
-    const about =
-      params.get("about");
-
-    const directorId =
-      params.get("director");
-
-    const directorName =
-      params.get("name");
-
-    const actorId =
-      params.get("actor");
-
-    const actorName =
-      params.get("name");
-
-
-    if(movieId){
-
-      showMovieWithoutHistory(
-        movieId
-      );
-
-    }else if(directorId){
-
-      const name = directorName ? decodeURIComponent(directorName) : currentDirectorName || "Director";
-
-      Promise.all([
-        getJSON(
-          API +
-          "/person/" +
-          directorId +
-          "/credits"
-        ),
-        getJSON(
-          API +
-          "/person/" +
-          directorId
-        )
-      ]).then(([credits, person]) => {
-
-        const directed =
-          (credits.crew || [])
-            .filter(
-              item =>
-                item.media_type === "movie" &&
-                item.job === "Director"
-            )
-            .filter(
-              (item,index,array) =>
-                array.findIndex(
-                  movie =>
-                    movie.id === item.id
-                ) === index
-            )
-            .sort(
-              (a,b) =>
-                (
-                  b.release_date || ""
-                ).localeCompare(
-                  a.release_date || ""
-                )
-            );
-
-        renderPersonPage(
-          name,
-          directed,
-          person,
-          "director"
-        );
-
-      }).catch(() => loadMovies("popular",1));
-
-    }else if(actorId){
-
-      const name = actorName ? decodeURIComponent(actorName) : currentActorName || "Actor";
-
-      Promise.all([
-        getJSON(
-          API +
-          "/person/" +
-          actorId +
-          "/credits"
-        ),
-        getJSON(
-          API +
-          "/person/" +
-          actorId
-        )
-      ]).then(([credits, person]) => {
-
-        const acted =
-          (credits.cast || [])
-            .filter(
-              item =>
-                item.media_type === "movie"
-            )
-            .filter(
-              (item,index,array) =>
-                array.findIndex(
-                  movie =>
-                    movie.id === item.id
-                ) === index
-            )
-            .sort(
-              (a,b) =>
-                (
-                  b.release_date || ""
-                ).localeCompare(
-                  a.release_date || ""
-                )
-            );
-
-        renderPersonPage(
-          name,
-          acted,
-          person,
-          "actor"
-        );
-
-      }).catch(() => loadMovies("popular",1));
-
-    }else if(genre){
-
-      findGenreIdByName(
-        genre
-      ).then(id => {
-
-        if(id){
-
-          loadGenrePage(
-            id,
-            genre,
-            1
-          );
-
-        }else{
-
-          loadMovies(
-            "popular",
-            1
-          );
-
-        }
-
-      });
-
-    }else if(about){
-
-      showAbout();
-
-    }else{
-
-      loadMovies(
-        "popular",
-        1
-      );
-
-    }
-
+  if(movieId){
+    showMovieWithoutHistory(movieId);
+  }else if(directorId){
+    const name = directorName ? decodeURIComponent(directorName) : currentDirectorName || "Director";
+    Promise.all([
+      getJSON(API + "/person/" + directorId + "/credits"),
+      getJSON(API + "/person/" + directorId)
+    ]).then(([credits, person]) => {
+      const directed = (credits.crew || [])
+        .filter(item => item.media_type === "movie" && item.job === "Director")
+        .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+        .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+      renderPersonPage(name, directed, person, "director");
+    }).catch(() => loadMovies("popular",1));
+  }else if(actorId){
+    const name = actorName ? decodeURIComponent(actorName) : currentActorName || "Actor";
+    Promise.all([
+      getJSON(API + "/person/" + actorId + "/credits"),
+      getJSON(API + "/person/" + actorId)
+    ]).then(([credits, person]) => {
+      const acted = (credits.cast || [])
+        .filter(item => item.media_type === "movie")
+        .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+        .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+      renderPersonPage(name, acted, person, "actor");
+    }).catch(() => loadMovies("popular",1));
+  }else if(genre){
+    findGenreIdByName(genre).then(id => {
+      if(id) loadGenrePage(id, genre, 1);
+      else loadMovies("popular",1);
+    });
+  }else if(about){
+    showAbout();
+  }else{
+    loadMovies("popular",1);
   }
-);
+});
 
 
 /* -------------------------
    GENRE ID HELPER
 ------------------------- */
 
-async function findGenreIdByName(
-  name
-){
-
-  if(
-    genreCache[
-      name.toLowerCase()
-    ]
-  ){
-
-    return genreCache[
-      name.toLowerCase()
-    ];
-
-  }
-
+async function findGenreIdByName(name){
+  if(genreCache[name.toLowerCase()]) return genreCache[name.toLowerCase()];
   try{
-
-    const data =
-      await getJSON(
-        API + "/genres"
-      );
-
-    const found =
-      (data.genres || [])
-        .find(
-          genre =>
-            genre.name.toLowerCase() ===
-            name.toLowerCase()
-        );
-
+    const data = await getJSON(API + "/genres");
+    const found = (data.genres || []).find(genre => genre.name.toLowerCase() === name.toLowerCase());
     if(found){
-
-      genreCache[
-        name.toLowerCase()
-      ] = found.id;
-
+      genreCache[name.toLowerCase()] = found.id;
       return found.id;
-
     }
-
   }catch(error){}
-
   return 0;
-
 }
 
 
@@ -3820,70 +2343,22 @@ async function findGenreIdByName(
    MOVIE WITHOUT HISTORY
 ------------------------- */
 
-async function showMovieWithoutHistory(
-  id
-){
-
+async function showMovieWithoutHistory(id){
   currentMovieId = id;
-
   showMovieSkeleton();
-
   try{
-
-    const [
-      movie,
-      credits,
-      videos
-    ] = await Promise.all([
-
-      getJSON(
-        API +
-        "/movie/" +
-        id
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/credits"
-      ),
-
-      getJSON(
-        API +
-        "/movie/" +
-        id +
-        "/videos"
-      )
-
+    const [movie, credits, videos] = await Promise.all([
+      getJSON(API + "/movie/" + id),
+      getJSON(API + "/movie/" + id + "/credits"),
+      getJSON(API + "/movie/" + id + "/videos")
     ]);
-
     currentMovie = movie;
-
-    currentTrailer =
-      findTrailer(
-        videos.results || []
-      );
-
-    renderMovieDetails(
-      movie,
-      credits
-    );
-
-    loadRelatedMovies(
-      movie
-    );
-
+    currentTrailer = findTrailer(videos.results || []);
+    renderMovieDetails(movie, credits);
+    loadRelatedMovies(movie);
   }catch(error){
-
-    document.getElementById("app").innerHTML = `
-      <div class="error">
-        Unable to load this movie.
-      </div>
-    `;
-
+    document.getElementById("app").innerHTML = `<div class="error">Unable to load this movie.</div>`;
   }
-
 }
 
 
@@ -3892,178 +2367,52 @@ async function showMovieWithoutHistory(
 ------------------------- */
 
 loadSavedTheme();
-
 loadGenres();
 
-
-const initialParams =
-  new URLSearchParams(
-    window.location.search
-  );
-
-const initialMovie =
-  initialParams.get("movie");
-
-const initialGenre =
-  initialParams.get("genre");
-
-const initialAbout =
-  initialParams.get("about");
-
-const initialDirector =
-  initialParams.get("director");
-
-const initialDirectorName =
-  initialParams.get("name");
-
-const initialActor =
-  initialParams.get("actor");
-
-const initialActorName =
-  initialParams.get("name");
-
+const initialParams = new URLSearchParams(window.location.search);
+const initialMovie = initialParams.get("movie");
+const initialGenre = initialParams.get("genre");
+const initialAbout = initialParams.get("about");
+const initialDirector = initialParams.get("director");
+const initialDirectorName = initialParams.get("name");
+const initialActor = initialParams.get("actor");
+const initialActorName = initialParams.get("name");
 
 if(initialMovie){
-
-  showMovieWithoutHistory(
-    initialMovie
-  );
-
+  showMovieWithoutHistory(initialMovie);
 }else if(initialDirector){
-
   const name = initialDirectorName ? decodeURIComponent(initialDirectorName) : "Director";
-
   Promise.all([
-    getJSON(
-      API +
-      "/person/" +
-      initialDirector +
-      "/credits"
-    ),
-    getJSON(
-      API +
-      "/person/" +
-      initialDirector
-    )
+    getJSON(API + "/person/" + initialDirector + "/credits"),
+    getJSON(API + "/person/" + initialDirector)
   ]).then(([credits, person]) => {
-
-    const directed =
-      (credits.crew || [])
-        .filter(
-          item =>
-            item.media_type === "movie" &&
-            item.job === "Director"
-        )
-        .filter(
-          (item,index,array) =>
-            array.findIndex(
-              movie =>
-                movie.id === item.id
-            ) === index
-        )
-        .sort(
-          (a,b) =>
-            (
-              b.release_date || ""
-            ).localeCompare(
-              a.release_date || ""
-            )
-        );
-
-    renderPersonPage(
-      name,
-      directed,
-      person,
-      "director"
-    );
-
+    const directed = (credits.crew || [])
+      .filter(item => item.media_type === "movie" && item.job === "Director")
+      .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+      .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+    renderPersonPage(name, directed, person, "director");
   }).catch(() => loadMovies("popular",1));
-
 }else if(initialActor){
-
   const name = initialActorName ? decodeURIComponent(initialActorName) : "Actor";
-
   Promise.all([
-    getJSON(
-      API +
-      "/person/" +
-      initialActor +
-      "/credits"
-    ),
-    getJSON(
-      API +
-      "/person/" +
-      initialActor
-    )
+    getJSON(API + "/person/" + initialActor + "/credits"),
+    getJSON(API + "/person/" + initialActor)
   ]).then(([credits, person]) => {
-
-    const acted =
-      (credits.cast || [])
-        .filter(
-          item =>
-            item.media_type === "movie"
-        )
-        .filter(
-          (item,index,array) =>
-            array.findIndex(
-              movie =>
-                movie.id === item.id
-            ) === index
-        )
-        .sort(
-          (a,b) =>
-            (
-              b.release_date || ""
-            ).localeCompare(
-              a.release_date || ""
-            )
-        );
-
-    renderPersonPage(
-      name,
-      acted,
-      person,
-      "actor"
-    );
-
+    const acted = (credits.cast || [])
+      .filter(item => item.media_type === "movie")
+      .filter((item,index,array) => array.findIndex(movie => movie.id === item.id) === index)
+      .sort((a,b) => (b.release_date || "").localeCompare(a.release_date || ""));
+    renderPersonPage(name, acted, person, "actor");
   }).catch(() => loadMovies("popular",1));
-
 }else if(initialGenre){
-
-  findGenreIdByName(
-    initialGenre
-  ).then(id => {
-
-    if(id){
-
-      loadGenrePage(
-        id,
-        initialGenre,
-        1
-      );
-
-    }else{
-
-      loadMovies(
-        "popular",
-        1
-      );
-
-    }
-
+  findGenreIdByName(initialGenre).then(id => {
+    if(id) loadGenrePage(id, initialGenre, 1);
+    else loadMovies("popular",1);
   });
-
 }else if(initialAbout){
-
   showAbout();
-
 }else{
-
-  loadMovies(
-    "popular",
-    1
-  );
-
+  loadMovies("popular",1);
 }
 
 </script>
