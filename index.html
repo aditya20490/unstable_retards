@@ -998,7 +998,7 @@ main{
 }
 
 
-/* ABOUT PAGE */
+/* LEGAL PAGES */
 .about-page,
 .legal-page {
   max-width: 850px;
@@ -1436,14 +1436,14 @@ main{
       <p class="footer-desc">Every Movie and TV Show Ever Made. Discover, explore, and enjoy.</p>
     </div>
 
-    <!-- Column 2: Quick Links (Horizontal) -->
+    <!-- Column 2: Quick Links (Horizontal) - Open in new tab -->
     <div class="footer-col">
       <h3>Quick Links</h3>
       <div class="footer-links-horizontal">
-        <a href="#" onclick="showAbout(); return false;">About Us</a>
-        <a href="#" onclick="showContact(); return false;">Contact Us</a>
-        <a href="#" onclick="showDmca(); return false;">DMCA</a>
-        <a href="#" onclick="showPrivacy(); return false;">Privacy Policy</a>
+        <a href="#" onclick="openLegalPage('about'); return false;">About Us</a>
+        <a href="#" onclick="openLegalPage('contact'); return false;">Contact Us</a>
+        <a href="#" onclick="openLegalPage('dmca'); return false;">DMCA</a>
+        <a href="#" onclick="openLegalPage('privacy'); return false;">Privacy Policy</a>
       </div>
     </div>
 
@@ -1558,6 +1558,21 @@ async function fetchStreams(movieId) {
   } catch (error) {
     return { success: false, message: "Error fetching streams" };
   }
+}
+
+
+/* -------------------------
+   LEGAL PAGES - OPEN IN NEW TAB
+------------------------- */
+
+function openLegalPage(page) {
+  const pageUrls = {
+    about: window.location.pathname + '?about=1',
+    contact: window.location.pathname + '?contact=1',
+    dmca: window.location.pathname + '?dmca=1',
+    privacy: window.location.pathname + '?privacy=1'
+  };
+  window.open(pageUrls[page], '_blank');
 }
 
 
@@ -2328,16 +2343,13 @@ function renderGenreMovies(movies, name){
 
 
 /* -------------------------
-   LEGAL PAGES (About, DMCA, Privacy, Contact)
+   LEGAL PAGES (Internal - for new tab)
 ------------------------- */
 
 function showAbout(){
-  closeMenu();
-  hideSearch();
-  window.history.pushState({ page:"about" }, "", "?about=1");
   document.getElementById("app").innerHTML = `
     <div class="about-page">
-      <button class="back-btn" onclick="goBack()">← Back</button>
+      <button class="back-btn" onclick="window.close()">← Back</button>
       <h1>About Unstable Retards</h1>
       <p class="about-tagline">Every Movie and TV Show Ever Made.</p>
       <div class="about-section">
@@ -2362,12 +2374,9 @@ function showAbout(){
 }
 
 function showDmca(){
-  closeMenu();
-  hideSearch();
-  window.history.pushState({ page:"dmca" }, "", "?dmca=1");
   document.getElementById("app").innerHTML = `
     <div class="legal-page">
-      <button class="back-btn" onclick="goBack()">← Back</button>
+      <button class="back-btn" onclick="window.close()">← Back</button>
       <h1>DMCA Policy</h1>
       <div class="legal-section">
         <h2>DMCA Notice Process</h2>
@@ -2395,12 +2404,9 @@ function showDmca(){
 }
 
 function showPrivacy(){
-  closeMenu();
-  hideSearch();
-  window.history.pushState({ page:"privacy" }, "", "?privacy=1");
   document.getElementById("app").innerHTML = `
     <div class="legal-page">
-      <button class="back-btn" onclick="goBack()">← Back</button>
+      <button class="back-btn" onclick="window.close()">← Back</button>
       <h1>Privacy Policy</h1>
       <div class="legal-section">
         <h2>Overview</h2>
@@ -2430,12 +2436,9 @@ function showPrivacy(){
 }
 
 function showContact(){
-  closeMenu();
-  hideSearch();
-  window.history.pushState({ page:"contact" }, "", "?contact=1");
   document.getElementById("app").innerHTML = `
     <div class="legal-page">
-      <button class="back-btn" onclick="goBack()">← Back</button>
+      <button class="back-btn" onclick="window.close()">← Back</button>
       <h1>Contact Us</h1>
       <div class="legal-section">
         <h2>Contact Information</h2>
@@ -2585,12 +2588,15 @@ function loadSavedTheme(){
 
 
 /* -------------------------
-   BACK / HISTORY
+   BACK / HISTORY - FIXED
 ------------------------- */
 
 function goBack(){
-  if(window.history.length > 1) window.history.back();
-  else goHome();
+  if(window.history.length > 1) {
+    window.history.back();
+  } else {
+    goHome();
+  }
 }
 
 window.addEventListener("popstate", function(){
@@ -2763,4 +2769,4 @@ if(initialSearch){
 </script>
 
 </body>
-  </html>
+</html>
