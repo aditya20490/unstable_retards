@@ -892,7 +892,9 @@ main{
   left:-310px;
   width:290px;
   height:100%;
-  background:var(--card);
+  background: rgba(11, 11, 15, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-right:1px solid var(--border);
   z-index:100;
   transition:.25s;
@@ -914,8 +916,8 @@ main{
   border-radius: 9px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -933,7 +935,7 @@ main{
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0 14px;
 }
 
@@ -944,8 +946,8 @@ main{
 }
 
 .menu-item.genre-item {
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
   padding: 10px 14px;
 }
 
@@ -957,6 +959,35 @@ main{
 .menu-item.genre-item:hover {
   background: var(--card2);
   color: var(--yellow);
+}
+
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.menu-top .close-btn {
+  border: 0;
+  background: var(--card2);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.menu-top .close-btn:hover {
+  background: var(--accent);
+  transform: rotate(90deg);
 }
 
 
@@ -1070,9 +1101,10 @@ main{
 .menu-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.5);
+  background:rgba(0,0,0,0.6);
   z-index:90;
   display:none;
+  transition: opacity 0.3s ease;
 }
 
 .menu-overlay.show{
@@ -1282,10 +1314,10 @@ footer{
   </div>
 
   <button class="menu-item" onclick="loadHomeSection('popular')">
-    <span class="menu-icon">🔥</span> Popular
+    🔥 Popular
   </button>
   <button class="menu-item" onclick="loadHomeSection('top-rated')">
-    <span class="menu-icon">⭐</span> Top Rated
+    ⭐ Top Rated
   </button>
 
   <div class="menu-section">Genres</div>
@@ -2097,31 +2129,9 @@ async function loadGenres(){
     const data = await getJSON(API + "/genres");
     const container = document.getElementById("genreMenu");
     container.innerHTML = (data.genres || []).map(genre => {
-      const iconMap = {
-        "Action": "⚔️",
-        "Adventure": "🗺️",
-        "Animation": "🎨",
-        "Comedy": "😂",
-        "Crime": "🔫",
-        "Documentary": "🎥",
-        "Drama": "🎭",
-        "Family": "👨‍👩‍👧‍👦",
-        "Fantasy": "🐉",
-        "History": "📜",
-        "Horror": "👻",
-        "Music": "🎵",
-        "Mystery": "🔍",
-        "Romance": "❤️",
-        "Science Fiction": "🚀",
-        "TV Movie": "📺",
-        "Thriller": "🔪",
-        "War": "⚔️",
-        "Western": "🤠"
-      };
-      const icon = iconMap[genre.name] || "🎬";
       return `
         <button class="menu-item genre-item" onclick="loadGenre(${genre.id}, '${escapeHTML(genre.name)}')">
-          <span class="menu-icon">${icon}</span> ${escapeHTML(genre.name)}
+          ${escapeHTML(genre.name)}
         </button>
       `;
     }).join("");
@@ -2501,4 +2511,4 @@ if(initialSearch){
 </script>
 
 </body>
-</html>
+  </html>
