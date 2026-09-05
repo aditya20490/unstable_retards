@@ -904,6 +904,61 @@ main{
   left:0;
 }
 
+.menu-item {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-item:hover {
+  background: var(--card2);
+  color: var(--yellow);
+}
+
+.menu-section {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  padding: 0 14px;
+}
+
+.menu-item .menu-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.menu-item.genre-item {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 14px;
+}
+
+.menu-item.genre-item .menu-icon {
+  font-size: 16px;
+  width: 24px;
+}
+
+.menu-item.genre-item:hover {
+  background: var(--card2);
+  color: var(--yellow);
+}
+
 
 /* ABOUT */
 
@@ -1226,8 +1281,12 @@ footer{
     <button class="close-btn" onclick="closeMenu()">×</button>
   </div>
 
-  <button class="menu-item" onclick="loadHomeSection('popular')">🔥 Popular</button>
-  <button class="menu-item" onclick="loadHomeSection('top-rated')">⭐ Top Rated</button>
+  <button class="menu-item" onclick="loadHomeSection('popular')">
+    <span class="menu-icon">🔥</span> Popular
+  </button>
+  <button class="menu-item" onclick="loadHomeSection('top-rated')">
+    <span class="menu-icon">⭐</span> Top Rated
+  </button>
 
   <div class="menu-section">Genres</div>
   <div id="genreMenu"></div>
@@ -2037,9 +2096,35 @@ async function loadGenres(){
   try{
     const data = await getJSON(API + "/genres");
     const container = document.getElementById("genreMenu");
-    container.innerHTML = (data.genres || []).map(genre => `
-      <button class="menu-item" onclick="loadGenre(${genre.id}, '${escapeHTML(genre.name)}')">${escapeHTML(genre.name)}</button>
-    `).join("");
+    container.innerHTML = (data.genres || []).map(genre => {
+      const iconMap = {
+        "Action": "⚔️",
+        "Adventure": "🗺️",
+        "Animation": "🎨",
+        "Comedy": "😂",
+        "Crime": "🔫",
+        "Documentary": "🎥",
+        "Drama": "🎭",
+        "Family": "👨‍👩‍👧‍👦",
+        "Fantasy": "🐉",
+        "History": "📜",
+        "Horror": "👻",
+        "Music": "🎵",
+        "Mystery": "🔍",
+        "Romance": "❤️",
+        "Science Fiction": "🚀",
+        "TV Movie": "📺",
+        "Thriller": "🔪",
+        "War": "⚔️",
+        "Western": "🤠"
+      };
+      const icon = iconMap[genre.name] || "🎬";
+      return `
+        <button class="menu-item genre-item" onclick="loadGenre(${genre.id}, '${escapeHTML(genre.name)}')">
+          <span class="menu-icon">${icon}</span> ${escapeHTML(genre.name)}
+        </button>
+      `;
+    }).join("");
   }catch(error){
     document.getElementById("genreMenu").innerHTML = `<div class="error">Genres unavailable.</div>`;
   }
