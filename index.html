@@ -886,6 +886,24 @@ main{
   color: var(--yellow);
 }
 
+.menu{
+  position:fixed;
+  top:0;
+  left:-310px;
+  width:290px;
+  height:100%;
+  background:var(--card);
+  border-right:1px solid var(--border);
+  z-index:100;
+  transition:.25s;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.menu.open{
+  left:0;
+}
+
 
 /* ABOUT */
 
@@ -993,55 +1011,6 @@ main{
 
 
 /* MENU OVERLAY */
-
-.menu{
-  position:fixed;
-  top:0;
-  right:-310px;
-  width:290px;
-  height:100%;
-  background:var(--card);
-  border-left:1px solid var(--border);
-  z-index:100;
-  transition:.25s;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.menu.open{
-  right:0;
-}
-
-.menu-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.menu-item{
-  width:100%;
-  text-align:left;
-  border:0;
-  background:transparent;
-  color:var(--text);
-  padding:13px 10px;
-  border-radius:9px;
-  cursor:pointer;
-}
-
-.menu-item:hover{
-  background:var(--card2);
-}
-
-.menu-section{
-  margin-top:20px;
-  margin-bottom:7px;
-  color:var(--muted);
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
 
 .menu-overlay{
   position:fixed;
@@ -1259,6 +1228,9 @@ footer{
 
   <button class="menu-item" onclick="loadHomeSection('popular')">🔥 Popular</button>
   <button class="menu-item" onclick="loadHomeSection('top-rated')">⭐ Top Rated</button>
+
+  <div class="menu-section">Genres</div>
+  <div id="genreMenu"></div>
 
 </aside>
 
@@ -2444,4 +2416,4 @@ if(initialSearch){
 </script>
 
 </body>
-  </html>
+</html>
