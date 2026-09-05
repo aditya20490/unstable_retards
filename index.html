@@ -537,6 +537,17 @@ main{
   background:#e68900;
 }
 
+.actor-link {
+  color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.actor-link:hover {
+  color:var(--yellow);
+}
+
 .details-box{
   margin-top:28px;
   background:var(--card);
@@ -568,7 +579,7 @@ main{
 
 .cast-name{
   color:var(--text);
-  font-weight:700;
+  font-weight:600;
 }
 
 .character{
@@ -646,8 +657,8 @@ main{
   }
 }
 
-/* DIRECTOR PAGE */
-.director-profile {
+/* DIRECTOR / ACTOR PAGE */
+.person-profile {
   display: flex;
   gap: 25px;
   margin-bottom: 25px;
@@ -657,7 +668,7 @@ main{
   border: 1px solid var(--border);
 }
 
-.director-profile-img {
+.person-profile-img {
   width: 180px;
   height: 220px;
   border-radius: 8px;
@@ -667,43 +678,43 @@ main{
   background: var(--card2);
 }
 
-.director-profile-info {
+.person-profile-info {
   flex: 1;
   min-width: 0;
 }
 
-.director-profile-info h1 {
+.person-profile-info h1 {
   font-size: 28px;
   margin-bottom: 5px;
 }
 
-.director-profile-info .director-meta {
+.person-profile-info .person-meta {
   color: var(--muted);
   font-size: 14px;
   margin-top: 3px;
 }
 
-.director-profile-info .director-bio {
+.person-profile-info .person-bio {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.6;
   margin-top: 8px;
 }
 
-.director-profile-info .director-bio-content {
+.person-profile-info .person-bio-content {
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
 
-.director-profile-info .director-bio-content.collapsed {
+.person-profile-info .person-bio-content.collapsed {
   max-height: 80px;
 }
 
-.director-profile-info .director-bio-content.expanded {
+.person-profile-info .person-bio-content.expanded {
   max-height: 1000px;
 }
 
-.director-profile-info .read-more-btn {
+.person-profile-info .read-more-btn {
   background: none;
   border: none;
   color: var(--yellow);
@@ -715,21 +726,32 @@ main{
   transition: color 0.2s;
 }
 
-.director-profile-info .read-more-btn:hover {
+.person-profile-info .read-more-btn:hover {
   color: var(--accent);
 }
 
+.person-profile-info .person-role {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
 @media (max-width: 650px) {
-  .director-profile {
+  .person-profile {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  .director-profile-img {
+  .person-profile-img {
     width: 140px;
     height: 170px;
   }
-  .director-profile-info h1 {
+  .person-profile-info h1 {
     font-size: 22px;
   }
 }
@@ -1319,6 +1341,8 @@ let currentGenreId = null;
 let currentGenreName = null;
 let currentDirectorId = null;
 let currentDirectorName = null;
+let currentActorId = null;
+let currentActorName = null;
 
 let genreCache = {};
 
@@ -2045,7 +2069,10 @@ function renderMovieDetails(
 
                       <div>
 
-                        <span class="cast-name">
+                        <span
+                          class="cast-name actor-link"
+                          onclick="showActor(${person.id}, '${escapeHTML(person.name)}')"
+                        >
                           ${escapeHTML(person.name)}
                         </span>
 
@@ -2228,7 +2255,7 @@ async function loadVideoPlayer(movieId) {
 
 
 /* -------------------------
-   DIRECTOR PAGE WITH PHOTO
+   DIRECTOR PAGE
 ------------------------- */
 
 async function showDirector(
@@ -2244,7 +2271,6 @@ async function showDirector(
   closeMenu();
   hideSearch();
 
-  // Store both ID and name in URL
   window.history.pushState(
     {
       page:"director",
@@ -2296,10 +2322,11 @@ async function showDirector(
             )
         );
 
-    renderDirectorPage(
+    renderPersonPage(
       name,
       directedMovies,
-      person
+      person,
+      "director"
     );
 
   }catch(error){
@@ -2336,10 +2363,11 @@ async function showDirector(
               )
           );
 
-      renderDirectorPage(
+      renderPersonPage(
         name,
         directedMovies,
-        null
+        null,
+        "director"
       );
     } catch {
       document.getElementById("app").innerHTML = `
@@ -2354,10 +2382,141 @@ async function showDirector(
 }
 
 
-function renderDirectorPage(
+/* -------------------------
+   ACTOR PAGE
+------------------------- */
+
+async function showActor(
+  id,
+  name
+){
+
+  window.scrollTo(0, 0);
+
+  currentActorId = id;
+  currentActorName = name;
+
+  closeMenu();
+  hideSearch();
+
+  window.history.pushState(
+    {
+      page:"actor",
+      id,
+      name
+    },
+    "",
+    "?actor=" + id + "&name=" + encodeURIComponent(name)
+  );
+
+  showMovieGridSkeleton();
+
+  try{
+
+    const [credits, person] = await Promise.all([
+      getJSON(
+        API +
+        "/person/" +
+        id +
+        "/credits"
+      ),
+      getJSON(
+        API +
+        "/person/" +
+        id
+      )
+    ]);
+
+    const actedMovies =
+      (credits.cast || [])
+        .filter(
+          item =>
+            item.media_type === "movie"
+        )
+        .filter(
+          (item,index,array) =>
+            array.findIndex(
+              movie =>
+                movie.id === item.id
+            ) === index
+        )
+        .sort(
+          (a,b) =>
+            (
+              b.release_date || ""
+            ).localeCompare(
+              a.release_date || ""
+            )
+        );
+
+    renderPersonPage(
+      name,
+      actedMovies,
+      person,
+      "actor"
+    );
+
+  }catch(error){
+
+    try{
+      const data =
+        await getJSON(
+          API +
+          "/person/" +
+          id +
+          "/credits"
+        );
+
+      const actedMovies =
+        (data.cast || [])
+          .filter(
+            item =>
+              item.media_type === "movie"
+          )
+          .filter(
+            (item,index,array) =>
+              array.findIndex(
+                movie =>
+                  movie.id === item.id
+              ) === index
+          )
+          .sort(
+            (a,b) =>
+              (
+                b.release_date || ""
+              ).localeCompare(
+                a.release_date || ""
+              )
+          );
+
+      renderPersonPage(
+        name,
+        actedMovies,
+        null,
+        "actor"
+      );
+    } catch {
+      document.getElementById("app").innerHTML = `
+        <div class="error">
+          Unable to load this actor.
+        </div>
+      `;
+    }
+
+  }
+
+}
+
+
+/* -------------------------
+   PERSON PAGE (Reusable for Director & Actor)
+------------------------- */
+
+function renderPersonPage(
   name,
   movies,
-  person
+  person,
+  role
 ){
 
   const app =
@@ -2366,21 +2525,23 @@ function renderDirectorPage(
   let profileHTML = "";
   let bioHTML = "";
 
+  const roleLabel = role === "director" ? "Directed" : "Starred In";
+
   if (person) {
     const profilePicUrl = person.profile_path ? poster(person.profile_path) : "";
     const bio = person.biography || "";
     const birthDate = person.birthday ? formatDate(person.birthday) : "";
     const birthPlace = person.place_of_birth || "";
     const deathDate = person.deathday ? formatDate(person.deathday) : "";
+    const knownFor = person.known_for_department || "";
 
-    // Bio with Read More
     if (bio) {
       const bioId = "bio_" + (person.id || Date.now());
       const isLong = bio.length > 250;
 
       bioHTML = `
-        <div class="director-bio">
-          <div id="${bioId}" class="director-bio-content ${isLong ? 'collapsed' : 'expanded'}">
+        <div class="person-bio">
+          <div id="${bioId}" class="person-bio-content ${isLong ? 'collapsed' : 'expanded'}">
             ${escapeHTML(bio)}
           </div>
           ${isLong ? `<button class="read-more-btn" onclick="toggleBio('${bioId}', this)">More ▼</button>` : ""}
@@ -2389,22 +2550,23 @@ function renderDirectorPage(
     }
 
     profileHTML = `
-      <div class="director-profile">
+      <div class="person-profile">
         ${
           profilePicUrl
-            ? `<img class="director-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">`
-            : `<div class="director-profile-img" style="display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);background:var(--card2);border:2px solid var(--border);border-radius:8px;">👤</div>`
+            ? `<img class="person-profile-img" src="${profilePicUrl}" alt="${escapeHTML(name)}">`
+            : `<div class="person-profile-img" style="display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--muted);background:var(--card2);border:2px solid var(--border);border-radius:8px;">👤</div>`
         }
-        <div class="director-profile-info">
+        <div class="person-profile-info">
           <h1>${escapeHTML(name)}</h1>
+          ${knownFor ? `<span class="person-role">${escapeHTML(knownFor)}</span>` : ""}
           ${
             birthDate
-              ? `<div class="director-meta">📅 Born: ${birthDate}${birthPlace ? `, ${escapeHTML(birthPlace)}` : ""}</div>`
+              ? `<div class="person-meta">📅 Born: ${birthDate}${birthPlace ? `, ${escapeHTML(birthPlace)}` : ""}</div>`
               : ""
           }
           ${
             deathDate
-              ? `<div class="director-meta">🕊️ Died: ${deathDate}</div>`
+              ? `<div class="person-meta">🕊️ Died: ${deathDate}</div>`
               : ""
           }
           ${bioHTML}
@@ -2433,7 +2595,7 @@ function renderDirectorPage(
         </h1>
 
         <p>
-          Movies directed by ${escapeHTML(name)}.
+          Movies ${roleLabel} by ${escapeHTML(name)}.
         </p>
 
       </div>
@@ -2456,7 +2618,7 @@ function renderDirectorPage(
           : `
 
             <div class="empty">
-              No directed movies found.
+              No movies found.
             </div>
 
           `
@@ -3448,6 +3610,12 @@ window.addEventListener(
     const directorName =
       params.get("name");
 
+    const actorId =
+      params.get("actor");
+
+    const actorName =
+      params.get("name");
+
 
     if(movieId){
 
@@ -3457,7 +3625,6 @@ window.addEventListener(
 
     }else if(directorId){
 
-      // Use the name from URL or fallback
       const name = directorName ? decodeURIComponent(directorName) : currentDirectorName || "Director";
 
       Promise.all([
@@ -3497,10 +3664,60 @@ window.addEventListener(
                 )
             );
 
-        renderDirectorPage(
+        renderPersonPage(
           name,
           directed,
-          person
+          person,
+          "director"
+        );
+
+      }).catch(() => loadMovies("popular",1));
+
+    }else if(actorId){
+
+      const name = actorName ? decodeURIComponent(actorName) : currentActorName || "Actor";
+
+      Promise.all([
+        getJSON(
+          API +
+          "/person/" +
+          actorId +
+          "/credits"
+        ),
+        getJSON(
+          API +
+          "/person/" +
+          actorId
+        )
+      ]).then(([credits, person]) => {
+
+        const acted =
+          (credits.cast || [])
+            .filter(
+              item =>
+                item.media_type === "movie"
+            )
+            .filter(
+              (item,index,array) =>
+                array.findIndex(
+                  movie =>
+                    movie.id === item.id
+                ) === index
+            )
+            .sort(
+              (a,b) =>
+                (
+                  b.release_date || ""
+                ).localeCompare(
+                  a.release_date || ""
+                )
+            );
+
+        renderPersonPage(
+          name,
+          acted,
+          person,
+          "actor"
         );
 
       }).catch(() => loadMovies("popular",1));
@@ -3699,6 +3916,12 @@ const initialDirector =
 const initialDirectorName =
   initialParams.get("name");
 
+const initialActor =
+  initialParams.get("actor");
+
+const initialActorName =
+  initialParams.get("name");
+
 
 if(initialMovie){
 
@@ -3747,10 +3970,60 @@ if(initialMovie){
             )
         );
 
-    renderDirectorPage(
+    renderPersonPage(
       name,
       directed,
-      person
+      person,
+      "director"
+    );
+
+  }).catch(() => loadMovies("popular",1));
+
+}else if(initialActor){
+
+  const name = initialActorName ? decodeURIComponent(initialActorName) : "Actor";
+
+  Promise.all([
+    getJSON(
+      API +
+      "/person/" +
+      initialActor +
+      "/credits"
+    ),
+    getJSON(
+      API +
+      "/person/" +
+      initialActor
+    )
+  ]).then(([credits, person]) => {
+
+    const acted =
+      (credits.cast || [])
+        .filter(
+          item =>
+            item.media_type === "movie"
+        )
+        .filter(
+          (item,index,array) =>
+            array.findIndex(
+              movie =>
+                movie.id === item.id
+            ) === index
+        )
+        .sort(
+          (a,b) =>
+            (
+              b.release_date || ""
+            ).localeCompare(
+              a.release_date || ""
+            )
+        );
+
+    renderPersonPage(
+      name,
+      acted,
+      person,
+      "actor"
     );
 
   }).catch(() => loadMovies("popular",1));
