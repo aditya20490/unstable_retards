@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dead End | Pure Cinema</title>
+  <title>404 | Pure Cinema</title>
   <style>
     * {
       margin: 0;
@@ -20,69 +20,68 @@
       height: 100vh;
       text-align: center;
       padding: 20px;
-      cursor: pointer;
+      cursor: default;
     }
     .container {
-      max-width: 600px;
+      max-width: 500px;
+    }
+    .error-code {
+      font-size: 80px;
+      font-weight: 900;
+      color: #e50914;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
     }
     img {
       width: 100%;
-      max-width: 500px;
+      max-width: 400px;
       border-radius: 12px;
-      margin-bottom: 20px;
-      transition: 0.3s;
+      margin-bottom: 15px;
       cursor: pointer;
+      transition: 0.3s;
     }
     img:hover {
       transform: scale(1.02);
     }
-    .caption {
-      font-size: 24px;
-      font-weight: 700;
-      color: #f5f5f5;
-      margin-bottom: 8px;
-      min-height: 40px;
-    }
-    .sub {
-      color: #9b9ba5;
-      font-size: 16px;
-      margin-bottom: 25px;
-    }
-    a {
+    .home-btn {
+      display: none;
       background: #e50914;
       color: white;
       padding: 12px 30px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 700;
+      margin-top: 20px;
       display: inline-block;
     }
-    a:hover {
+    .home-btn:hover {
       background: #b20710;
+    }
+    .home-btn.show {
+      display: inline-block;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="error-code">404</div>
     <img id="napoleonImg" src="/well.jpg" alt="Napoleon meme" />
-    <div id="captionText" class="caption">Well...</div>
-    <div class="sub">Click the image to continue</div>
-    <a href="/">Go Back Home</a>
+    <a id="homeBtn" class="home-btn" href="/">Go Back Home</a>
   </div>
 
   <script>
     const img = document.getElementById('napoleonImg');
-    const caption = document.getElementById('captionText');
+    const homeBtn = document.getElementById('homeBtn');
     let state = 0;
 
     img.addEventListener('click', function() {
       if (state === 0) {
         img.src = '/nothing.jpg';
-        caption.textContent = 'There is nothing we can do';
+        homeBtn.classList.add('show');
         state = 1;
       } else {
         img.src = '/well.jpg';
-        caption.textContent = 'Well...';
+        homeBtn.classList.remove('show');
         state = 0;
       }
     });
