@@ -1981,7 +1981,7 @@ function renderMovieDetails(movie, credits){
       <section class="section">
         <div class="section-header"><h2>More Like This</h2></div>
         <div id="relatedMovies" class="related-grid">
-          ${Array.from({length:6}, ()=>`
+          ${Array.from({length:8}, ()=>`
             <div class="skeleton-card">
               <div class="skeleton skeleton-poster"></div>
               <div class="skeleton-info">
@@ -2193,22 +2193,112 @@ function toggleBio(bioId, btn) {
 
 
 /* -------------------------
-   RELATED MOVIES
+   RELATED MOVIES (NEW RANDOM VERSION)
 ------------------------- */
 
 async function loadRelatedMovies(movie){
   const container = document.getElementById("relatedMovies");
   if(!container) return;
+  
   const genreIds = (movie.genres || []).map(genre => genre.id);
-  if(!genreIds.length){ container.innerHTML = ""; return; }
-
-  try{
-    const data = await getJSON(API + "/discover?with_genres=" + genreIds.join("|") + "&sort_by=popularity.desc&page=1");
-    const movies = (data.results || []).filter(item => item.id !== movie.id).slice(0,6);
-    container.innerHTML = movies.map(movieCard).join("");
-  }catch(error){
-    container.innerHTML = "";
+  if(!genreIds.length){ 
+    container.innerHTML = ""; 
+    return; 
   }
+
+  const targetCount = 8;
+  let allMovies = [];
+  let usedIds = new Set();
+
+  // Helper to shuffle array
+  function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // For each genre, fetch random pages and collect movies
+  for (const genreId of genreIds) {
+    try {
+      // First get total pages for this genre
+      const firstPageData = await getJSON(API + "/discover?with_genres=" + genreId + "&sort_by=popularity.desc&page=1");
+      const totalPages = Math.min(firstPageData.total_pages || 1, 100); // Limit to 100 pages max for speed
+      
+      // Pick 2 random pages from this genre
+      const pageCandidates = [];
+      for (let i = 0; i < 2; i++) {
+        const randomPage = Math.floor(Math.random() * totalPages) + 1;
+        pageCandidates.push(randomPage);
+      }
+
+      // Fetch each random page
+      for (const page of pageCandidates) {
+        try {
+          const data = await getJSON(API + "/discover?with_genres=" + genreId + "&sort_by=popularity.desc&page=" + page);
+          const results = data.results || [];
+          
+          // Filter out movies already used or the current movie
+          const filtered = results.filter(m => m.id !== movie.id && !usedIds.has(m.id));
+          
+          // Shuffle and add up to 4 from this page
+          const shuffled = shuffleArray(filtered);
+          const toAdd = shuffled.slice(0, 4);
+          
+          for (const m of toAdd) {
+            if (!usedIds.has(m.id)) {
+              allMovies.push(m);
+              usedIds.add(m.id);
+            }
+          }
+        } catch (e) {
+          // Skip this page if it fails
+          continue;
+        }
+      }
+    } catch (e) {
+      // Skip this genre if it fails
+      continue;
+    }
+  }
+
+  // Remove duplicates (just in case)
+  const uniqueMovies = allMovies.filter((m, index, self) => 
+    index === self.findIndex(t => t.id === m.id)
+  );
+
+  // Shuffle the final list
+  shuffleArray(uniqueMovies);
+
+  // Take exactly 8 or as many as available
+  const finalMovies = uniqueMovies.slice(0, targetCount);
+
+  // If we don't have enough, try a fallback using only the first genre
+  if (finalMovies.length < targetCount && genreIds.length > 0) {
+    try {
+      const fallbackData = await getJSON(API + "/discover?with_genres=" + genreIds[0] + "&sort_by=popularity.desc&page=" + (Math.floor(Math.random() * 5) + 1));
+      const fallbackResults = (fallbackData.results || []).filter(m => m.id !== movie.id && !usedIds.has(m.id));
+      const shuffledFallback = shuffleArray(fallbackResults);
+      for (const m of shuffledFallback) {
+        if (!usedIds.has(m.id) && finalMovies.length < targetCount) {
+          finalMovies.push(m);
+          usedIds.add(m.id);
+        }
+      }
+    } catch (e) {
+      // Fallback failed
+    }
+  }
+
+  // If still empty, show nothing
+  if (finalMovies.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  // Render the movies
+  container.innerHTML = finalMovies.map(movieCard).join("");
 }
 
 
@@ -2805,4 +2895,4 @@ if(initialSearch){
 </script>
 
 </body>
-</html>
+  </html>
