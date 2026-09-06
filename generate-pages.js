@@ -128,7 +128,7 @@ async function generateAllMovies() {
   console.log("Fetching popular movies...");
   
   let allMovies = [];
-  for (let page = 1; page <= 3; page++) {
+  for (let page = 1; page <= 10; page++) {
     try {
       const data = await getJSON(API + "/popular?page=" + page);
       allMovies = allMovies.concat(data.results || []);
