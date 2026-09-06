@@ -29,14 +29,13 @@ function generateMoviePage(movie, credits) {
   const posterUrl = movie.poster_path 
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "https://via.placeholder.com/500x750?text=No+Poster";
-  const year = movie.release_date ? movie.release_date.slice(0,4) : "";
-  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "";
   const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric"
   }) : "Release date unavailable";
   const runtime = movie.runtime ? `${movie.runtime} min` : "";
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -128,7 +127,8 @@ async function generateAllMovies() {
   console.log("Fetching popular movies...");
   
   let allMovies = [];
-  for (let page = 1; page <= 10; page++) {
+  const totalPages = 10; // Change this number to generate more pages
+  for (let page = 1; page <= totalPages; page++) {
     try {
       const data = await getJSON(API + "/popular?page=" + page);
       allMovies = allMovies.concat(data.results || []);
@@ -140,8 +140,11 @@ async function generateAllMovies() {
 
   console.log(`Generating pages for ${allMovies.length} movies...`);
 
+  // Create movies directory
   const dir = "./movies";
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+  const movieUrls = [];
 
   for (const movie of allMovies) {
     try {
@@ -151,12 +154,44 @@ async function generateAllMovies() {
       const filePath = path.join(dir, `${slug}.html`);
       fs.writeFileSync(filePath, html);
       console.log(`Generated: ${slug}.html`);
+      
+      // Add to sitemap list
+      movieUrls.push(`https://pure-cinema.in/movies/${slug}.html`);
     } catch (e) {
       console.error(`Failed to generate ${movie.title}:`, e.message);
     }
   }
 
-  console.log("Done! Generated " + allMovies.length + " movie pages.");
+  console.log("Generating sitemap.xml...");
+
+  // Generate sitemap
+  let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://pure-cinema.in/</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>`;
+
+  for (const url of movieUrls) {
+    sitemapXml += `
+  <url>
+    <loc>${url}</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+  }
+
+  sitemapXml += `
+</urlset>`;
+
+  // Write sitemap to file
+  fs.writeFileSync("./sitemap.xml", sitemapXml);
+  console.log(`Sitemap generated with ${movieUrls.length} movie URLs.`);
+
+  console.log(`Done! Generated ${allMovies.length} movie pages and sitemap.`);
 }
 
 generateAllMovies();
