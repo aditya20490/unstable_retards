@@ -1,17 +1,18 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Your API endpoint
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const API = "https://movie-stream.828477ww.workers.dev";
 
-// Helper to fetch JSON
 async function getJSON(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error("Request failed");
   return await response.json();
 }
 
-// Helper to clean movie title for URL
 function slugify(title) {
   return title
     .toLowerCase()
@@ -19,7 +20,6 @@ function slugify(title) {
     .replace(/^-|-$/g, '');
 }
 
-// Movie page template
 function generateMoviePage(movie, credits) {
   const cast = (credits.cast || []).slice(0, 10);
   const directors = (credits.crew || [])
@@ -124,11 +124,9 @@ function generateMoviePage(movie, credits) {
 </html>`;
 }
 
-// Main function
 async function generateAllMovies() {
   console.log("Fetching popular movies...");
   
-  // Get first 3 pages of popular movies (60 movies)
   let allMovies = [];
   for (let page = 1; page <= 3; page++) {
     try {
@@ -142,23 +140,16 @@ async function generateAllMovies() {
 
   console.log(`Generating pages for ${allMovies.length} movies...`);
 
-  // Create directory
   const dir = "./movies";
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   for (const movie of allMovies) {
     try {
-      // Fetch credits
       const credits = await getJSON(API + "/movie/" + movie.id + "/credits");
-      
-      // Generate HTML
       const html = generateMoviePage(movie, credits);
-      
-      // Save file
       const slug = slugify(movie.title);
       const filePath = path.join(dir, `${slug}.html`);
       fs.writeFileSync(filePath, html);
-      
       console.log(`Generated: ${slug}.html`);
     } catch (e) {
       console.error(`Failed to generate ${movie.title}:`, e.message);
@@ -168,5 +159,4 @@ async function generateAllMovies() {
   console.log("Done! Generated " + allMovies.length + " movie pages.");
 }
 
-// Run it
 generateAllMovies();
